@@ -35,27 +35,35 @@ _SDIST_REQUIRED = (
     "scripts/verify_release.sh",
     "uv.lock",
 )
-_FORBIDDEN_COMPONENTS = frozenset(
+_FORBIDDEN_ANY_COMPONENT = frozenset(
     {
         ".env",
         ".git",
         ".venv",
-        "reports",
-        "runs",
         "stock_data",
     }
 )
+_FORBIDDEN_TOP_LEVEL = frozenset({"reports", "runs"})
 
 
 def _check(name: str, passed: bool, detail: str) -> VerificationCheck:
     return VerificationCheck(name=name, passed=passed, detail=detail)
 
 
-def _forbidden(names: list[str]) -> list[str]:
+def _forbidden(
+    names: list[str],
+    *,
+    strip_archive_root: bool = False,
+) -> list[str]:
     offenders: list[str] = []
     for name in names:
-        components = {item.lower() for item in PurePosixPath(name).parts}
-        if components & _FORBIDDEN_COMPONENTS:
+        parts = tuple(item.lower() for item in PurePosixPath(name).parts)
+        content_parts = parts[1:] if strip_archive_root else parts
+        has_forbidden_component = bool(set(content_parts) & _FORBIDDEN_ANY_COMPONENT)
+        has_forbidden_top_level = bool(
+            content_parts and content_parts[0] in _FORBIDDEN_TOP_LEVEL
+        )
+        if has_forbidden_component or has_forbidden_top_level:
             offenders.append(name)
     return offenders
 
@@ -149,7 +157,7 @@ def verify_distributions(
             else f"missing: {missing_sdist}",
         )
     )
-    sdist_forbidden = _forbidden(sdist_names)
+    sdist_forbidden = _forbidden(sdist_names, strip_archive_root=True)
     checks.append(
         _check(
             "sdist_exclusions",

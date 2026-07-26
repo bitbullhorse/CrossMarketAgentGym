@@ -100,6 +100,10 @@ def test_distribution_verifier_requires_metadata_resources_and_exclusions(
             "{}",
         )
         wheel.writestr(
+            "crossmarket_agentgym/tuning/reports/__init__.py",
+            '"""Packaged HPO report module."""',
+        )
+        wheel.writestr(
             "crossmarket_agent_gym-1.0.0rc1.dist-info/METADATA",
             "Name: crossmarket-agent-gym\n"
             "Version: 1.0.0rc1\n"
@@ -118,6 +122,7 @@ def test_distribution_verifier_requires_metadata_resources_and_exclusions(
             "release/api_inventory.csv",
             "schemas/rc1/checksums.json",
             "scripts/verify_release.sh",
+            "src/crossmarket_agentgym/tuning/reports/__init__.py",
             "uv.lock",
         ):
             payload = b"fixture"
