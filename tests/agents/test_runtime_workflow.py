@@ -3,12 +3,19 @@ from __future__ import annotations
 from pathlib import Path
 
 import yaml
+from click import unstyle
 from typer.testing import CliRunner
 
 from crossmarket_agentgym.agents.config import load_agent_runtime_config
 from crossmarket_agentgym.agents.runtime_workflow import execute_agent_runtime
 from crossmarket_agentgym.audit.run_manifest import verify_run_manifest
 from crossmarket_agentgym.cli.app import app
+
+
+def _plain_cli_output(result: object) -> str:
+    stdout = getattr(result, "stdout", "")
+    stderr = getattr(result, "stderr", "")
+    return " ".join(unstyle(stdout + stderr).split())
 
 
 def test_offline_single_runtime_workflow_and_cli(tmp_path: Path) -> None:
@@ -69,9 +76,9 @@ def test_offline_one_plus_three_plus_two_workflow(tmp_path: Path) -> None:
 
 
 def test_runtime_cli_requires_explicit_config() -> None:
-    result = CliRunner().invoke(app, ["agent", "run"])
+    result = CliRunner().invoke(app, ["agent", "run"], color=True)
     assert result.exit_code == 2
-    assert "--config is required" in (result.stdout + result.stderr)
+    assert "--config is required" in _plain_cli_output(result)
 
 
 def test_online_runtime_config_is_credential_free_and_three_layered() -> None:

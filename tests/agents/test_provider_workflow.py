@@ -3,11 +3,18 @@ from __future__ import annotations
 from pathlib import Path
 
 import yaml
+from click import unstyle
 from typer.testing import CliRunner
 
 from crossmarket_agentgym.agents.config import load_provider_check_config
 from crossmarket_agentgym.agents.workflow import execute_provider_check
 from crossmarket_agentgym.cli.app import app
+
+
+def _plain_cli_output(result: object) -> str:
+    stdout = getattr(result, "stdout", "")
+    stderr = getattr(result, "stderr", "")
+    return " ".join(unstyle(stdout + stderr).split())
 
 
 def test_offline_provider_workflow_and_cli(tmp_path: Path) -> None:
@@ -43,9 +50,9 @@ def test_offline_provider_workflow_and_cli(tmp_path: Path) -> None:
 
 
 def test_provider_check_requires_explicit_config() -> None:
-    result = CliRunner().invoke(app, ["agent", "provider-check"])
+    result = CliRunner().invoke(app, ["agent", "provider-check"], color=True)
     assert result.exit_code == 2
-    assert "--config is required" in (result.stdout + result.stderr)
+    assert "--config is required" in _plain_cli_output(result)
 
 
 def test_online_deepseek_configuration_contains_environment_names_only() -> None:

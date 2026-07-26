@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import yaml
+from click import unstyle
 from typer.testing import CliRunner
 
 from crossmarket_agentgym.audit.run_manifest import verify_run_manifest
@@ -13,6 +14,12 @@ from crossmarket_agentgym.cli.app import app
 from crossmarket_agentgym.rl import CallbackConfig, TrainerConfig, load_train_run_config
 
 runner = CliRunner()
+
+
+def _plain_cli_output(result: object) -> str:
+    stdout = getattr(result, "stdout", "")
+    stderr = getattr(result, "stderr", "")
+    return " ".join(unstyle(stdout + stderr).split())
 
 
 def test_help_lists_stable_commands() -> None:
@@ -45,36 +52,34 @@ def test_version_option() -> None:
 
 
 def test_reproduce_requires_run_id() -> None:
-    result = runner.invoke(app, ["reproduce"])
+    result = runner.invoke(app, ["reproduce"], color=True)
 
     assert result.exit_code == 2
-    assert "--run-id is required" in (result.stdout + result.stderr)
+    assert "--run-id is required" in _plain_cli_output(result)
 
 
 def test_phase3_commands_require_explicit_artifacts() -> None:
     """Training and locked evaluation never guess their input targets."""
-    train_result = runner.invoke(app, ["train"])
-    evaluate_result = runner.invoke(app, ["evaluate"])
-    tune_result = runner.invoke(app, ["tune"])
+    train_result = runner.invoke(app, ["train"], color=True)
+    evaluate_result = runner.invoke(app, ["evaluate"], color=True)
+    tune_result = runner.invoke(app, ["tune"], color=True)
 
     assert train_result.exit_code == 2
-    assert "--config is required" in (train_result.stdout + train_result.stderr)
+    assert "--config is required" in _plain_cli_output(train_result)
     assert evaluate_result.exit_code == 2
-    assert "--run-id is required" in (
-        evaluate_result.stdout + evaluate_result.stderr
-    )
+    assert "--run-id is required" in _plain_cli_output(evaluate_result)
     assert tune_result.exit_code == 2
-    assert "--config is required" in (tune_result.stdout + tune_result.stderr)
+    assert "--config is required" in _plain_cli_output(tune_result)
 
 
 def test_phase8_commands_require_explicit_configuration() -> None:
-    report_result = runner.invoke(app, ["report", "softwarex"])
-    service_result = runner.invoke(app, ["service", "run"])
+    report_result = runner.invoke(app, ["report", "softwarex"], color=True)
+    service_result = runner.invoke(app, ["service", "run"], color=True)
 
     assert report_result.exit_code == 2
-    assert "--config is required" in (report_result.stdout + report_result.stderr)
+    assert "--config is required" in _plain_cli_output(report_result)
     assert service_result.exit_code == 2
-    assert "--config is required" in (service_result.stdout + service_result.stderr)
+    assert "--config is required" in _plain_cli_output(service_result)
 
 
 def test_report_run_id_prints_one_whitelisted_record(tmp_path: Path) -> None:
@@ -181,10 +186,10 @@ def test_data_validate_runs_phase1_sample() -> None:
 
 def test_data_validate_requires_config() -> None:
     """Omitting a dataset reference fails before any filesystem work."""
-    result = runner.invoke(app, ["data", "validate"])
+    result = runner.invoke(app, ["data", "validate"], color=True)
 
     assert result.exit_code == 2
-    assert "--config is required" in (result.stdout + result.stderr)
+    assert "--config is required" in _plain_cli_output(result)
 
 
 def test_env_check_runs_phase2_smoke() -> None:
