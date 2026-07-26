@@ -75,7 +75,8 @@ repository.
     The release workflow combines `release`, `rl`, and `llm` extras because contract verification
     loads the frozen RL Schemas and online-provider public API, while the release extra itself
     remains build-tool-only. It installs through `constraints-cpu.txt` so a newer transitive
-    CLI dependency cannot silently change the frozen public interface.
+    CLI dependency cannot silently change the frozen public interface. Release creation passes
+    the repository explicitly because its artifact-only job intentionally has no source checkout.
 
 ## Automated local results
 

@@ -100,8 +100,10 @@ jobs:
         run: |
           if [[ "$GITHUB_REF_NAME" == *-rc* ]]; then
             gh release create "$GITHUB_REF_NAME" dist/* \
+              --repo "$GITHUB_REPOSITORY" \
               --verify-tag --generate-notes --prerelease
           else
             gh release create "$GITHUB_REF_NAME" dist/* \
+              --repo "$GITHUB_REPOSITORY" \
               --verify-tag --generate-notes
           fi

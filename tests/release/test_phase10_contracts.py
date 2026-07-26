@@ -189,6 +189,7 @@ def test_release_tag_cannot_implicitly_publish_to_pypi() -> None:
         "if: github.event_name == 'workflow_dispatch' && inputs.publish" in workflow
     )
     assert "if: startsWith(github.ref, 'refs/tags/v') || inputs.publish" not in workflow
+    assert workflow.count('--repo "$GITHUB_REPOSITORY"') == 2
 
 
 def test_github_actions_use_node24_generations() -> None:
