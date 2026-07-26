@@ -1,0 +1,167 @@
+{
+  "additionalProperties": false,
+  "description": "One local-market daily bar with explicit provenance and adjustment state.",
+  "properties": {
+    "adjusted": {
+      "title": "Adjusted",
+      "type": "boolean"
+    },
+    "adjusted_close": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Adjusted Close"
+    },
+    "close": {
+      "minimum": 0.0,
+      "title": "Close",
+      "type": "number"
+    },
+    "currency": {
+      "maxLength": 3,
+      "minLength": 3,
+      "title": "Currency",
+      "type": "string"
+    },
+    "exchange": {
+      "minLength": 1,
+      "title": "Exchange",
+      "type": "string"
+    },
+    "high": {
+      "minimum": 0.0,
+      "title": "High",
+      "type": "number"
+    },
+    "limit_down": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Limit Down"
+    },
+    "limit_up": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Limit Up"
+    },
+    "low": {
+      "minimum": 0.0,
+      "title": "Low",
+      "type": "number"
+    },
+    "market": {
+      "enum": [
+        "CN",
+        "HK",
+        "JP",
+        "US"
+      ],
+      "title": "Market",
+      "type": "string"
+    },
+    "open": {
+      "minimum": 0.0,
+      "title": "Open",
+      "type": "number"
+    },
+    "source": {
+      "minLength": 1,
+      "title": "Source",
+      "type": "string"
+    },
+    "suspension_flag": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Suspension Flag"
+    },
+    "symbol": {
+      "minLength": 1,
+      "title": "Symbol",
+      "type": "string"
+    },
+    "timezone": {
+      "minLength": 1,
+      "title": "Timezone",
+      "type": "string"
+    },
+    "tradable": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tradable"
+    },
+    "trade_date": {
+      "format": "date",
+      "title": "Trade Date",
+      "type": "string"
+    },
+    "turnover": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Turnover"
+    },
+    "volume": {
+      "minimum": 0.0,
+      "title": "Volume",
+      "type": "number"
+    }
+  },
+  "required": [
+    "trade_date",
+    "symbol",
+    "market",
+    "exchange",
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "currency",
+    "timezone",
+    "adjusted",
+    "source"
+  ],
+  "title": "OHLCVRecord",
+  "type": "object"
+}

@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 import re
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 import yaml
 from pydantic import Field, field_validator, model_validator
@@ -181,8 +181,8 @@ class Phase7RunConfig(StrictDirectiveModel):
     """Complete CPU-first three-layer fusion acceptance configuration."""
 
     run_id: str = "phase7-full-stack-offline"
-    workspace_root: Path = Path(".")
-    output_dir: Path = Path("runs")
+    workspace_root: Path = Field(default=cast(Path, "."), validate_default=True)
+    output_dir: Path = Field(default=cast(Path, "runs"), validate_default=True)
     prompt_version: str = Field(default="phase7.v1", min_length=1)
     seed: int = Field(default=1024, ge=0, le=2**32 - 1)
     load_entry_points: bool = True

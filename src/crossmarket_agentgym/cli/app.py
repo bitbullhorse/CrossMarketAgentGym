@@ -24,7 +24,11 @@ app = typer.Typer(
 data_app = typer.Typer(help="Inspect, import, and validate market data.", no_args_is_help=True)
 env_app = typer.Typer(help="Validate portfolio environments.", no_args_is_help=True)
 agent_app = typer.Typer(help="Run single-agent or multi-agent teams.", no_args_is_help=True)
-report_app = typer.Typer(help="Build reports and browse run evidence.", no_args_is_help=True)
+report_app = typer.Typer(
+    help="Build reports and browse run evidence.",
+    no_args_is_help=False,
+    invoke_without_command=True,
+)
 service_app = typer.Typer(help="Run the optional read-only report service.", no_args_is_help=True)
 release_app = typer.Typer(help="Validate local release artifacts.", no_args_is_help=True)
 app.add_typer(data_app, name="data")
@@ -56,6 +60,29 @@ def root(
 ) -> None:
     """Expose global CLI options."""
     del version
+
+
+@report_app.callback()
+def report_root(
+    context: typer.Context,
+    run_id: Annotated[str | None, typer.Option("--run-id")] = None,
+    workspace_root: Annotated[Path, typer.Option("--workspace-root")] = Path("."),
+    runs_root: Annotated[Path, typer.Option("--runs-root")] = Path("runs"),
+) -> None:
+    """Print one whitelisted run when no report subcommand is selected."""
+    if context.invoked_subcommand is not None:
+        return
+    if run_id is None:
+        typer.echo(context.get_help())
+        raise typer.Exit()
+    from crossmarket_agentgym.reporting import build_run_index
+
+    index = build_run_index(
+        workspace_root,
+        runs_root,
+        include_run_ids=(run_id,),
+    )
+    typer.echo(index.runs[0].model_dump_json(indent=2))
 
 
 @data_app.command("validate")
@@ -306,6 +333,33 @@ def release_verify(
     from crossmarket_agentgym.release import verify_distributions
 
     result = verify_distributions(dist_dir)
+    typer.echo(result.model_dump_json(indent=2))
+    if not result.is_valid:
+        raise typer.Exit(code=1)
+
+
+@release_app.command("freeze")
+def release_freeze(
+    workspace_root: Annotated[Path, typer.Option("--workspace-root")] = Path("."),
+    write: Annotated[
+        bool,
+        typer.Option(
+            "--write",
+            help="Write reviewed inventory and Schema snapshots; default is read-only verify.",
+        ),
+    ] = False,
+) -> None:
+    """Export or verify the Phase 10 API and persisted-format freeze."""
+    from crossmarket_agentgym.release.freeze import (
+        export_frozen_contracts,
+        verify_frozen_contracts,
+    )
+
+    result = (
+        export_frozen_contracts(workspace_root)
+        if write
+        else verify_frozen_contracts(workspace_root)
+    )
     typer.echo(result.model_dump_json(indent=2))
     if not result.is_valid:
         raise typer.Exit(code=1)

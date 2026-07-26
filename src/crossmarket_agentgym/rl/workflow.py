@@ -7,6 +7,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
+from crossmarket_agentgym.audit import write_run_manifest
 from crossmarket_agentgym.data.manifests import sha256_file
 from crossmarket_agentgym.data.partitions import PartitionCapability
 from crossmarket_agentgym.environments import CrossMarketPortfolioEnv, MarketDataPanel
@@ -25,6 +26,7 @@ class TrainingRunSummary(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
+    schema_version: Literal["1.0"] = "1.0"
     run_id: str
     run_dir: str
     algorithm: str
@@ -138,6 +140,15 @@ def execute_training_run(config: TrainRunConfig) -> TrainingRunSummary:
         summary.model_dump_json(indent=2),
         encoding="utf-8",
     )
+    write_run_manifest(
+        run_dir,
+        workspace_root=Path.cwd(),
+        run_id=config.run_name,
+        kind="training",
+        config_path=run_dir / "resolved_config.json",
+        dataset_sha256=sha256_file(config.dataset_root / "dataset_manifest.json"),
+        seed=config.trainer.seed,
+    )
     return summary
 
 
@@ -172,4 +183,16 @@ def evaluate_saved_run(
         episodes=config.trainer.eval_episodes,
     )
     write_evaluation_artifacts(result, output_dir)
+    if config_path.is_file():
+        write_run_manifest(
+            run_dir,
+            workspace_root=Path.cwd(),
+            run_id=config.run_name,
+            kind="training",
+            config_path=config_path,
+            dataset_sha256=sha256_file(
+                config.dataset_root / "dataset_manifest.json"
+            ),
+            seed=config.trainer.seed,
+        )
     return result

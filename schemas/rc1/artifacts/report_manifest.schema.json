@@ -1,0 +1,76 @@
+{
+  "$defs": {
+    "ReportArtifact": {
+      "additionalProperties": false,
+      "description": "One generated artifact and its reproducibility digest.",
+      "properties": {
+        "relative_path": {
+          "title": "Relative Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "relative_path",
+        "sha256",
+        "size_bytes"
+      ],
+      "title": "ReportArtifact",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Self-contained provenance excluding the manifest's own digest.",
+  "properties": {
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/ReportArtifact"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "config_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Config Sha256",
+      "type": "string"
+    },
+    "evidence_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Evidence Sha256",
+      "type": "string"
+    },
+    "report_id": {
+      "title": "Report Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_index_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Source Index Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "report_id",
+    "source_index_sha256",
+    "config_sha256",
+    "evidence_sha256",
+    "artifacts"
+  ],
+  "title": "ReportManifest",
+  "type": "object"
+}

@@ -1,0 +1,466 @@
+{
+  "$defs": {
+    "GenerationConfig": {
+      "additionalProperties": false,
+      "description": "Auditable request-time generation and retry limits.",
+      "properties": {
+        "max_retries": {
+          "default": 2,
+          "maximum": 10,
+          "minimum": 0,
+          "title": "Max Retries",
+          "type": "integer"
+        },
+        "max_tokens": {
+          "default": 2048,
+          "maximum": 131072,
+          "minimum": 1,
+          "title": "Max Tokens",
+          "type": "integer"
+        },
+        "retry_backoff_seconds": {
+          "default": 0.25,
+          "maximum": 30.0,
+          "minimum": 0.0,
+          "title": "Retry Backoff Seconds",
+          "type": "number"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "maximum": 4294967295,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Seed"
+        },
+        "temperature": {
+          "default": 0.0,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "timeout_seconds": {
+          "default": 120.0,
+          "exclusiveMinimum": 0.0,
+          "maximum": 600.0,
+          "title": "Timeout Seconds",
+          "type": "number"
+        }
+      },
+      "title": "GenerationConfig",
+      "type": "object"
+    },
+    "Message": {
+      "additionalProperties": false,
+      "description": "Provider-neutral chat message.",
+      "properties": {
+        "content": {
+          "default": "",
+          "title": "Content",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "role": {
+          "enum": [
+            "system",
+            "user",
+            "assistant",
+            "tool"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "tool_call_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Call Id"
+        },
+        "tool_calls": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ToolCall"
+          },
+          "title": "Tool Calls",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role"
+      ],
+      "title": "Message",
+      "type": "object"
+    },
+    "MockTurn": {
+      "additionalProperties": false,
+      "description": "One scripted response or deliberate safe failure.",
+      "properties": {
+        "content": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "additionalProperties": true,
+              "type": "object"
+            }
+          ],
+          "default": "",
+          "title": "Content"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "error_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Message"
+        },
+        "tool_calls": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ToolCall"
+          },
+          "title": "Tool Calls",
+          "type": "array"
+        },
+        "usage": {
+          "$ref": "#/$defs/TokenUsage"
+        }
+      },
+      "title": "MockTurn",
+      "type": "object"
+    },
+    "ProviderCheckOutput": {
+      "additionalProperties": false,
+      "description": "Structured output used by the offline acceptance conversation.",
+      "properties": {
+        "markets": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Markets",
+          "type": "array"
+        },
+        "safe_to_continue": {
+          "title": "Safe To Continue",
+          "type": "boolean"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "markets",
+        "safe_to_continue"
+      ],
+      "title": "ProviderCheckOutput",
+      "type": "object"
+    },
+    "ProviderConfig": {
+      "additionalProperties": false,
+      "description": "Credential-free provider configuration.",
+      "properties": {
+        "api_key_env": {
+          "default": "DEEPSEEK_API_KEY",
+          "title": "Api Key Env",
+          "type": "string"
+        },
+        "base_url_env": {
+          "default": "DEEPSEEK_BASE_URL",
+          "title": "Base Url Env",
+          "type": "string"
+        },
+        "default_base_url": {
+          "default": "https://api.deepseek.com",
+          "title": "Default Base Url",
+          "type": "string"
+        },
+        "endpoint": {
+          "default": "/chat/completions",
+          "title": "Endpoint",
+          "type": "string"
+        },
+        "generation": {
+          "$ref": "#/$defs/GenerationConfig"
+        },
+        "model": {
+          "default": "deepseek-v4-pro",
+          "title": "Model",
+          "type": "string"
+        },
+        "provider": {
+          "default": "openai_compatible",
+          "enum": [
+            "openai_compatible",
+            "mock",
+            "replay"
+          ],
+          "title": "Provider",
+          "type": "string"
+        },
+        "replay_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replay Path"
+        },
+        "structured_output_mode": {
+          "default": "json_object",
+          "enum": [
+            "json_object",
+            "json_schema"
+          ],
+          "title": "Structured Output Mode",
+          "type": "string"
+        }
+      },
+      "title": "ProviderConfig",
+      "type": "object"
+    },
+    "TokenUsage": {
+      "additionalProperties": false,
+      "description": "Normalized provider token accounting.",
+      "properties": {
+        "completion_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Completion Tokens",
+          "type": "integer"
+        },
+        "prompt_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Prompt Tokens",
+          "type": "integer"
+        },
+        "total_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Total Tokens",
+          "type": "integer"
+        }
+      },
+      "title": "TokenUsage",
+      "type": "object"
+    },
+    "ToolCall": {
+      "additionalProperties": false,
+      "description": "One model-requested tool invocation with parsed arguments.",
+      "properties": {
+        "arguments": {
+          "additionalProperties": true,
+          "title": "Arguments",
+          "type": "object"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "ToolCall",
+      "type": "object"
+    },
+    "ToolPolicy": {
+      "additionalProperties": false,
+      "description": "Administrator-owned allowlist and per-session resource budget.",
+      "properties": {
+        "allowed_permissions": {
+          "default": [
+            "compute",
+            "read"
+          ],
+          "items": {
+            "enum": [
+              "read",
+              "compute",
+              "write",
+              "expensive"
+            ],
+            "type": "string"
+          },
+          "title": "Allowed Permissions",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "allowed_tools": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Allowed Tools"
+        },
+        "max_cumulative_seconds": {
+          "default": 300.0,
+          "minimum": 0.0,
+          "title": "Max Cumulative Seconds",
+          "type": "number"
+        },
+        "max_expensive_calls": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Max Expensive Calls",
+          "type": "integer"
+        },
+        "max_total_calls": {
+          "default": 20,
+          "minimum": 0,
+          "title": "Max Total Calls",
+          "type": "integer"
+        },
+        "require_budget_before_expensive": {
+          "default": false,
+          "title": "Require Budget Before Expensive",
+          "type": "boolean"
+        }
+      },
+      "title": "ToolPolicy",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Complete bounded provider/tool-loop configuration.",
+  "properties": {
+    "fallback": {
+      "$ref": "#/$defs/ProviderCheckOutput"
+    },
+    "max_rounds": {
+      "default": 3,
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Max Rounds",
+      "type": "integer"
+    },
+    "messages": {
+      "items": {
+        "$ref": "#/$defs/Message"
+      },
+      "title": "Messages",
+      "type": "array"
+    },
+    "mock_script": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/MockTurn"
+      },
+      "title": "Mock Script",
+      "type": "array"
+    },
+    "output_dir": {
+      "default": "runs",
+      "format": "path",
+      "title": "Output Dir",
+      "type": "string"
+    },
+    "prompt_version": {
+      "default": "phase5.v1",
+      "minLength": 1,
+      "title": "Prompt Version",
+      "type": "string"
+    },
+    "provider": {
+      "$ref": "#/$defs/ProviderConfig"
+    },
+    "run_id": {
+      "default": "phase5-provider-offline",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "tool_names": {
+      "default": [
+        "inspect_dataset"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Tool Names",
+      "type": "array"
+    },
+    "tool_policy": {
+      "$ref": "#/$defs/ToolPolicy"
+    },
+    "verify_replay": {
+      "default": true,
+      "title": "Verify Replay",
+      "type": "boolean"
+    },
+    "workspace_root": {
+      "default": ".",
+      "format": "path",
+      "title": "Workspace Root",
+      "type": "string"
+    }
+  },
+  "required": [
+    "messages"
+  ],
+  "title": "ProviderCheckConfig",
+  "type": "object"
+}

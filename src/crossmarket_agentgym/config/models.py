@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Literal
+from typing import Literal, cast
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -23,7 +23,7 @@ class ProjectConfig(StrictConfigModel):
 
     name: str = Field(default="crossmarket_agent_gym", min_length=1)
     seed: int = Field(default=1024, ge=0, le=2**32 - 1)
-    output_dir: Path = Path("runs")
+    output_dir: Path = Field(default=cast(Path, "runs"), validate_default=True)
 
 
 class LLMConfig(StrictConfigModel):

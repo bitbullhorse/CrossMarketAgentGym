@@ -1,0 +1,74 @@
+{
+  "additionalProperties": false,
+  "description": "Credential-free checkpoint provenance.",
+  "properties": {
+    "algorithm": {
+      "title": "Algorithm",
+      "type": "string"
+    },
+    "checkpoint": {
+      "title": "Checkpoint",
+      "type": "string"
+    },
+    "config_sha256": {
+      "maxLength": 64,
+      "minLength": 64,
+      "title": "Config Sha256",
+      "type": "string"
+    },
+    "data_partition": {
+      "title": "Data Partition",
+      "type": "string"
+    },
+    "dataset_id": {
+      "title": "Dataset Id",
+      "type": "string"
+    },
+    "dependencies": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Dependencies",
+      "type": "object"
+    },
+    "policy": {
+      "title": "Policy",
+      "type": "string"
+    },
+    "requested_timesteps": {
+      "minimum": 1,
+      "title": "Requested Timesteps",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "seed": {
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "trained_timesteps": {
+      "minimum": 1,
+      "title": "Trained Timesteps",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "algorithm",
+    "policy",
+    "requested_timesteps",
+    "trained_timesteps",
+    "seed",
+    "config_sha256",
+    "checkpoint",
+    "dataset_id",
+    "data_partition",
+    "dependencies"
+  ],
+  "title": "TrainingMetadata",
+  "type": "object"
+}

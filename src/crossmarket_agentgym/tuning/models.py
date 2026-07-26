@@ -331,6 +331,7 @@ class SearchSpace(StrictTuningModel):
 class TrialSuggestion(StrictTuningModel):
     """One candidate emitted by a search algorithm."""
 
+    schema_version: Literal["1.0"] = "1.0"
     trial_id: int = Field(ge=0)
     parameters: dict[str, Any]
     generation: int = Field(default=0, ge=0)
@@ -340,6 +341,7 @@ class TrialSuggestion(StrictTuningModel):
 class TrialResult(StrictTuningModel):
     """Completed, failed, or pruned trial result."""
 
+    schema_version: Literal["1.0"] = "1.0"
     trial_id: int = Field(ge=0)
     parameters: dict[str, Any]
     status: TrialStatus
@@ -364,6 +366,7 @@ class TrialResult(StrictTuningModel):
 class StudyState(StrictTuningModel):
     """Search history visible to initialization and reports."""
 
+    schema_version: Literal["1.0"] = "1.0"
     study_name: str = Field(min_length=1)
     directions: tuple[Direction, ...] = ("maximize",)
     results: tuple[TrialResult, ...] = ()

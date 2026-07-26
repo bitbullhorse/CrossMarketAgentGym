@@ -1,0 +1,185 @@
+{
+  "$defs": {
+    "TradeRecord": {
+      "additionalProperties": false,
+      "description": "One environment transition's executed trade audit.",
+      "properties": {
+        "episode": {
+          "title": "Episode",
+          "type": "integer"
+        },
+        "execution_date": {
+          "title": "Execution Date",
+          "type": "string"
+        },
+        "quantities": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Quantities",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "signal_date": {
+          "title": "Signal Date",
+          "type": "string"
+        },
+        "slippage": {
+          "title": "Slippage",
+          "type": "number"
+        },
+        "step": {
+          "title": "Step",
+          "type": "integer"
+        },
+        "trade_value": {
+          "title": "Trade Value",
+          "type": "number"
+        },
+        "transaction_cost": {
+          "title": "Transaction Cost",
+          "type": "number"
+        },
+        "turnover": {
+          "title": "Turnover",
+          "type": "number"
+        }
+      },
+      "required": [
+        "episode",
+        "step",
+        "signal_date",
+        "execution_date",
+        "quantities",
+        "trade_value",
+        "transaction_cost",
+        "slippage",
+        "turnover"
+      ],
+      "title": "TradeRecord",
+      "type": "object"
+    },
+    "WeightRecord": {
+      "additionalProperties": false,
+      "description": "One projected and realized portfolio record.",
+      "properties": {
+        "drawdown": {
+          "title": "Drawdown",
+          "type": "number"
+        },
+        "episode": {
+          "title": "Episode",
+          "type": "integer"
+        },
+        "execution_date": {
+          "title": "Execution Date",
+          "type": "string"
+        },
+        "portfolio_value": {
+          "title": "Portfolio Value",
+          "type": "number"
+        },
+        "projected": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Projected",
+          "type": "array"
+        },
+        "realized": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Realized",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "step": {
+          "title": "Step",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "episode",
+        "step",
+        "execution_date",
+        "projected",
+        "realized",
+        "portfolio_value",
+        "drawdown"
+      ],
+      "title": "WeightRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Metrics and replayable step records for one evaluated policy.",
+  "properties": {
+    "algorithm": {
+      "title": "Algorithm",
+      "type": "string"
+    },
+    "episodes": {
+      "minimum": 1,
+      "title": "Episodes",
+      "type": "integer"
+    },
+    "metrics": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Metrics",
+      "type": "object"
+    },
+    "partition": {
+      "title": "Partition",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "total_steps": {
+      "minimum": 1,
+      "title": "Total Steps",
+      "type": "integer"
+    },
+    "trades": {
+      "items": {
+        "$ref": "#/$defs/TradeRecord"
+      },
+      "title": "Trades",
+      "type": "array"
+    },
+    "weights": {
+      "items": {
+        "$ref": "#/$defs/WeightRecord"
+      },
+      "title": "Weights",
+      "type": "array"
+    }
+  },
+  "required": [
+    "algorithm",
+    "partition",
+    "episodes",
+    "total_steps",
+    "metrics",
+    "trades",
+    "weights"
+  ],
+  "title": "EvaluationResult",
+  "type": "object"
+}

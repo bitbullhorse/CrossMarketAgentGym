@@ -1,7 +1,8 @@
 # Python API reference
 
-CrossMarketAgentGym follows semantic versioning from `0.1.0`. Objects documented here are the
-supported integration surface; internal helpers beginning with `_` may change without notice.
+CrossMarketAgentGym follows the [versioning policy](versioning_policy.md) from `1.0.0-rc1`.
+The exhaustive reviewed list, classification, signature, and summary are in
+[stable API catalog](stable-api.md) and `release/api_inventory.csv`. Unlisted imports are internal.
 
 ## Data
 
@@ -10,7 +11,8 @@ supported integration surface; internal helpers beginning with `_` may change wi
 - `validate_manifest_dataset(root)` verifies every packaged OHLCV artifact and manifest hash.
 - `validate_legacy_dataset(root, ...)` performs bounded, non-destructive mixed-source inspection.
 - `validate_configured_dataset(config, ...)` dispatches the strict configured validation path.
-- `MarketDataPanel.from_manifest(...)` builds the aligned cross-market panel used by environments.
+- `crossmarket_agentgym.environments.MarketDataPanel.from_manifest(...)` builds the aligned
+  cross-market panel used by environments.
 
 Canonical schema, timezone, currency, and manifest rules are defined in `data-contract.md`.
 
@@ -38,13 +40,17 @@ The LLM packages do not own or import the account/execution mutation implementat
 
 ## Hyperparameter optimization
 
-`crossmarket_agentgym.tuning`
+Stable models and executors are exported from `crossmarket_agentgym.tuning`; orchestration is
+available from the named workflow modules:
 
-- `execute_tuning_run(config)` runs the train/validation-only tuning workflow.
-- `build_searcher(config, search_space)` constructs one of the nine core search algorithms.
-- `build_scheduler(config)` constructs FIFO, Median Stopping, ASHA, HyperBand, or PBT
+- `crossmarket_agentgym.tuning.workflow.execute_tuning_run(config)` runs the
+  train/validation-only tuning workflow.
+- `crossmarket_agentgym.tuning.factory.create_searcher(config)` constructs one of the nine core
+  search algorithms.
+- `crossmarket_agentgym.tuning.factory.create_scheduler(config, ...)` constructs FIFO, Median
+  Stopping, ASHA, HyperBand, or PBT
   independently of the searcher.
-- `StudyStore` persists trials and component state in SQLite.
+- `SQLiteStudyStore` persists trials and component state in SQLite.
 - `LocalTrialExecutor` is the deterministic reference evaluator.
 - `RayTrialExecutor` optionally allocates per-Trial CPU/GPU resources while preserving result
   order and the independent scheduler authority.
@@ -94,6 +100,7 @@ All online Agent configurations require model `deepseek-v4-pro`; credentials are
   assets without publishing.
 - `build_release_manifest(dist_dir)` hashes built wheel/source archives into a credential-free
   manifest.
+- `release.freeze.verify_frozen_contracts(workspace_root)` detects API or schema drift.
 
 Every public result is a strict Pydantic model and can be serialized with
 `model_dump(mode="json")` or `model_dump_json()`.

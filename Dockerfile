@@ -11,6 +11,8 @@ COPY pyproject.toml README.md LICENSE CITATION.cff ./
 COPY src ./src
 COPY configs ./configs
 COPY data/sample ./data/sample
+COPY release ./release
+COPY schemas/rc1 ./schemas/rc1
 RUN python -m pip wheel \
     --wheel-dir /wheels \
     ".[${CMAG_EXTRAS}]"

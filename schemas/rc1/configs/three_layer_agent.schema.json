@@ -1,0 +1,1246 @@
+{
+  "$defs": {
+    "AgentDecision": {
+      "additionalProperties": false,
+      "description": "Provider-neutral structured envelope used by every Phase 6 role.",
+      "properties": {
+        "confidence": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "constraints": {
+          "$ref": "#/$defs/DecisionConstraints"
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "revise",
+            "reject",
+            "abstain"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        },
+        "risk_score": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Risk Score",
+          "type": "number"
+        },
+        "summary": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision",
+        "summary"
+      ],
+      "title": "AgentDecision",
+      "type": "object"
+    },
+    "AgentSpec": {
+      "additionalProperties": false,
+      "description": "One configurable Agent role, expanded into ``count`` independent instances.",
+      "properties": {
+        "allowed_permissions": {
+          "default": [
+            "compute",
+            "read"
+          ],
+          "items": {
+            "enum": [
+              "read",
+              "compute",
+              "write",
+              "expensive"
+            ],
+            "type": "string"
+          },
+          "title": "Allowed Permissions",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "api_key_env": {
+          "default": "DEEPSEEK_API_KEY",
+          "title": "Api Key Env",
+          "type": "string"
+        },
+        "base_url_env": {
+          "default": "DEEPSEEK_BASE_URL",
+          "title": "Base Url Env",
+          "type": "string"
+        },
+        "count": {
+          "default": 1,
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Count",
+          "type": "integer"
+        },
+        "default_base_url": {
+          "default": "https://api.deepseek.com",
+          "title": "Default Base Url",
+          "type": "string"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "endpoint": {
+          "default": "/chat/completions",
+          "title": "Endpoint",
+          "type": "string"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentDecision"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "max_expensive_tool_calls": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Max Expensive Tool Calls",
+          "type": "integer"
+        },
+        "max_retries": {
+          "default": 2,
+          "maximum": 10,
+          "minimum": 0,
+          "title": "Max Retries",
+          "type": "integer"
+        },
+        "max_tokens": {
+          "default": 2048,
+          "maximum": 131072,
+          "minimum": 1,
+          "title": "Max Tokens",
+          "type": "integer"
+        },
+        "max_tool_calls": {
+          "default": 20,
+          "minimum": 0,
+          "title": "Max Tool Calls",
+          "type": "integer"
+        },
+        "max_tool_rounds": {
+          "default": 3,
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Max Tool Rounds",
+          "type": "integer"
+        },
+        "max_tool_seconds": {
+          "default": 300.0,
+          "minimum": 0.0,
+          "title": "Max Tool Seconds",
+          "type": "number"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "mock_scripts": {
+          "default": [],
+          "items": {
+            "items": {
+              "$ref": "#/$defs/MockTurn"
+            },
+            "type": "array"
+          },
+          "title": "Mock Scripts",
+          "type": "array"
+        },
+        "model": {
+          "default": "deepseek-v4-pro",
+          "title": "Model",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "prompt_template": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt Template"
+        },
+        "provider": {
+          "default": "openai_compatible",
+          "enum": [
+            "openai_compatible",
+            "mock",
+            "replay"
+          ],
+          "title": "Provider",
+          "type": "string"
+        },
+        "replay_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replay Path"
+        },
+        "require_budget_before_expensive": {
+          "default": true,
+          "title": "Require Budget Before Expensive",
+          "type": "boolean"
+        },
+        "retry_backoff_seconds": {
+          "default": 0.25,
+          "maximum": 30.0,
+          "minimum": 0.0,
+          "title": "Retry Backoff Seconds",
+          "type": "number"
+        },
+        "structured_output_mode": {
+          "default": "json_object",
+          "enum": [
+            "json_object",
+            "json_schema"
+          ],
+          "title": "Structured Output Mode",
+          "type": "string"
+        },
+        "temperature": {
+          "default": 0.0,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "timeout_seconds": {
+          "default": 120.0,
+          "exclusiveMinimum": 0.0,
+          "maximum": 600.0,
+          "title": "Timeout Seconds",
+          "type": "number"
+        },
+        "tools": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Tools",
+          "type": "array"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ],
+      "title": "AgentSpec",
+      "type": "object"
+    },
+    "DecisionConstraints": {
+      "additionalProperties": false,
+      "description": "Optional structured limits that conservative arbitration can intersect.",
+      "properties": {
+        "allow_new_positions": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Allow New Positions"
+        },
+        "cash_floor": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cash Floor"
+        },
+        "max_asset_weight": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Asset Weight"
+        },
+        "max_market_weights": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Max Market Weights",
+          "type": "object"
+        },
+        "max_turnover": {
+          "anyOf": [
+            {
+              "maximum": 2.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Turnover"
+        }
+      },
+      "title": "DecisionConstraints",
+      "type": "object"
+    },
+    "EnvironmentConfig": {
+      "additionalProperties": false,
+      "description": "Immutable hard constraints and daily execution settings.",
+      "properties": {
+        "accounting_tolerance": {
+          "default": 1e-08,
+          "exclusiveMinimum": 0.0,
+          "maximum": 0.001,
+          "title": "Accounting Tolerance",
+          "type": "number"
+        },
+        "allow_short": {
+          "default": false,
+          "title": "Allow Short",
+          "type": "boolean"
+        },
+        "base_currency": {
+          "default": "USD",
+          "title": "Base Currency",
+          "type": "string"
+        },
+        "cash_floor": {
+          "default": 0.05,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Cash Floor",
+          "type": "number"
+        },
+        "cvar_alpha": {
+          "default": 0.05,
+          "exclusiveMinimum": 0.0,
+          "maximum": 0.5,
+          "title": "Cvar Alpha",
+          "type": "number"
+        },
+        "cvar_penalty": {
+          "default": 0.5,
+          "minimum": 0.0,
+          "title": "Cvar Penalty",
+          "type": "number"
+        },
+        "drawdown_penalty": {
+          "default": 0.5,
+          "minimum": 0.0,
+          "title": "Drawdown Penalty",
+          "type": "number"
+        },
+        "execution_protocol": {
+          "const": "close_signal_next_open",
+          "default": "close_signal_next_open",
+          "title": "Execution Protocol",
+          "type": "string"
+        },
+        "initial_cash": {
+          "default": 1000000.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Initial Cash",
+          "type": "number"
+        },
+        "lookback": {
+          "default": 20,
+          "minimum": 1,
+          "title": "Lookback",
+          "type": "integer"
+        },
+        "lot_sizes": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Lot Sizes",
+          "type": "object"
+        },
+        "market_weight_overrides": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "propertyNames": {
+            "enum": [
+              "CN",
+              "HK",
+              "JP",
+              "US"
+            ]
+          },
+          "title": "Market Weight Overrides",
+          "type": "object"
+        },
+        "max_asset_weight": {
+          "default": 0.1,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Max Asset Weight",
+          "type": "number"
+        },
+        "max_episode_steps": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Episode Steps"
+        },
+        "max_leverage": {
+          "default": 1.0,
+          "maximum": 3.0,
+          "minimum": 1.0,
+          "title": "Max Leverage",
+          "type": "number"
+        },
+        "max_market_weight": {
+          "default": 0.4,
+          "exclusiveMinimum": 0.0,
+          "maximum": 3.0,
+          "title": "Max Market Weight",
+          "type": "number"
+        },
+        "max_turnover": {
+          "default": 1.0,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Max Turnover",
+          "type": "number"
+        },
+        "reward": {
+          "default": "risk_adjusted",
+          "enum": [
+            "log_return",
+            "return_minus_cost",
+            "risk_adjusted",
+            "differential_sharpe",
+            "drawdown_penalty",
+            "cvar_penalty"
+          ],
+          "title": "Reward",
+          "type": "string"
+        },
+        "risk_aversion": {
+          "default": 0.1,
+          "minimum": 0.0,
+          "title": "Risk Aversion",
+          "type": "number"
+        },
+        "slippage_bps": {
+          "default": 5.0,
+          "maximum": 1000.0,
+          "minimum": 0.0,
+          "title": "Slippage Bps",
+          "type": "number"
+        },
+        "t_plus_one_markets": {
+          "default": [
+            "CN"
+          ],
+          "items": {
+            "enum": [
+              "CN",
+              "HK",
+              "JP",
+              "US"
+            ],
+            "type": "string"
+          },
+          "title": "T Plus One Markets",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "transaction_cost_bps": {
+          "default": 10.0,
+          "maximum": 1000.0,
+          "minimum": 0.0,
+          "title": "Transaction Cost Bps",
+          "type": "number"
+        }
+      },
+      "title": "EnvironmentConfig",
+      "type": "object"
+    },
+    "HierarchicalDirective": {
+      "additionalProperties": false,
+      "description": "Third-layer low-frequency market and objective budget.",
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "global_risk_budget": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Global Risk Budget",
+          "type": "number"
+        },
+        "market_budgets": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Market Budgets",
+          "type": "object"
+        },
+        "market_regime": {
+          "enum": [
+            "risk_on",
+            "neutral",
+            "risk_off",
+            "high_volatility",
+            "unknown"
+          ],
+          "title": "Market Regime",
+          "type": "string"
+        },
+        "objective_weights": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Objective Weights",
+          "type": "object"
+        },
+        "rebalance_interval": {
+          "maximum": 252,
+          "minimum": 1,
+          "title": "Rebalance Interval",
+          "type": "integer"
+        },
+        "sector_budgets": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "number"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sector Budgets"
+        }
+      },
+      "required": [
+        "market_regime",
+        "global_risk_budget",
+        "rebalance_interval",
+        "objective_weights",
+        "confidence"
+      ],
+      "title": "HierarchicalDirective",
+      "type": "object"
+    },
+    "HierarchicalLayerConfig": {
+      "additionalProperties": false,
+      "description": "Third-layer constraint-only fusion and deterministic cadence.",
+      "properties": {
+        "cadence": {
+          "default": "monthly",
+          "enum": [
+            "daily",
+            "weekly",
+            "monthly"
+          ],
+          "title": "Cadence",
+          "type": "string"
+        },
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "fusion": {
+          "const": "constraint",
+          "default": "constraint",
+          "title": "Fusion",
+          "type": "string"
+        },
+        "previous_directive": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HierarchicalDirective"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "team": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TeamSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "HierarchicalLayerConfig",
+      "type": "object"
+    },
+    "LLMLayersConfig": {
+      "additionalProperties": false,
+      "description": "Three independently switchable layers.",
+      "properties": {
+        "hierarchical": {
+          "$ref": "#/$defs/HierarchicalLayerConfig"
+        },
+        "research": {
+          "$ref": "#/$defs/ResearchLayerConfig"
+        },
+        "risk": {
+          "$ref": "#/$defs/RiskLayerConfig"
+        }
+      },
+      "title": "LLMLayersConfig",
+      "type": "object"
+    },
+    "MockTurn": {
+      "additionalProperties": false,
+      "description": "One scripted response or deliberate safe failure.",
+      "properties": {
+        "content": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "additionalProperties": true,
+              "type": "object"
+            }
+          ],
+          "default": "",
+          "title": "Content"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "error_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Message"
+        },
+        "tool_calls": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ToolCall"
+          },
+          "title": "Tool Calls",
+          "type": "array"
+        },
+        "usage": {
+          "$ref": "#/$defs/TokenUsage"
+        }
+      },
+      "title": "MockTurn",
+      "type": "object"
+    },
+    "ResearchLayerConfig": {
+      "additionalProperties": false,
+      "description": "First-layer enable switch and authority mode.",
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "mode": {
+          "default": "plan_only",
+          "enum": [
+            "plan_only",
+            "dry_run",
+            "execute"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "team": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TeamSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "ResearchLayerConfig",
+      "type": "object"
+    },
+    "RiskContext": {
+      "additionalProperties": false,
+      "description": "Structured portfolio evidence visible to the risk layer.",
+      "properties": {
+        "asset_exposures": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Asset Exposures",
+          "type": "object"
+        },
+        "current_drawdown": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Current Drawdown",
+          "type": "number"
+        },
+        "liquidity_flags": {
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "title": "Liquidity Flags",
+          "type": "object"
+        },
+        "market_exposures": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Market Exposures",
+          "type": "object"
+        },
+        "portfolio_value": {
+          "exclusiveMinimum": 0.0,
+          "title": "Portfolio Value",
+          "type": "number"
+        },
+        "regime_features": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Regime Features",
+          "type": "object"
+        },
+        "rolling_cvar": {
+          "minimum": 0.0,
+          "title": "Rolling Cvar",
+          "type": "number"
+        },
+        "rolling_volatility": {
+          "minimum": 0.0,
+          "title": "Rolling Volatility",
+          "type": "number"
+        },
+        "turnover": {
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Turnover",
+          "type": "number"
+        }
+      },
+      "required": [
+        "portfolio_value",
+        "current_drawdown",
+        "rolling_volatility",
+        "rolling_cvar",
+        "turnover"
+      ],
+      "title": "RiskContext",
+      "type": "object"
+    },
+    "RiskDirective": {
+      "additionalProperties": false,
+      "description": "Second-layer bounded risk proposal.",
+      "properties": {
+        "allow_new_positions": {
+          "title": "Allow New Positions",
+          "type": "boolean"
+        },
+        "cash_floor": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Cash Floor",
+          "type": "number"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "max_asset_weight": {
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Max Asset Weight",
+          "type": "number"
+        },
+        "max_market_weights": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Max Market Weights",
+          "type": "object"
+        },
+        "max_turnover": {
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Max Turnover",
+          "type": "number"
+        },
+        "rationale": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "rebalance_frequency": {
+          "enum": [
+            "daily",
+            "weekly",
+            "monthly"
+          ],
+          "title": "Rebalance Frequency",
+          "type": "string"
+        },
+        "risk_budget": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Risk Budget",
+          "type": "number"
+        }
+      },
+      "required": [
+        "risk_budget",
+        "max_asset_weight",
+        "cash_floor",
+        "max_turnover",
+        "allow_new_positions",
+        "rebalance_frequency",
+        "rationale",
+        "confidence"
+      ],
+      "title": "RiskDirective",
+      "type": "object"
+    },
+    "RiskLayerConfig": {
+      "additionalProperties": false,
+      "description": "Second-layer advice/enforcement mode and deterministic cadence.",
+      "properties": {
+        "cadence": {
+          "default": "weekly",
+          "enum": [
+            "daily",
+            "weekly",
+            "monthly"
+          ],
+          "title": "Cadence",
+          "type": "string"
+        },
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "mode": {
+          "default": "enforced",
+          "enum": [
+            "advisory",
+            "enforced"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "previous_directive": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RiskDirective"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "team": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TeamSpec"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "RiskLayerConfig",
+      "type": "object"
+    },
+    "TeamSpec": {
+      "additionalProperties": false,
+      "description": "Communication topology and deterministic arbitration policy.",
+      "properties": {
+        "agents": {
+          "items": {
+            "$ref": "#/$defs/AgentSpec"
+          },
+          "title": "Agents",
+          "type": "array"
+        },
+        "conflict_policy": {
+          "default": "most_conservative",
+          "enum": [
+            "weighted_vote",
+            "majority_vote",
+            "judge",
+            "most_conservative",
+            "reject"
+          ],
+          "title": "Conflict Policy",
+          "type": "string"
+        },
+        "judge": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Judge"
+        },
+        "max_rounds": {
+          "default": 3,
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Max Rounds",
+          "type": "integer"
+        },
+        "max_workers": {
+          "default": 8,
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Max Workers",
+          "type": "integer"
+        },
+        "parallel": {
+          "default": true,
+          "title": "Parallel",
+          "type": "boolean"
+        },
+        "quorum": {
+          "default": 0.5,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Quorum",
+          "type": "number"
+        },
+        "supervisor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supervisor"
+        },
+        "topology": {
+          "enum": [
+            "single",
+            "pipeline",
+            "supervisor_worker",
+            "committee_vote",
+            "debate_then_judge",
+            "map_reduce"
+          ],
+          "title": "Topology",
+          "type": "string"
+        }
+      },
+      "required": [
+        "topology",
+        "agents"
+      ],
+      "title": "TeamSpec",
+      "type": "object"
+    },
+    "TokenUsage": {
+      "additionalProperties": false,
+      "description": "Normalized provider token accounting.",
+      "properties": {
+        "completion_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Completion Tokens",
+          "type": "integer"
+        },
+        "prompt_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Prompt Tokens",
+          "type": "integer"
+        },
+        "total_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Total Tokens",
+          "type": "integer"
+        }
+      },
+      "title": "TokenUsage",
+      "type": "object"
+    },
+    "ToolCall": {
+      "additionalProperties": false,
+      "description": "One model-requested tool invocation with parsed arguments.",
+      "properties": {
+        "arguments": {
+          "additionalProperties": true,
+          "title": "Arguments",
+          "type": "object"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "ToolCall",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Complete CPU-first three-layer fusion acceptance configuration.",
+  "properties": {
+    "administrator_environment": {
+      "$ref": "#/$defs/EnvironmentConfig"
+    },
+    "as_of_index": {
+      "default": 0,
+      "minimum": 0,
+      "title": "As Of Index",
+      "type": "integer"
+    },
+    "current_weights": {
+      "items": {
+        "type": "number"
+      },
+      "title": "Current Weights",
+      "type": "array"
+    },
+    "hierarchical_features": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Hierarchical Features",
+      "type": "object"
+    },
+    "layers": {
+      "$ref": "#/$defs/LLMLayersConfig"
+    },
+    "load_entry_points": {
+      "default": true,
+      "title": "Load Entry Points",
+      "type": "boolean"
+    },
+    "market_membership": {
+      "items": {
+        "enum": [
+          "CN",
+          "HK",
+          "JP",
+          "US"
+        ],
+        "type": "string"
+      },
+      "title": "Market Membership",
+      "type": "array"
+    },
+    "objective": {
+      "minLength": 1,
+      "title": "Objective",
+      "type": "string"
+    },
+    "output_dir": {
+      "default": "runs",
+      "format": "path",
+      "title": "Output Dir",
+      "type": "string"
+    },
+    "preset": {
+      "enum": [
+        "no_llm",
+        "research_only",
+        "risk_only",
+        "hierarchical_only",
+        "research_plus_risk",
+        "full_stack",
+        "custom"
+      ],
+      "title": "Preset",
+      "type": "string"
+    },
+    "prompt_version": {
+      "default": "phase7.v1",
+      "minLength": 1,
+      "title": "Prompt Version",
+      "type": "string"
+    },
+    "raw_action": {
+      "items": {
+        "type": "number"
+      },
+      "title": "Raw Action",
+      "type": "array"
+    },
+    "research_payload": {
+      "additionalProperties": true,
+      "title": "Research Payload",
+      "type": "object"
+    },
+    "risk_context": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RiskContext"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "run_id": {
+      "default": "phase7-full-stack-offline",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "seed": {
+      "default": 1024,
+      "maximum": 4294967295,
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "tradable_mask": {
+      "items": {
+        "type": "boolean"
+      },
+      "title": "Tradable Mask",
+      "type": "array"
+    },
+    "verify_directive_replay": {
+      "default": true,
+      "title": "Verify Directive Replay",
+      "type": "boolean"
+    },
+    "workspace_root": {
+      "default": ".",
+      "format": "path",
+      "title": "Workspace Root",
+      "type": "string"
+    }
+  },
+  "required": [
+    "preset",
+    "objective",
+    "layers",
+    "market_membership",
+    "raw_action",
+    "current_weights",
+    "tradable_mask"
+  ],
+  "title": "Phase7RunConfig",
+  "type": "object"
+}

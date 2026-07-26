@@ -15,6 +15,7 @@ from crossmarket_agentgym.release.models import (
     ReleaseReadinessResult,
     VerificationCheck,
 )
+from crossmarket_agentgym.release.versioning import release_label, release_tag
 
 _SECRET_PATTERN = re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b")
 _REQUIRED_FILES = (
@@ -27,9 +28,35 @@ _REQUIRED_FILES = (
     "SECURITY.md",
     ".github/workflows/ci.yml",
     ".github/workflows/release.yml",
+    "constraints-cpu.txt",
+    "constraints-gpu.txt",
+    "environment-cpu.yml",
+    "environment-gpu.yml",
+    "uv.lock",
+    "release/rc1_checklist.md",
+    "release/api_inventory.csv",
+    "release/cli_inventory.json",
+    "release/config_schema_inventory.csv",
+    "release/format_registry.json",
+    "release/known_issues.md",
+    "release/compatibility_matrix.md",
+    "release/release_notes_v1.0.0-rc1.md",
+    "release/release_blockers.md",
+    "schemas/rc1/checksums.json",
+    "scripts/build_release.sh",
+    "scripts/verify_release.sh",
+    "scripts/create_clean_env_test.sh",
+    "scripts/verify_reproducible_build.py",
     "docs/api-reference.md",
+    "docs/api_stability.md",
     "docs/cli-reference.md",
+    "docs/deprecation_policy.md",
+    "docs/installation.md",
+    "docs/quickstart.md",
     "docs/release.md",
+    "docs/reproducibility.md",
+    "docs/stable-api.md",
+    "docs/versioning_policy.md",
     "paper/README.md",
     "paper/softwarex-paper-outline.md",
     "paper/artifact-map.md",
@@ -37,7 +64,8 @@ _REQUIRED_FILES = (
 
 
 def _check(name: str, passed: bool, detail: str) -> VerificationCheck:
-    return VerificationCheck(name=name, passed=passed, detail=detail)
+    bounded = detail if len(detail) <= 1000 else detail[:997] + "..."
+    return VerificationCheck(name=name, passed=passed, detail=bounded)
 
 
 def _project_metadata(root: Path) -> dict[str, Any]:
@@ -101,12 +129,22 @@ def check_release_readiness(
         metadata_detail = "PEP 621 name, dynamic version, Python range, and URLs agree"
     checks.append(_check("pypi_metadata", metadata_valid, metadata_detail))
 
-    stable_version = re.fullmatch(r"\d+\.\d+\.\d+", __version__) is not None
+    try:
+        public_version = release_label(__version__)
+        expected_tag = release_tag(__version__)
+    except ValueError as error:
+        release_version_valid = False
+        version_detail = str(error)
+    else:
+        release_version_valid = True
+        version_detail = (
+            f"package {__version__}; public label {public_version}; tag {expected_tag}"
+        )
     checks.append(
         _check(
-            "stable_version",
-            stable_version,
-            f"package version is {__version__}",
+            "release_version",
+            release_version_valid,
+            version_detail,
         )
     )
 
@@ -115,13 +153,17 @@ def check_release_readiness(
         zenodo = json.loads((root / ".zenodo.json").read_text(encoding="utf-8"))
         citation_version = str(citation.get("version")) if isinstance(citation, dict) else ""
         zenodo_version = str(zenodo.get("version")) if isinstance(zenodo, dict) else ""
-        citation_valid = citation_version == __version__ == zenodo_version
+        expected_metadata_version = release_label(__version__)
+        citation_valid = (
+            citation_version == expected_metadata_version == zenodo_version
+        )
     except (FileNotFoundError, json.JSONDecodeError, yaml.YAMLError) as error:
         citation_valid = False
         citation_detail = str(error)
     else:
         citation_detail = (
-            f"CITATION.cff and Zenodo metadata both declare {__version__}"
+            "CITATION.cff and Zenodo metadata both declare "
+            f"{release_label(__version__)}"
         )
     checks.append(_check("citation_version", citation_valid, citation_detail))
 

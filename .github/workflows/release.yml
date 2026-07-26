@@ -37,15 +37,23 @@ jobs:
           python - <<'PY'
           import os
           from crossmarket_agentgym import __version__
+          from crossmarket_agentgym.release.versioning import release_tag
           tag = os.environ["RELEASE_TAG"]
-          if tag and tag != f"v{__version__}":
-              raise SystemExit(f"tag {tag!r} does not match v{__version__}")
+          expected = release_tag(__version__)
+          if tag and tag != expected:
+              raise SystemExit(f"tag {tag!r} does not match {expected}")
           PY
+          cmag release freeze --workspace-root .
+          python scripts/verify_docs.py
           cmag release check --workspace-root .
+      - name: Set reproducible source epoch
+        run: echo "SOURCE_DATE_EPOCH=$(git show -s --format=%ct HEAD)" >> "$GITHUB_ENV"
+      - name: Double-build reproducibility
+        run: python scripts/verify_reproducible_build.py
       - name: Build distributions
         run: python -m build
       - name: Validate distributions
-        run: python -m twine check dist/*
+        run: python -m twine check dist/*.whl dist/*.tar.gz
       - name: Inspect distribution contents
         run: cmag release verify --dist-dir dist
       - name: Write distribution manifest
@@ -89,4 +97,11 @@ jobs:
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes
+        run: |
+          if [[ "$GITHUB_REF_NAME" == *-rc* ]]; then
+            gh release create "$GITHUB_REF_NAME" dist/* \
+              --verify-tag --generate-notes --prerelease
+          else
+            gh release create "$GITHUB_REF_NAME" dist/* \
+              --verify-tag --generate-notes
+          fi

@@ -1,0 +1,374 @@
+{
+  "$defs": {
+    "AgentDecision": {
+      "additionalProperties": false,
+      "description": "Provider-neutral structured envelope used by every Phase 6 role.",
+      "properties": {
+        "confidence": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "constraints": {
+          "$ref": "#/$defs/DecisionConstraints"
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "revise",
+            "reject",
+            "abstain"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        },
+        "risk_score": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Risk Score",
+          "type": "number"
+        },
+        "summary": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision",
+        "summary"
+      ],
+      "title": "AgentDecision",
+      "type": "object"
+    },
+    "AgentExecutionResult": {
+      "additionalProperties": false,
+      "description": "Auditable outcome of one invocation, including partial failures.",
+      "properties": {
+        "attempts": {
+          "minimum": 1,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "base_name": {
+          "title": "Base Name",
+          "type": "string"
+        },
+        "decision": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentDecision"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "duration_seconds": {
+          "minimum": 0.0,
+          "title": "Duration Seconds",
+          "type": "number"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "error_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Message"
+        },
+        "instance_id": {
+          "title": "Instance Id",
+          "type": "string"
+        },
+        "invocation_id": {
+          "title": "Invocation Id",
+          "type": "string"
+        },
+        "role_type": {
+          "title": "Role Type",
+          "type": "string"
+        },
+        "round_index": {
+          "title": "Round Index",
+          "type": "integer"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "succeeded",
+            "fallback",
+            "failed",
+            "timed_out"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "weight": {
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "invocation_id",
+        "instance_id",
+        "role_type",
+        "base_name",
+        "seed",
+        "round_index",
+        "weight",
+        "status",
+        "attempts",
+        "duration_seconds"
+      ],
+      "title": "AgentExecutionResult",
+      "type": "object"
+    },
+    "DecisionConstraints": {
+      "additionalProperties": false,
+      "description": "Optional structured limits that conservative arbitration can intersect.",
+      "properties": {
+        "allow_new_positions": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Allow New Positions"
+        },
+        "cash_floor": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cash Floor"
+        },
+        "max_asset_weight": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Asset Weight"
+        },
+        "max_market_weights": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Max Market Weights",
+          "type": "object"
+        },
+        "max_turnover": {
+          "anyOf": [
+            {
+              "maximum": 2.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Turnover"
+        }
+      },
+      "title": "DecisionConstraints",
+      "type": "object"
+    },
+    "TeamAggregate": {
+      "additionalProperties": false,
+      "description": "Deterministic structured team resolution.",
+      "properties": {
+        "decision": {
+          "$ref": "#/$defs/AgentDecision"
+        },
+        "failed_instances": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Failed Instances",
+          "type": "array"
+        },
+        "participants": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Participants",
+          "type": "array"
+        },
+        "policy": {
+          "enum": [
+            "weighted_vote",
+            "majority_vote",
+            "judge",
+            "most_conservative",
+            "reject"
+          ],
+          "title": "Policy",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "rejected",
+            "no_quorum"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "policy",
+        "decision",
+        "participants"
+      ],
+      "title": "TeamAggregate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Serializable result shared by single-Agent and multi-Agent runs.",
+  "properties": {
+    "aggregate": {
+      "$ref": "#/$defs/TeamAggregate"
+    },
+    "configured_instances": {
+      "minimum": 1,
+      "title": "Configured Instances",
+      "type": "integer"
+    },
+    "failed": {
+      "minimum": 0,
+      "title": "Failed",
+      "type": "integer"
+    },
+    "fallback": {
+      "minimum": 0,
+      "title": "Fallback",
+      "type": "integer"
+    },
+    "invocations": {
+      "minimum": 1,
+      "title": "Invocations",
+      "type": "integer"
+    },
+    "network_used": {
+      "title": "Network Used",
+      "type": "boolean"
+    },
+    "parallel": {
+      "title": "Parallel",
+      "type": "boolean"
+    },
+    "results": {
+      "items": {
+        "$ref": "#/$defs/AgentExecutionResult"
+      },
+      "title": "Results",
+      "type": "array"
+    },
+    "rounds": {
+      "minimum": 1,
+      "title": "Rounds",
+      "type": "integer"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "succeeded": {
+      "minimum": 0,
+      "title": "Succeeded",
+      "type": "integer"
+    },
+    "timed_out": {
+      "minimum": 0,
+      "title": "Timed Out",
+      "type": "integer"
+    },
+    "topology": {
+      "enum": [
+        "single",
+        "pipeline",
+        "supervisor_worker",
+        "committee_vote",
+        "debate_then_judge",
+        "map_reduce"
+      ],
+      "title": "Topology",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "topology",
+    "configured_instances",
+    "invocations",
+    "succeeded",
+    "fallback",
+    "failed",
+    "timed_out",
+    "rounds",
+    "parallel",
+    "network_used",
+    "results",
+    "aggregate"
+  ],
+  "title": "TeamRunResult",
+  "type": "object"
+}

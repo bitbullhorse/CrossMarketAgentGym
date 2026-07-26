@@ -1,0 +1,134 @@
+{
+  "$defs": {
+    "ExperimentDeclaration": {
+      "additionalProperties": false,
+      "description": "SoftwareX experiment readiness with explicit evidence provenance.",
+      "properties": {
+        "category": {
+          "enum": [
+            "environment_correctness",
+            "algorithm_benchmark",
+            "cross_stock_zero_shot",
+            "leave_one_market_out",
+            "market_mechanism_ablation",
+            "agent_hpo_ablation"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "evidence_paths": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Paths",
+          "type": "array"
+        },
+        "label": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "maxLength": 1000,
+          "title": "Notes",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "partial",
+            "planned"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "category",
+        "label",
+        "status"
+      ],
+      "title": "ExperimentDeclaration",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One-command, CPU-only report configuration.",
+  "properties": {
+    "experiments": {
+      "items": {
+        "$ref": "#/$defs/ExperimentDeclaration"
+      },
+      "title": "Experiments",
+      "type": "array"
+    },
+    "include_run_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Include Run Ids",
+      "type": "array"
+    },
+    "max_json_bytes": {
+      "default": 5000000,
+      "maximum": 100000000,
+      "minimum": 1024,
+      "title": "Max Json Bytes",
+      "type": "integer"
+    },
+    "max_runs": {
+      "default": 500,
+      "maximum": 5000,
+      "minimum": 1,
+      "title": "Max Runs",
+      "type": "integer"
+    },
+    "output_dir": {
+      "default": "reports",
+      "format": "path",
+      "title": "Output Dir",
+      "type": "string"
+    },
+    "partition": {
+      "default": "validation",
+      "enum": [
+        "validation",
+        "test"
+      ],
+      "title": "Partition",
+      "type": "string"
+    },
+    "report_id": {
+      "default": "phase8-softwarex",
+      "title": "Report Id",
+      "type": "string"
+    },
+    "runs_root": {
+      "default": "runs",
+      "format": "path",
+      "title": "Runs Root",
+      "type": "string"
+    },
+    "title": {
+      "default": "CrossMarketAgentGym SoftwareX Evidence",
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "workspace_root": {
+      "default": ".",
+      "format": "path",
+      "title": "Workspace Root",
+      "type": "string"
+    }
+  },
+  "required": [
+    "experiments"
+  ],
+  "title": "SoftwareXReportConfig",
+  "type": "object"
+}

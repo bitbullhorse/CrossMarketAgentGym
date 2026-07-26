@@ -86,3 +86,16 @@ class DistributionVerificationResult(StrictReleaseModel):
     version: str
     is_valid: bool
     checks: tuple[VerificationCheck, ...]
+
+
+class ContractFreezeResult(StrictReleaseModel):
+    """API and Schema freeze export or verification result."""
+
+    schema_version: Literal["1.0"] = "1.0"
+    release: str
+    api_records: int = Field(ge=1)
+    config_schemas: int = Field(ge=1)
+    artifact_schemas: int = Field(ge=1)
+    is_valid: bool
+    wrote_files: bool
+    checks: tuple[VerificationCheck, ...]

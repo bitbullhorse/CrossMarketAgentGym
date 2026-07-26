@@ -1,0 +1,105 @@
+{
+  "$defs": {
+    "VerificationCheck": {
+      "additionalProperties": false,
+      "description": "One named release or reproduction assertion.",
+      "properties": {
+        "detail": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Detail",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "passed",
+        "detail"
+      ],
+      "title": "VerificationCheck",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Read-only verification of a recorded run and deterministic replay.",
+  "properties": {
+    "account_state_mutated": {
+      "const": false,
+      "default": false,
+      "title": "Account State Mutated",
+      "type": "boolean"
+    },
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/VerificationCheck"
+      },
+      "title": "Checks",
+      "type": "array"
+    },
+    "deterministic_replay": {
+      "title": "Deterministic Replay",
+      "type": "boolean"
+    },
+    "is_valid": {
+      "title": "Is Valid",
+      "type": "boolean"
+    },
+    "kind": {
+      "enum": [
+        "training",
+        "tuning",
+        "agent",
+        "phase7"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "network_used": {
+      "const": false,
+      "default": false,
+      "title": "Network Used",
+      "type": "boolean"
+    },
+    "run_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Run Fingerprint",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "test_metrics_used_for_selection": {
+      "const": false,
+      "default": false,
+      "title": "Test Metrics Used For Selection",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "run_id",
+    "kind",
+    "run_fingerprint",
+    "is_valid",
+    "deterministic_replay",
+    "checks"
+  ],
+  "title": "ReproductionResult",
+  "type": "object"
+}

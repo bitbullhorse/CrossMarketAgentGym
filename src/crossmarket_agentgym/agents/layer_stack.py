@@ -42,6 +42,7 @@ from crossmarket_agentgym.audit.directives import (
     load_directive_journal,
 )
 from crossmarket_agentgym.audit.logging import redact_value
+from crossmarket_agentgym.audit.run_manifest import write_run_manifest
 from crossmarket_agentgym.data.schemas import Market
 from crossmarket_agentgym.environments.config import EnvironmentConfig
 
@@ -75,6 +76,7 @@ class HierarchicalLayerResult(StrictDirectiveModel):
 class Phase7RunSummary(StrictDirectiveModel):
     """Terminal result for all layer presets, including no-LLM."""
 
+    schema_version: Literal["1.0"] = "1.0"
     run_id: str
     preset: str
     provider_runtimes_started: int = Field(ge=0, le=3)
@@ -90,6 +92,7 @@ class Phase7RunSummary(StrictDirectiveModel):
 class Phase7ReplayBundle(StrictDirectiveModel):
     """Minimal validated state needed to reproduce directive fusion without an LLM."""
 
+    schema_version: Literal["1.0"] = "1.0"
     environment: EnvironmentConfig
     markets: tuple[Market, ...]
     raw_action: tuple[float, ...]
@@ -532,5 +535,13 @@ def execute_phase7_stack(
         )
         + "\n",
         encoding="utf-8",
+    )
+    write_run_manifest(
+        run_dir,
+        workspace_root=workspace,
+        run_id=config.run_id,
+        kind="phase7",
+        config_path=run_dir / "config.resolved.yaml",
+        seed=config.seed,
     )
     return summary

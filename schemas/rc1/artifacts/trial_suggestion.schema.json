@@ -1,0 +1,39 @@
+{
+  "additionalProperties": false,
+  "description": "One candidate emitted by a search algorithm.",
+  "properties": {
+    "generation": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Generation",
+      "type": "integer"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "title": "Metadata",
+      "type": "object"
+    },
+    "parameters": {
+      "additionalProperties": true,
+      "title": "Parameters",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "trial_id": {
+      "minimum": 0,
+      "title": "Trial Id",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "trial_id",
+    "parameters"
+  ],
+  "title": "TrialSuggestion",
+  "type": "object"
+}

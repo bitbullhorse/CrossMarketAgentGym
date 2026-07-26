@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -316,6 +316,7 @@ class TeamAggregate(StrictAgentModel):
 class TeamRunResult(StrictAgentModel):
     """Serializable result shared by single-Agent and multi-Agent runs."""
 
+    schema_version: Literal["1.0"] = "1.0"
     run_id: str
     topology: AgentTopology
     configured_instances: int = Field(ge=1)
@@ -335,8 +336,8 @@ class AgentRuntimeConfig(StrictAgentModel):
     """Complete credential-free Phase 6 CLI configuration."""
 
     run_id: str = "phase6-runtime-offline"
-    workspace_root: Path = Path(".")
-    output_dir: Path = Path("runs")
+    workspace_root: Path = Field(default=cast(Path, "."), validate_default=True)
+    output_dir: Path = Field(default=cast(Path, "runs"), validate_default=True)
     prompt_version: str = Field(default="phase6.v1", min_length=1)
     seed: int = Field(default=1024, ge=0, le=2**32 - 1)
     objective: str = Field(min_length=1)

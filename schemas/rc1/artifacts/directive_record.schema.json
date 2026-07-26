@@ -1,0 +1,44 @@
+{
+  "additionalProperties": false,
+  "description": "One hash-verified typed-directive audit event.",
+  "properties": {
+    "kind": {
+      "title": "Kind",
+      "type": "string"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "payload_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Payload Sha256",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "timestamp": {
+      "title": "Timestamp",
+      "type": "string"
+    }
+  },
+  "required": [
+    "sequence",
+    "timestamp",
+    "kind",
+    "payload",
+    "payload_sha256"
+  ],
+  "title": "DirectiveRecord",
+  "type": "object"
+}

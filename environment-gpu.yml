@@ -1,0 +1,14 @@
+name: crossmarket-agent-gym-gpu
+channels:
+  - pytorch
+  - nvidia
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge
+dependencies:
+  - python=3.12
+  - pip=25.1
+  - pytorch::pytorch=2.7.1
+  - pytorch::pytorch-cuda=12.6
+  - pip:
+      - --index-url=https://pypi.tuna.tsinghua.edu.cn/simple
+      - --constraint=constraints-gpu.txt
+      - --editable=.[dev,legacy-data,ray,release,service]

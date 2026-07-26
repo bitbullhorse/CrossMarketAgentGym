@@ -1,0 +1,93 @@
+{
+  "additionalProperties": false,
+  "description": "Serializable CLI result for a completed or resumed tuning study.",
+  "properties": {
+    "best_trial_id": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Best Trial Id"
+    },
+    "completed_count": {
+      "title": "Completed Count",
+      "type": "integer"
+    },
+    "failed_count": {
+      "title": "Failed Count",
+      "type": "integer"
+    },
+    "locked_parameters": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Locked Parameters"
+    },
+    "report_json": {
+      "title": "Report Json",
+      "type": "string"
+    },
+    "report_markdown": {
+      "title": "Report Markdown",
+      "type": "string"
+    },
+    "retrain_checkpoint": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Retrain Checkpoint"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "storage_path": {
+      "title": "Storage Path",
+      "type": "string"
+    },
+    "study_name": {
+      "title": "Study Name",
+      "type": "string"
+    },
+    "test_set_accessed": {
+      "default": false,
+      "title": "Test Set Accessed",
+      "type": "boolean"
+    },
+    "trial_count": {
+      "title": "Trial Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "study_name",
+    "trial_count",
+    "completed_count",
+    "failed_count",
+    "best_trial_id",
+    "locked_parameters",
+    "storage_path",
+    "report_json",
+    "report_markdown",
+    "retrain_checkpoint"
+  ],
+  "title": "TuningRunSummary",
+  "type": "object"
+}

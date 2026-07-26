@@ -1,0 +1,27 @@
+dataset_root: data/sample
+seed: 1024
+smoke_steps: 64
+
+environment:
+  execution_protocol: close_signal_next_open
+  base_currency: USD
+  lookback: 2
+  initial_cash: 1000000
+  allow_short: false
+  max_leverage: 1.0
+  max_asset_weight: 0.40
+  max_market_weight: 0.40
+  market_weight_overrides: {}
+  cash_floor: 0.05
+  max_turnover: 0.50
+  transaction_cost_bps: 10
+  slippage_bps: 5
+  reward: risk_adjusted
+  risk_aversion: 0.10
+  drawdown_penalty: 0.50
+  cvar_alpha: 0.05
+  cvar_penalty: 0.50
+  lot_sizes: {}
+  t_plus_one_markets: [CN]
+  max_episode_steps: null
+  accounting_tolerance: 1.0e-8

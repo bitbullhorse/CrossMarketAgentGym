@@ -12,6 +12,7 @@ from crossmarket_agentgym.agents.directives import DirectiveProjection
 from crossmarket_agentgym.agents.layer_stack import replay_phase7_bundle
 from crossmarket_agentgym.agents.providers.replay import ReplayRecord
 from crossmarket_agentgym.audit.logging import redact_value
+from crossmarket_agentgym.audit.run_manifest import verify_run_manifest
 from crossmarket_agentgym.release.models import (
     ReproductionResult,
     VerificationCheck,
@@ -52,6 +53,25 @@ def _verify_config_file(run_dir: Path) -> VerificationCheck:
         "resolved_config_hash",
         passed,
         "resolved configuration hash and redaction verified",
+    )
+
+
+def _verify_versioned_run_manifest(run_dir: Path) -> VerificationCheck:
+    manifest_path = run_dir / "run_manifest.json"
+    if not manifest_path.is_file():
+        return _check(
+            "run_manifest",
+            True,
+            "legacy pre-rc1 run; specialized provenance verification applied",
+        )
+    try:
+        manifest = verify_run_manifest(run_dir)
+    except (OSError, TypeError, ValueError) as error:
+        return _check("run_manifest", False, str(error))
+    return _check(
+        "run_manifest",
+        True,
+        f"schema {manifest.schema_version}; {len(manifest.artifacts)} artifacts verified",
     )
 
 
@@ -247,7 +267,8 @@ def reproduce_run(
             "source_fingerprint",
             len(record.fingerprint) == 64,
             f"whitelisted source fingerprint {record.fingerprint}",
-        )
+        ),
+        _verify_versioned_run_manifest(run_dir),
     ]
     specialized: list[VerificationCheck]
     deterministic = False

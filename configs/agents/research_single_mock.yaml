@@ -1,0 +1,77 @@
+run_id: repro-research-single-mock
+workspace_root: .
+output_dir: runs
+prompt_version: phase10.rc1
+seed: 1024
+load_entry_points: false
+preset: research_only
+objective: Produce a validation-only research plan from the packaged sample.
+research_payload:
+  dataset_manifest: data/sample/dataset_manifest.json
+as_of_index: 0
+layers:
+  research:
+    enabled: true
+    mode: dry_run
+    team:
+      topology: single
+      max_rounds: 1
+      quorum: 1.0
+      conflict_policy: reject
+      parallel: false
+      agents:
+        - type: research_coordinator
+          name: research
+          provider: mock
+          model: deepseek-v4-pro
+          metadata:
+            directive_schema: research
+          tools: [inspect_dataset]
+          allowed_permissions: [read, compute]
+          max_tool_calls: 1
+          mock_scripts:
+            -
+              - tool_calls:
+                  - id: inspect-repro
+                    name: inspect_dataset
+                    arguments:
+                      manifest_path: data/sample/dataset_manifest.json
+              - content:
+                  objective: Produce a validation-only research plan from the packaged sample.
+                  mode: dry_run
+                  steps:
+                    - id: inspect
+                      action: inspect_dataset
+                      arguments:
+                        manifest_path: data/sample/dataset_manifest.json
+                      expected_artifacts: []
+                    - id: validate
+                      action: validate_experiment_config
+                      arguments:
+                        partition: validation
+                      depends_on: [inspect]
+                      expected_artifacts: []
+                  validation_only: true
+                  test_metrics_accessed: false
+                  safe_to_execute: false
+                  estimated_compute_units: 0.0
+                  rationale: Offline mock plan passed schema and data inspection.
+                  confidence: 0.95
+  risk:
+    enabled: false
+    mode: enforced
+    cadence: weekly
+  hierarchical:
+    enabled: false
+    fusion: constraint
+    cadence: monthly
+administrator_environment:
+  max_asset_weight: 0.20
+  max_market_weight: 0.40
+  cash_floor: 0.10
+  max_turnover: 0.80
+market_membership: [CN, HK, JP, US]
+raw_action: [0.0, 0.40, 0.30, 0.20, 0.10]
+current_weights: [1.0, 0.0, 0.0, 0.0, 0.0]
+tradable_mask: [true, true, true, true]
+verify_directive_replay: true

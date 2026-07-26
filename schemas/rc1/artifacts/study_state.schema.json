@@ -1,0 +1,119 @@
+{
+  "$defs": {
+    "TrialResult": {
+      "additionalProperties": false,
+      "description": "Completed, failed, or pruned trial result.",
+      "properties": {
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error"
+        },
+        "metrics": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Metrics",
+          "type": "object"
+        },
+        "objectives": {
+          "default": [],
+          "items": {
+            "type": "number"
+          },
+          "title": "Objectives",
+          "type": "array"
+        },
+        "parameters": {
+          "additionalProperties": true,
+          "title": "Parameters",
+          "type": "object"
+        },
+        "resource": {
+          "default": 0.0,
+          "minimum": 0.0,
+          "title": "Resource",
+          "type": "number"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "running",
+            "completed",
+            "failed",
+            "pruned"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "trial_id": {
+          "minimum": 0,
+          "title": "Trial Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "trial_id",
+        "parameters",
+        "status"
+      ],
+      "title": "TrialResult",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Search history visible to initialization and reports.",
+  "properties": {
+    "directions": {
+      "default": [
+        "maximize"
+      ],
+      "items": {
+        "enum": [
+          "maximize",
+          "minimize"
+        ],
+        "type": "string"
+      },
+      "title": "Directions",
+      "type": "array"
+    },
+    "results": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/TrialResult"
+      },
+      "title": "Results",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "study_name": {
+      "minLength": 1,
+      "title": "Study Name",
+      "type": "string"
+    }
+  },
+  "required": [
+    "study_name"
+  ],
+  "title": "StudyState",
+  "type": "object"
+}

@@ -17,6 +17,7 @@ from crossmarket_agentgym.agents.layer_stack import (
     replay_phase7_bundle,
 )
 from crossmarket_agentgym.audit.directives import load_directive_journal
+from crossmarket_agentgym.audit.run_manifest import verify_run_manifest
 from crossmarket_agentgym.cli.app import app
 
 _PRESETS = {
@@ -104,6 +105,9 @@ def test_all_required_presets_run_offline(
         summary.fusion.constraints.max_turnover
         <= config.administrator_environment.max_turnover
     )
+    manifest = verify_run_manifest(tmp_path / config.run_id)
+    assert manifest.kind == "phase7"
+    assert manifest.run_id == config.run_id
 
 
 def test_no_llm_never_constructs_an_agent_runtime(

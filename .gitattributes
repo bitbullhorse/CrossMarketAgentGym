@@ -1,0 +1,20 @@
+* text=auto
+*.py text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf
+*.md text eol=lf
+*.csv text eol=lf
+*.cff text eol=lf
+*.lock text eol=lf
+*.sh text eol=lf
+.gitignore text eol=lf
+Dockerfile text eol=lf
+*.parquet binary
+*.xls binary
+*.xlsx binary
+*.zip binary
+*.whl binary
+*.gz binary

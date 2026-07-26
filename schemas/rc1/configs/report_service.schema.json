@@ -1,0 +1,62 @@
+{
+  "additionalProperties": false,
+  "description": "Local-first service settings with explicit remote opt-in.",
+  "properties": {
+    "allow_remote": {
+      "default": false,
+      "title": "Allow Remote",
+      "type": "boolean"
+    },
+    "docs_enabled": {
+      "default": false,
+      "title": "Docs Enabled",
+      "type": "boolean"
+    },
+    "host": {
+      "default": "127.0.0.1",
+      "title": "Host",
+      "type": "string"
+    },
+    "max_json_bytes": {
+      "default": 5000000,
+      "maximum": 100000000,
+      "minimum": 1024,
+      "title": "Max Json Bytes",
+      "type": "integer"
+    },
+    "max_runs": {
+      "default": 500,
+      "maximum": 5000,
+      "minimum": 1,
+      "title": "Max Runs",
+      "type": "integer"
+    },
+    "port": {
+      "default": 8000,
+      "maximum": 65535,
+      "minimum": 1,
+      "title": "Port",
+      "type": "integer"
+    },
+    "reports_root": {
+      "default": "reports",
+      "format": "path",
+      "title": "Reports Root",
+      "type": "string"
+    },
+    "runs_root": {
+      "default": "runs",
+      "format": "path",
+      "title": "Runs Root",
+      "type": "string"
+    },
+    "workspace_root": {
+      "default": ".",
+      "format": "path",
+      "title": "Workspace Root",
+      "type": "string"
+    }
+  },
+  "title": "ServiceConfig",
+  "type": "object"
+}

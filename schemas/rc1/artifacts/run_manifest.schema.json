@@ -1,0 +1,206 @@
+{
+  "$defs": {
+    "RunArtifactRecord": {
+      "additionalProperties": false,
+      "description": "One immutable file identity inside a run directory.",
+      "properties": {
+        "relative_path": {
+          "minLength": 1,
+          "title": "Relative Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "relative_path",
+        "sha256",
+        "size_bytes"
+      ],
+      "title": "RunArtifactRecord",
+      "type": "object"
+    },
+    "RuntimeIdentity": {
+      "additionalProperties": false,
+      "description": "Portable runtime facts that contain no username or absolute path.",
+      "properties": {
+        "cpu_count": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cpu Count"
+        },
+        "implementation": {
+          "title": "Implementation",
+          "type": "string"
+        },
+        "machine": {
+          "title": "Machine",
+          "type": "string"
+        },
+        "python": {
+          "title": "Python",
+          "type": "string"
+        },
+        "system": {
+          "title": "System",
+          "type": "string"
+        }
+      },
+      "required": [
+        "python",
+        "implementation",
+        "system",
+        "machine"
+      ],
+      "title": "RuntimeIdentity",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Frozen Phase 10 run-directory envelope shared by all workflows.",
+  "properties": {
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/RunArtifactRecord"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "code_commit": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{40}(?:[0-9a-f]{24})?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Code Commit"
+    },
+    "config_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Config Sha256",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "dataset_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dataset Sha256"
+    },
+    "kind": {
+      "enum": [
+        "training",
+        "tuning",
+        "agent",
+        "phase7"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "protocol_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Protocol Sha256"
+    },
+    "run_id": {
+      "minLength": 1,
+      "title": "Run Id",
+      "type": "string"
+    },
+    "runtime": {
+      "$ref": "#/$defs/RuntimeIdentity"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "seed": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Seed"
+    },
+    "software_version": {
+      "title": "Software Version",
+      "type": "string"
+    },
+    "source_state": {
+      "enum": [
+        "clean",
+        "dirty",
+        "unknown"
+      ],
+      "title": "Source State",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "kind",
+    "software_version",
+    "source_state",
+    "created_at",
+    "config_sha256",
+    "status",
+    "runtime",
+    "artifacts"
+  ],
+  "title": "RunManifest",
+  "type": "object"
+}

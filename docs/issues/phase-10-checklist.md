@@ -1,191 +1,125 @@
-# Phase 10 issue checklist — `v1.0.0-rc1` freeze
+# Phase 10 issue checklist — `v1.0.0-rc1`
 
-This checklist starts Phase 10. An unchecked item is not accepted evidence. Phase 10 is not
-complete until every exit criterion is checked and a completion report identifies the exact
-commit and release-candidate artifacts.
+Status: **open**. Checked items have local evidence. Phase 10 is not complete while any release
+blocker or exit criterion remains unchecked.
 
-## Input preconditions
+## Input conditions
 
-- [x] Phase 0–9 local acceptance reports are present.
-- [x] CPU quickstart has passed on the packaged CN/HK/JP/US sample.
-- [x] PPO, SAC, and TD3 training/evaluation evidence is present.
-- [x] Research, Risk, and Hierarchical layers can be enabled independently.
-- [x] Single-Agent and multi-Agent configurations use `AgentRuntime`.
-- [x] The CPU HPO study can run and resume without test-set access.
-- [x] Leakage, accounting, risk-boundary, unit, integration, property, and Replay tests passed at
-  the Phase 9 baseline.
-- [x] The current CLI starts and exposes the Phase 0–9 command groups.
-- [ ] Establish an immutable Git baseline commit; the repository currently has no commit history.
-- [ ] Record a reachable source repository and CI run for the baseline.
-- [ ] Revalidate the baseline on Python 3.11/Linux in addition to Python 3.12/Windows.
+- [x] Phase 0–9 acceptance reports are present.
+- [x] A pre-Phase-10 local baseline commit exists (`b17e7f6`).
+- [x] Packaged four-market CPU quickstart passes.
+- [x] PPO, SAC, and TD3 train/evaluate paths pass.
+- [x] Research, Risk, and Hierarchical Agents are independently switchable.
+- [x] Single and multi-Agent teams share `AgentRuntime`.
+- [x] Nine search algorithms and separate ASHA/HyperBand/PBT schedulers pass.
+- [x] HPO resume passes without test-set access.
+- [x] Leakage, accounting, risk-boundary, integration, property, and Replay tests pass locally.
+- [ ] Immutable candidate commit is reachable from a configured remote.
+- [ ] Python 3.11 and 3.12 Linux CI passes.
 
-## Release blockers
+## Version and release channel
 
-- [ ] Resolve every P0/P1 item in `release/known_issues.md`.
-- [ ] Change the Python distribution version from `0.1.0` to PEP 440 `1.0.0rc1`.
-- [ ] Map PEP 440 `1.0.0rc1` to the required Git/Release tag `v1.0.0-rc1`.
-- [ ] Mark the GitHub Release as a prerelease and prevent it from being presented as v1.0.0.
-- [ ] Make release readiness accept the intended rc1 channel without accepting arbitrary
-  development versions.
-- [ ] Align `CITATION.cff`, Zenodo metadata, release notes, wheel metadata, and release manifest.
-- [ ] Replace the sample Manifest's stale `software_version: 0.1.0.dev0`.
-- [ ] Define and verify one rc1 mapping for software, data Manifest, protocol, benchmark, and paper
-  status without claiming Phase 12/13 artifacts already exist.
-- [ ] Execute the Docker build/quickstart gate on a Docker-capable host.
-- [ ] Confirm no security, accounting, information-leakage, or nondeterministic-test blocker exists.
-
-## Public API freeze
-
-- [ ] Generate `release/api_inventory.csv` from the actual importable objects.
-- [ ] Classify every exported object as stable, provisional, experimental, or internal.
-- [ ] Reduce or explicitly classify the current 232 `__all__` export records.
-- [ ] Resolve documentation references that are not exported from the documented namespace.
-- [ ] Give every stable API a public doc page, signature, behavior, exceptions, and version-added
-  declaration.
-- [ ] Add a compatibility test that fails on an unreviewed removal, rename, signature change, or
-  stability-class change.
-- [ ] Define deprecation warnings, minimum support window, and removal process.
-- [ ] Define Semantic Versioning and release-candidate rules.
-
-## CLI freeze
-
-- [ ] Inventory root options, command groups, leaf commands, arguments, exit codes, and optional
-  dependency behavior.
-- [ ] Freeze the current root commands: `train`, `evaluate`, `tune`, `quickstart`, and `reproduce`.
-- [ ] Freeze the `data validate`, `env check`, `agent run`, `agent provider-check`,
-  `report softwarex`, `report runs`, `service run`, and `release check|manifest|verify` commands.
-- [ ] Add or reconcile the Phase 11-required `cmag report --run-id <RUN_ID>` interface.
-- [ ] Add the exact Phase 11 quickstart configuration names or version the reproduction protocol
-  to an equivalent tested command set.
-- [ ] Snapshot CLI help and fail on unreviewed command/option removals or renames.
-- [ ] Document stable exit-code semantics and missing-extra errors.
-
-## Configuration and artifact Schema freeze
-
-- [ ] Inventory and export canonical JSON Schema for project, data, environment, training,
-  Provider, AgentRuntime, three-layer Agent, tuning, reporting, and service root configurations.
-- [ ] Remove platform-dependent JSON Schema generation and current non-serializable `Path` default
-  warnings.
-- [ ] Add deterministic schema hashes and a verification command.
-- [ ] Freeze the canonical OHLCV and Dataset Manifest formats.
-- [ ] Freeze the training/evaluation run-directory layout and add a versioned run manifest.
-- [ ] Freeze Agent message, tool-call, response, Replay, team-result, and directive formats.
-- [ ] Freeze audit JSON/JSONL envelopes with explicit schema versions.
-- [ ] Freeze HPO Trial/Study/checkpoint formats and version the SQLite schema with migrations.
-- [ ] Keep parsers compatible with existing Phase 3/4/6/7 artifacts or provide explicit migration
-  fixtures.
-- [ ] Reject unknown fields and incompatible major schema versions.
-- [ ] Add golden fixtures and tamper/hash tests for every frozen format.
-
-## Dependency and environment freeze
-
-- [ ] Review core dependencies and remove anything not needed by the installed CPU quickstart.
-- [ ] Keep RL, HPO, online LLM transport, Ray, service, release, and development capabilities in
-  explicit extras.
-- [ ] Make the documented Phase 11 `.[dev]` installation sufficient for its CPU reproduction
-  tasks, or freeze and document one corrected install command before rc1.
-- [ ] Export a complete CPU lock that cannot resolve CUDA packages.
-- [ ] Probe the target GPU driver securely before choosing a CUDA/PyTorch build.
-- [ ] Generate complete `constraints-cpu.txt` and `constraints-gpu.txt`.
-- [ ] Generate `environment-cpu.yml` and `environment-gpu.yml`.
-- [ ] Record tested and untested Python/PyTorch/Gymnasium/SB3/Optuna/Ray combinations in
-  `release/compatibility_matrix.md`.
-- [ ] Verify there are no unpinned Git URL dependencies.
-- [ ] Install every supported extra independently and verify lazy optional imports.
-- [ ] Run `pip check` and lock consistency checks in clean environments.
-
-## Code and repository cleanup
-
-- [ ] Classify broad exception handlers as audited failure boundaries or replace them.
-- [ ] Remove or justify the environment render-mode `print`.
-- [ ] Confirm examples are the only remaining intentional direct `print` calls.
-- [ ] Search for TODO/FIXME/HACK, debugger calls, temporary paths, example credentials, and
-  author-machine-only paths.
-- [ ] Separate release blockers from future enhancements.
-- [ ] Verify all stable public callables/classes have usable docstrings.
-- [ ] Verify raw data, runs, reports, caches, credentials, checkpoints, and local environments
-  remain outside release archives.
-
-## Required documentation
-
-- [ ] Add `docs/api_stability.md`.
-- [ ] Add `docs/versioning_policy.md`.
-- [ ] Add `docs/deprecation_policy.md`.
-- [ ] Add `docs/installation.md`.
-- [ ] Add `docs/quickstart.md`.
-- [ ] Add `docs/data_schema.md`.
-- [ ] Add `docs/environment.md`.
-- [ ] Add `docs/market_rules.md`.
-- [ ] Add `docs/rl_training.md`.
-- [ ] Add `docs/llm_agents.md`.
-- [ ] Add `docs/multi_agent.md`.
-- [ ] Add `docs/tuning.md`.
-- [ ] Add `docs/reproducibility.md`.
-- [ ] Add `docs/troubleshooting.md`.
-- [x] Maintain `docs/security.md`.
-- [ ] Add `docs/faq.md`.
-- [ ] Test links, fenced commands, configuration paths, package names, and documented imports.
-- [ ] Update README and all Phase 0–9 references for the rc1 lifecycle.
-
-## Required release files
-
-- [ ] Add `release/rc1_checklist.md`.
-- [ ] Add `release/api_inventory.csv`.
-- [ ] Add `release/known_issues.md`.
-- [ ] Add `release/compatibility_matrix.md`.
-- [ ] Add `release/release_notes_v1.0.0-rc1.md`.
-- [ ] Record schema/format inventories and hashes in the release candidate.
-- [ ] Record the exact commit, source date epoch, wheel/sdist hashes, and clean-environment
-  evidence.
-
-## Automation
-
-- [ ] Add `scripts/build_release.sh`.
-- [ ] Add `scripts/verify_release.sh`.
-- [ ] Add `scripts/create_clean_env_test.sh`.
-- [ ] Put cross-platform logic in typed Python helpers and keep shell wrappers minimal.
-- [ ] Add API inventory export/verify automation.
-- [ ] Add config/artifact Schema export/verify automation.
-- [ ] Add documentation link/command verification automation.
-- [ ] Add deterministic double-build comparison.
-- [ ] Add clean wheel installation and source-tree-independent quickstart.
-- [ ] Add CI Docker build and unprivileged-container quickstart.
-- [ ] Ensure every publication workflow has a non-publishing dry-run path.
-
-## Tests
-
-- [ ] Run the full unit suite and the 85% branch-coverage gate.
-- [ ] Run property tests, including accounting invariants and frozen-schema rejection.
-- [ ] Run all leakage tests and explicitly confirm HPO has no test capability.
-- [ ] Run CPU integration tests for data, environment, PPO/SAC/TD3, Agents, HPO resume, reports,
-  and reproduction.
-- [ ] Run LLM Mock and exact Replay tests; do not require an online key.
-- [ ] Run wheel install tests in clean Python 3.11 and 3.12 environments.
-- [ ] Run Docker build and Docker quickstart tests.
-- [ ] Run CLI smoke/help/exit-code snapshot tests.
-- [ ] Run documentation command and link tests.
-- [ ] Verify current Phase 3/4/6/7 artifacts remain readable after schema versioning.
-- [ ] Run Ruff, strict Mypy, dependency checks, lock checks, archive checks, and credential scans.
-- [ ] Verify two rc1 builds from the same commit and epoch have identical hashes.
-
-## Phase 10 exit criteria
-
-- [ ] Every stable API is documented.
+- [x] Python version is PEP 440 `1.0.0rc1`.
+- [x] Human release label and candidate tag map to `1.0.0-rc1` / `v1.0.0-rc1`.
+- [x] GitHub workflow marks `-rc` tags as prereleases.
+- [x] `CITATION.cff`, `.zenodo.json`, sample data manifest, wheel, sdist, and release notes agree.
+- [x] Workflow has a non-publishing dry-run path.
+- [x] No v1.0.0 tag or external publication occurred.
+- [ ] Docker image and unprivileged container quickstart pass.
 - [ ] Release blocker count is zero.
-- [ ] A clean environment installs the rc1 wheel.
-- [ ] CPU quickstart succeeds from the installed wheel.
-- [ ] Docker quickstart succeeds as an unprivileged user.
-- [ ] Configuration and artifact Schemas are frozen and hashed.
-- [ ] Locks and compatibility matrix are complete.
-- [ ] All required tests pass without random failure.
-- [ ] `v1.0.0-rc1` can be created from one immutable commit.
-- [ ] Release notes and known issues are complete.
-- [ ] `docs/phases/phase-10.md` records all files, decisions, tests, deviations, blockers, and
-  evidence.
-- [ ] Phase 11 readiness is explicitly approved; no third-party reproduction has been skipped.
 
-## Phase 11 preparation only
+## Public API and CLI freeze
 
-- [ ] Prepare, but do not fabricate, participant protocol/templates and comparison automation.
-- [ ] Do not publish rc2 until real independent participants finish and P0/P1 are zero.
-- [ ] Do not start formal Phase 12 experiments from development or rc1 smoke runs.
+- [x] `release/api_inventory.csv` inventories and classifies all 248 reviewed exports.
+- [x] Stable, provisional, and experimental classifications are explicit.
+- [x] Every stable export has a generated signature, summary, and version-added record.
+- [x] `docs/stable-api.md` and high-level API docs cover the stable surface.
+- [x] API stability, versioning, and deprecation policies exist.
+- [x] Drift verification fails on unreviewed export/signature/schema changes.
+- [x] Namespace mismatches in earlier API documentation are reconciled.
+- [x] `release/cli_inventory.json` freezes commands, options, defaults, and parameter types.
+- [x] Root and leaf commands required by Phase 11 are present.
+- [x] `cmag report --run-id <RUN_ID>` works.
+- [x] `cmag release freeze` verifies by default and writes only with `--write`.
+- [x] Phase 11 fixed configuration filenames and commands exist.
+
+## Configuration and persisted formats
+
+- [x] Eleven root configuration JSON Schemas are exported and hashed.
+- [x] Twenty persisted-artifact Schemas are exported and hashed.
+- [x] Path defaults generate portable deterministic JSON Schema without warnings.
+- [x] OHLCV, data manifest, training/evaluation, Provider, Replay, team, directive, reporting,
+  release, and reproduction formats are versioned.
+- [x] Every new workflow writes a shared `run_manifest.json`.
+- [x] Run manifests include config/data/protocol hashes, commit when available, source state, seed,
+  runtime identity, status, and exact artifact hashes.
+- [x] Manifest verification rejects tampering, missing files, and extra files.
+- [x] HPO SQLite uses `PRAGMA user_version=1`, upgrades legacy version zero, and rejects future
+  unsupported versions.
+- [x] Existing pre-rc1 Phase 3/4/6/7 artifacts remain readable.
+- [x] Frozen API/CLI/schema verification passes in a fresh Python process.
+
+## Dependencies and environments
+
+- [x] Core wheel excludes Excel, RL, HPO, online LLM, Ray, and service dependencies.
+- [x] `legacy-data`, `rl`, `hpo`, `llm`, `ray`, `service`, `release`, `dev`, and `all` extras are
+  explicit.
+- [x] `.[dev]` contains the CPU requirements used by the Phase 11 protocol.
+- [x] `uv.lock`, CPU/GPU constraints, and CPU/GPU Conda environment files exist.
+- [x] Ordinary package downloads use the Tsinghua mirror.
+- [x] No dependency uses an unpinned Git URL.
+- [x] Local Python 3.12 `.[dev,legacy-data,release,service]` install succeeds.
+- [x] `pip check` and `uv lock --check` pass.
+- [x] Compatibility matrix distinguishes verified from declared profiles.
+- [x] Python 3.11.15 clean-wheel install, CLI help, packaged quickstart, and `pip check` pass.
+- [ ] Remote NVIDIA driver and declared CUDA/Ray profile are securely verified.
+
+## Documentation and release files
+
+- [x] All report-required installation, quickstart, data, environment, market, RL, LLM,
+  multi-Agent, tuning, reproducibility, troubleshooting, security, and FAQ documents exist.
+- [x] README uses the rc1 lifecycle and exact Phase 11 commands.
+- [x] Offline documentation link/command verifier passes for 18 required documents.
+- [x] rc1 checklist, API/CLI/config/format inventories, blockers, known issues, compatibility
+  matrix, and release notes exist.
+- [x] Phase 10 status report lists goals, files, decisions, tests, results, and remaining issues.
+- [x] Phase 10/11 smoke outputs are explicitly prohibited from Phase 12 formal results.
+
+## Automation and tests
+
+- [x] Build, verify, clean-wheel, API/schema export, documentation, and double-build scripts exist.
+- [x] Required Bash scripts pass `bash -n`.
+- [x] 310 full tests pass with 87.50% branch coverage.
+- [x] Ruff passes.
+- [x] Strict mypy passes for 133 source files.
+- [x] Mock/Replay and deterministic directive replay pass without an online key.
+- [x] Exact Phase 11 environment, PPO, research Mock, risk committee Mock, and PSO/ASHA commands
+  run locally.
+- [x] Exact PPO and Agent reproduction commands pass.
+- [x] Exact HPO command resumes to identical trial/selection state.
+- [x] Wheel/sdist build, Twine, archive contents, and credential scan pass.
+- [x] Python 3.12 clean-wheel CLI and packaged-data quickstart pass.
+- [x] Two same-epoch builds produce byte-identical wheel and sdist hashes.
+- [x] Python 3.11 clean-wheel command passes.
+- [ ] CI CPU matrix, package job, and Docker job pass on the candidate commit.
+
+## Exit conditions
+
+- [x] Stable API and frozen formats are documented.
+- [x] Local security, accounting, information-leakage, Replay, and HPO-resume blockers are zero.
+- [x] Local CPU and clean Python 3.12 wheel quickstarts pass.
+- [x] Locks, compatibility matrix, release notes, and known issues are current.
+- [ ] Docker quickstart passes.
+- [ ] Linux Python 3.11/3.12 gates pass.
+- [x] Python 3.11 clean-wheel gate passes.
+- [ ] Release blocker count is zero.
+- [ ] `v1.0.0-rc1` is created from the immutable passing commit.
+- [ ] Phase 10 report status changes from blocked to complete.
+- [ ] Phase 11 readiness is explicitly approved.
+
+## Phase 11 boundary
+
+- [x] Reproduction commands/configurations are prepared.
+- [x] Real independent participants have not started before Phase 10 completion.
+- [x] rc2 is not published before third-party reproduction and P0/P1 clearance.
+- [x] Formal Phase 12 experiments do not reuse development or rc1 smoke results.

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 from pydantic import Field, field_validator, model_validator
@@ -33,8 +33,8 @@ class ProviderCheckConfig(StrictProviderModel):
     """Complete bounded provider/tool-loop configuration."""
 
     run_id: str = "phase5-provider-offline"
-    workspace_root: Path = Path(".")
-    output_dir: Path = Path("runs")
+    workspace_root: Path = Field(default=cast(Path, "."), validate_default=True)
+    output_dir: Path = Field(default=cast(Path, "runs"), validate_default=True)
     prompt_version: str = Field(default="phase5.v1", min_length=1)
     max_rounds: int = Field(default=3, ge=1, le=10)
     provider: ProviderConfig = Field(

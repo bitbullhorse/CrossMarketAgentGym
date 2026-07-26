@@ -12,6 +12,7 @@ from crossmarket_agentgym.agents.models import AgentRuntimeConfig, TeamRunResult
 from crossmarket_agentgym.agents.roles import AgentRegistry
 from crossmarket_agentgym.agents.runtime import AgentRuntime
 from crossmarket_agentgym.agents.tools import ToolRegistry
+from crossmarket_agentgym.audit import write_run_manifest
 from crossmarket_agentgym.audit.logging import redact_value
 
 
@@ -73,5 +74,13 @@ def execute_agent_runtime(
         )
         + "\n",
         encoding="utf-8",
+    )
+    write_run_manifest(
+        run_dir,
+        workspace_root=workspace,
+        run_id=config.run_id,
+        kind="agent",
+        config_path=run_dir / "config.resolved.yaml",
+        seed=config.seed,
     )
     return result

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Literal
+from typing import Literal, cast
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -122,9 +122,9 @@ class SoftwareXReportConfig(StrictReportModel):
 
     report_id: str = "phase8-softwarex"
     title: str = Field(default="CrossMarketAgentGym SoftwareX Evidence", min_length=1)
-    workspace_root: Path = Path(".")
-    runs_root: Path = Path("runs")
-    output_dir: Path = Path("reports")
+    workspace_root: Path = Field(default=cast(Path, "."), validate_default=True)
+    runs_root: Path = Field(default=cast(Path, "runs"), validate_default=True)
+    output_dir: Path = Field(default=cast(Path, "reports"), validate_default=True)
     partition: ReportPartition = "validation"
     include_run_ids: tuple[str, ...] = ()
     max_runs: int = Field(default=500, ge=1, le=5000)

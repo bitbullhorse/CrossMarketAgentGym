@@ -1,0 +1,498 @@
+{
+  "commands": [
+    {
+      "command": "cmag",
+      "help": "Auditable cross-market agent research platform.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": false,
+          "kind": "option",
+          "name": "version",
+          "nargs": 1,
+          "options": [
+            "--version"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.BoolParamType"
+        },
+        {
+          "default": null,
+          "kind": "option",
+          "name": "install_completion",
+          "nargs": 1,
+          "options": [
+            "--install-completion"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.BoolParamType"
+        },
+        {
+          "default": null,
+          "kind": "option",
+          "name": "show_completion",
+          "nargs": 1,
+          "options": [
+            "--show-completion"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.BoolParamType"
+        }
+      ]
+    },
+    {
+      "command": "cmag agent",
+      "help": "Run single-agent or multi-agent teams.",
+      "hidden": false,
+      "parameters": []
+    },
+    {
+      "command": "cmag agent provider-check",
+      "help": "Run the Phase 5 provider, tool, audit, and replay acceptance loop.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "config",
+          "nargs": 1,
+          "options": [
+            "--config"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag agent run",
+      "help": "Run a Phase 6 team or Phase 7 three-layer stack.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "config",
+          "nargs": 1,
+          "options": [
+            "--config"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag data",
+      "help": "Inspect, import, and validate market data.",
+      "hidden": false,
+      "parameters": []
+    },
+    {
+      "command": "cmag data validate",
+      "help": "Validate source quality and manifest integrity without modifying data.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "config",
+          "nargs": 1,
+          "options": [
+            "--config"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": null,
+          "kind": "option",
+          "name": "max_files_per_market",
+          "nargs": 1,
+          "options": [
+            "--max-files-per-market"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.IntRange(min=1, max=None, clamp=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag env",
+      "help": "Validate portfolio environments.",
+      "hidden": false,
+      "parameters": []
+    },
+    {
+      "command": "cmag env check",
+      "help": "Check Gym APIs, random actions, finite values, and accounting invariants.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "config",
+          "nargs": 1,
+          "options": [
+            "--config"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag evaluate",
+      "help": "Evaluate a saved run once on its locked test partition.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "run_id",
+          "nargs": 1,
+          "options": [
+            "--run-id"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.StringParamType"
+        }
+      ]
+    },
+    {
+      "command": "cmag quickstart",
+      "help": "Run the packaged four-market CPU validation quickstart.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": ".",
+          "kind": "option",
+          "name": "workspace_root",
+          "nargs": 1,
+          "options": [
+            "--workspace-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": 64,
+          "kind": "option",
+          "name": "smoke_steps",
+          "nargs": 1,
+          "options": [
+            "--smoke-steps"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.IntRange(min=1, max=None, clamp=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag release",
+      "help": "Validate local release artifacts.",
+      "hidden": false,
+      "parameters": []
+    },
+    {
+      "command": "cmag release check",
+      "help": "Run local pre-publish checks without changing external state.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": ".",
+          "kind": "option",
+          "name": "workspace_root",
+          "nargs": 1,
+          "options": [
+            "--workspace-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag release freeze",
+      "help": "Export or verify the Phase 10 API and persisted-format freeze.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": ".",
+          "kind": "option",
+          "name": "workspace_root",
+          "nargs": 1,
+          "options": [
+            "--workspace-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": false,
+          "kind": "option",
+          "name": "write",
+          "nargs": 1,
+          "options": [
+            "--write"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.BoolParamType"
+        }
+      ]
+    },
+    {
+      "command": "cmag release manifest",
+      "help": "Hash locally built wheel and source archives.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": "dist",
+          "kind": "option",
+          "name": "dist_dir",
+          "nargs": 1,
+          "options": [
+            "--dist-dir"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag release verify",
+      "help": "Inspect built archive metadata, resources, and exclusions.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": "dist",
+          "kind": "option",
+          "name": "dist_dir",
+          "nargs": 1,
+          "options": [
+            "--dist-dir"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag report",
+      "help": "Build reports and browse run evidence.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "run_id",
+          "nargs": 1,
+          "options": [
+            "--run-id"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.StringParamType"
+        },
+        {
+          "default": ".",
+          "kind": "option",
+          "name": "workspace_root",
+          "nargs": 1,
+          "options": [
+            "--workspace-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": "runs",
+          "kind": "option",
+          "name": "runs_root",
+          "nargs": 1,
+          "options": [
+            "--runs-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag report runs",
+      "help": "Print the whitelisted read-only run index.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": ".",
+          "kind": "option",
+          "name": "workspace_root",
+          "nargs": 1,
+          "options": [
+            "--workspace-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": "runs",
+          "kind": "option",
+          "name": "runs_root",
+          "nargs": 1,
+          "options": [
+            "--runs-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag report softwarex",
+      "help": "Generate SoftwareX Markdown, HTML, tables, figures, and run browser.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "config",
+          "nargs": 1,
+          "options": [
+            "--config"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag reproduce",
+      "help": "Verify and replay a recorded run without network or account mutation.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "run_id",
+          "nargs": 1,
+          "options": [
+            "--run-id"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.StringParamType"
+        },
+        {
+          "default": ".",
+          "kind": "option",
+          "name": "workspace_root",
+          "nargs": 1,
+          "options": [
+            "--workspace-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": "runs",
+          "kind": "option",
+          "name": "runs_root",
+          "nargs": 1,
+          "options": [
+            "--runs-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag service",
+      "help": "Run the optional read-only report service.",
+      "hidden": false,
+      "parameters": []
+    },
+    {
+      "command": "cmag service run",
+      "help": "Start the optional read-only FastAPI service.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "config",
+          "nargs": 1,
+          "options": [
+            "--config"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag train",
+      "help": "Train a partition-safe RL policy and persist validation artifacts.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "config",
+          "nargs": 1,
+          "options": [
+            "--config"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag tune",
+      "help": "Tune on training and validation data only.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "config",
+          "nargs": 1,
+          "options": [
+            "--config"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    }
+  ],
+  "release": "1.0.0-rc1",
+  "schema_version": "1.0"
+}

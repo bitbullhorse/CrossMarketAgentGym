@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Literal
+from typing import Literal, cast
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -113,7 +113,7 @@ class TrainRunConfig(StrictRLModel):
     """Complete local training workflow configuration."""
 
     dataset_root: Path
-    output_dir: Path = Path("runs")
+    output_dir: Path = Field(default=cast(Path, "runs"), validate_default=True)
     run_name: str = "ppo_cpu_quickstart"
     environment: EnvironmentConfig = Field(default_factory=EnvironmentConfig)
     split: TemporalSplitConfig

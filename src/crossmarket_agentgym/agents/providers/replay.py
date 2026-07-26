@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -23,6 +24,7 @@ from crossmarket_agentgym.config.models import REQUIRED_AGENT_MODEL
 class ReplayRecord(StrictProviderModel):
     """One canonical request identity and its credential-free response."""
 
+    schema_version: Literal["1.0"] = "1.0"
     request_sha256: str
     response: LLMResponse
 

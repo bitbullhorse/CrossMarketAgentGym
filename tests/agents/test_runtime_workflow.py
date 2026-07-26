@@ -7,6 +7,7 @@ from typer.testing import CliRunner
 
 from crossmarket_agentgym.agents.config import load_agent_runtime_config
 from crossmarket_agentgym.agents.runtime_workflow import execute_agent_runtime
+from crossmarket_agentgym.audit.run_manifest import verify_run_manifest
 from crossmarket_agentgym.cli.app import app
 
 
@@ -62,6 +63,9 @@ def test_offline_one_plus_three_plus_two_workflow(tmp_path: Path) -> None:
     assert (
         tmp_path / config.run_id / "agent" / "team.resolved.json"
     ).exists()
+    manifest = verify_run_manifest(tmp_path / config.run_id)
+    assert manifest.kind == "agent"
+    assert manifest.run_id == config.run_id
 
 
 def test_runtime_cli_requires_explicit_config() -> None:

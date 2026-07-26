@@ -1,0 +1,73 @@
+{
+  "$defs": {
+    "DatasetConfig": {
+      "additionalProperties": false,
+      "description": "One canonical or mixed legacy dataset reference.",
+      "properties": {
+        "layout": {
+          "enum": [
+            "canonical_manifest",
+            "legacy_mixed"
+          ],
+          "title": "Layout",
+          "type": "string"
+        },
+        "markets": {
+          "additionalProperties": {
+            "enum": [
+              "CN",
+              "HK",
+              "JP",
+              "US"
+            ],
+            "type": "string"
+          },
+          "title": "Markets",
+          "type": "object"
+        },
+        "max_files_per_market": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Files Per Market"
+        },
+        "mutation_policy": {
+          "const": "reject",
+          "default": "reject",
+          "title": "Mutation Policy",
+          "type": "string"
+        },
+        "root": {
+          "format": "path",
+          "title": "Root",
+          "type": "string"
+        }
+      },
+      "required": [
+        "root",
+        "layout"
+      ],
+      "title": "DatasetConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Root model for `cmag data validate`.",
+  "properties": {
+    "dataset": {
+      "$ref": "#/$defs/DatasetConfig"
+    }
+  },
+  "required": [
+    "dataset"
+  ],
+  "title": "DataValidationConfig",
+  "type": "object"
+}

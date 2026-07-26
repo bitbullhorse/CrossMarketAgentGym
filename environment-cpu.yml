@@ -1,0 +1,13 @@
+name: crossmarket-agent-gym-cpu
+channels:
+  - pytorch
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge
+dependencies:
+  - python=3.12
+  - pip=25.1
+  - pytorch::cpuonly=2.0
+  - pytorch::pytorch=2.7.1
+  - pip:
+      - --index-url=https://pypi.tuna.tsinghua.edu.cn/simple
+      - --constraint=constraints-cpu.txt
+      - --editable=.[dev,legacy-data,release,service]

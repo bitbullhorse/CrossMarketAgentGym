@@ -14,7 +14,7 @@ ruff check .
 mypy src
 cmag release check --workspace-root .
 python -m build
-python -m twine check dist/*
+python -m twine check dist/*.whl dist/*.tar.gz
 cmag release verify --dist-dir dist
 cmag release manifest --dist-dir dist
 ```

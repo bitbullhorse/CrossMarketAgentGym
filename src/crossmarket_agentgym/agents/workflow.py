@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -22,6 +23,7 @@ from crossmarket_agentgym.agents.tools import (
     build_builtin_tool_registry,
 )
 from crossmarket_agentgym.audit.agent import AgentAuditWriter
+from crossmarket_agentgym.audit.run_manifest import write_run_manifest
 
 
 class ProviderCheckRunSummary(BaseModel):
@@ -29,6 +31,7 @@ class ProviderCheckRunSummary(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
+    schema_version: Literal["1.0"] = "1.0"
     run_id: str
     run_dir: str
     provider: str
@@ -139,5 +142,18 @@ def execute_provider_check(config: ProviderCheckConfig) -> ProviderCheckRunSumma
         )
         + "\n",
         encoding="utf-8",
+    )
+    resolved_path = run_dir / "config.resolved.json"
+    resolved_path.write_text(
+        config.model_dump_json(indent=2) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    write_run_manifest(
+        run_dir,
+        workspace_root=workspace,
+        run_id=config.run_id,
+        kind="agent",
+        config_path=resolved_path,
     )
     return summary

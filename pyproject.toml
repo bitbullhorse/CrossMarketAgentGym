@@ -21,7 +21,7 @@ keywords = [
   "hyperparameter-optimization",
 ]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
@@ -29,12 +29,12 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Typing :: Typed",
 ]
 dependencies = [
   "gymnasium>=1.0,<1.2",
   "jinja2>=3.1,<4",
   "numpy>=1.26,<2.4",
-  "openpyxl>=3.1,<4",
   "pandas>=2.2,<3",
   "pyarrow>=16,<24",
   "pydantic>=2.8,<3",
@@ -42,10 +42,13 @@ dependencies = [
   "pyyaml>=6,<7",
   "rich>=13,<15",
   "typer>=0.12,<1",
-  "xlrd>=2,<3",
 ]
 
 [project.optional-dependencies]
+legacy-data = [
+  "openpyxl>=3.1,<4",
+  "xlrd>=2,<3",
+]
 rl = [
   "stable-baselines3>=2.4,<3",
   "torch>=2.3,<3",
@@ -71,22 +74,29 @@ release = [
 dev = [
   "coverage[toml]>=7.6,<8",
   "hypothesis>=6.112,<7",
+  "httpx>=0.27,<1",
   "mypy>=1.11,<2",
+  "optuna>=4,<5",
   "pandas-stubs>=2.2.3,<3",
   "pytest>=8.3,<9",
   "pytest-cov>=5,<7",
   "ruff>=0.8,<1",
+  "scipy>=1.13,<2",
+  "stable-baselines3>=2.4,<3",
+  "torch>=2.3,<3",
   "types-pyyaml>=6.0.12,<7",
 ]
 all = [
   "fastapi>=0.115,<1",
   "httpx>=0.27,<1",
+  "openpyxl>=3.1,<4",
   "optuna>=4,<5",
   "ray[tune]>=2.40,<3",
   "scipy>=1.13,<2",
   "stable-baselines3>=2.4,<3",
   "torch>=2.3,<3",
   "uvicorn[standard]>=0.30,<1",
+  "xlrd>=2,<3",
 ]
 
 [project.scripts]
@@ -106,10 +116,13 @@ packages = ["src/crossmarket_agentgym"]
 [tool.hatch.build.targets.wheel.force-include]
 "configs" = "crossmarket_agentgym/resources/configs"
 "data/sample" = "crossmarket_agentgym/resources/data/sample"
+"release" = "crossmarket_agentgym/resources/release"
+"schemas/rc1" = "crossmarket_agentgym/resources/schemas/rc1"
 
 [tool.hatch.build.targets.sdist]
 include = [
   "/.env.example",
+  "/.gitattributes",
   "/.github",
   "/CHANGELOG.md",
   "/CITATION.cff",
@@ -120,13 +133,21 @@ include = [
   "/README.md",
   "/SECURITY.md",
   "/configs",
+  "/constraints-cpu.txt",
+  "/constraints-gpu.txt",
   "/data/sample",
   "/docs",
+  "/environment-cpu.yml",
+  "/environment-gpu.yml",
   "/examples",
   "/paper",
   "/pyproject.toml",
+  "/release",
+  "/schemas/rc1",
+  "/scripts",
   "/src",
   "/tests",
+  "/uv.lock",
 ]
 exclude = [
   "/.venv",

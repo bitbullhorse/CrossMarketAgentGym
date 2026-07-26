@@ -1,0 +1,87 @@
+{
+  "$defs": {
+    "DistributionArtifact": {
+      "additionalProperties": false,
+      "description": "One built distribution and its digest.",
+      "properties": {
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "filename",
+        "sha256",
+        "size_bytes"
+      ],
+      "title": "DistributionArtifact",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Credential-free provenance for locally built distributions.",
+  "properties": {
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/DistributionArtifact"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "package": {
+      "const": "crossmarket-agent-gym",
+      "default": "crossmarket-agent-gym",
+      "title": "Package",
+      "type": "string"
+    },
+    "platform": {
+      "title": "Platform",
+      "type": "string"
+    },
+    "python": {
+      "title": "Python",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_date_epoch": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Date Epoch"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "version",
+    "python",
+    "platform",
+    "artifacts"
+  ],
+  "title": "DistributionManifest",
+  "type": "object"
+}

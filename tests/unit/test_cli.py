@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import yaml
 from typer.testing import CliRunner
 
+from crossmarket_agentgym.audit.run_manifest import verify_run_manifest
 from crossmarket_agentgym.cli.app import app
 from crossmarket_agentgym.rl import CallbackConfig, TrainerConfig, load_train_run_config
 
@@ -39,7 +41,7 @@ def test_version_option() -> None:
     result = runner.invoke(app, ["--version"])
 
     assert result.exit_code == 0
-    assert result.stdout.strip() == "0.1.0"
+    assert result.stdout.strip() == "1.0.0rc1"
 
 
 def test_reproduce_requires_run_id() -> None:
@@ -73,6 +75,46 @@ def test_phase8_commands_require_explicit_configuration() -> None:
     assert "--config is required" in (report_result.stdout + report_result.stderr)
     assert service_result.exit_code == 2
     assert "--config is required" in (service_result.stdout + service_result.stderr)
+
+
+def test_report_run_id_prints_one_whitelisted_record(tmp_path: Path) -> None:
+    run_dir = tmp_path / "runs" / "report-example"
+    validation = run_dir / "validation"
+    validation.mkdir(parents=True)
+    (run_dir / "run_summary.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "run_id": "report-example",
+                "algorithm": "PPO",
+                "requested_timesteps": 8,
+                "trained_timesteps": 8,
+            }
+        ),
+        encoding="utf-8",
+    )
+    (validation / "metrics.json").write_text(
+        '{"metrics": {"sharpe": 0.5}}\n',
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "report",
+            "--run-id",
+            "report-example",
+            "--workspace-root",
+            str(tmp_path),
+            "--runs-root",
+            "runs",
+        ],
+    )
+    assert result.exit_code == 0
+    payload = json.loads(result.stdout)
+    assert payload["run_id"] == "report-example"
+    assert payload["kind"] == "training"
+    assert payload["metrics"]["validation"]["sharpe"] == 0.5
 
 
 def test_train_and_locked_evaluate_cli(tmp_path) -> None:
@@ -118,6 +160,11 @@ def test_train_and_locked_evaluate_cli(tmp_path) -> None:
     assert '"algorithm": "PPO"' in train_result.stdout
     assert evaluate_result.exit_code == 0
     assert '"partition": "test"' in evaluate_result.stdout
+    manifest = verify_run_manifest(tmp_path / "cli_phase3")
+    assert {item.relative_path for item in manifest.artifacts} >= {
+        "validation/metrics.json",
+        "test/metrics.json",
+    }
 
 
 def test_data_validate_runs_phase1_sample() -> None:

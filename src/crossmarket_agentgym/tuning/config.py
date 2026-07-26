@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 import yaml
 from pydantic import Field, field_validator, model_validator
@@ -163,8 +163,14 @@ class TuningRunConfig(StrictTuningModel):
     """Complete CPU-first tuning study configuration."""
 
     study_name: str
-    output_dir: Path = Path("runs/tuning")
-    storage_path: Path = Path("runs/tuning/study.sqlite3")
+    output_dir: Path = Field(
+        default=cast(Path, "runs/tuning"),
+        validate_default=True,
+    )
+    storage_path: Path = Field(
+        default=cast(Path, "runs/tuning/study.sqlite3"),
+        validate_default=True,
+    )
     max_trials: int = Field(default=8, ge=1)
     batch_size: int = Field(default=1, ge=1)
     directions: tuple[Direction, ...] = ("maximize",)

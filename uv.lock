@@ -246,7 +246,6 @@ dependencies = [
     { name = "gymnasium" },
     { name = "jinja2" },
     { name = "numpy" },
-    { name = "openpyxl" },
     { name = "pandas" },
     { name = "pyarrow" },
     { name = "pydantic" },
@@ -254,13 +253,13 @@ dependencies = [
     { name = "pyyaml" },
     { name = "rich" },
     { name = "typer" },
-    { name = "xlrd" },
 ]
 
 [package.optional-dependencies]
 all = [
     { name = "fastapi" },
     { name = "httpx" },
+    { name = "openpyxl" },
     { name = "optuna" },
     { name = "ray", extra = ["tune"] },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }, marker = "python_full_version < '3.12'" },
@@ -268,21 +267,32 @@ all = [
     { name = "stable-baselines3" },
     { name = "torch" },
     { name = "uvicorn", extra = ["standard"] },
+    { name = "xlrd" },
 ]
 dev = [
     { name = "coverage", extra = ["toml"] },
+    { name = "httpx" },
     { name = "hypothesis" },
     { name = "mypy" },
+    { name = "optuna" },
     { name = "pandas-stubs" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "ruff" },
+    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "scipy", version = "1.18.0", source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "stable-baselines3" },
+    { name = "torch" },
     { name = "types-pyyaml" },
 ]
 hpo = [
     { name = "optuna" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }, marker = "python_full_version < '3.12'" },
     { name = "scipy", version = "1.18.0", source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }, marker = "python_full_version >= '3.12'" },
+]
+legacy-data = [
+    { name = "openpyxl" },
+    { name = "xlrd" },
 ]
 llm = [
     { name = "httpx" },
@@ -311,13 +321,16 @@ requires-dist = [
     { name = "fastapi", marker = "extra == 'service'", specifier = ">=0.115,<1" },
     { name = "gymnasium", specifier = ">=1.0,<1.2" },
     { name = "httpx", marker = "extra == 'all'", specifier = ">=0.27,<1" },
+    { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.27,<1" },
     { name = "httpx", marker = "extra == 'llm'", specifier = ">=0.27,<1" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.112,<7" },
     { name = "jinja2", specifier = ">=3.1,<4" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.11,<2" },
     { name = "numpy", specifier = ">=1.26,<2.4" },
-    { name = "openpyxl", specifier = ">=3.1,<4" },
+    { name = "openpyxl", marker = "extra == 'all'", specifier = ">=3.1,<4" },
+    { name = "openpyxl", marker = "extra == 'legacy-data'", specifier = ">=3.1,<4" },
     { name = "optuna", marker = "extra == 'all'", specifier = ">=4,<5" },
+    { name = "optuna", marker = "extra == 'dev'", specifier = ">=4,<5" },
     { name = "optuna", marker = "extra == 'hpo'", specifier = ">=4,<5" },
     { name = "pandas", specifier = ">=2.2,<3" },
     { name = "pandas-stubs", marker = "extra == 'dev'", specifier = ">=2.2.3,<3" },
@@ -332,19 +345,23 @@ requires-dist = [
     { name = "rich", specifier = ">=13,<15" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.8,<1" },
     { name = "scipy", marker = "extra == 'all'", specifier = ">=1.13,<2" },
+    { name = "scipy", marker = "extra == 'dev'", specifier = ">=1.13,<2" },
     { name = "scipy", marker = "extra == 'hpo'", specifier = ">=1.13,<2" },
     { name = "stable-baselines3", marker = "extra == 'all'", specifier = ">=2.4,<3" },
+    { name = "stable-baselines3", marker = "extra == 'dev'", specifier = ">=2.4,<3" },
     { name = "stable-baselines3", marker = "extra == 'rl'", specifier = ">=2.4,<3" },
     { name = "torch", marker = "extra == 'all'", specifier = ">=2.3,<3" },
+    { name = "torch", marker = "extra == 'dev'", specifier = ">=2.3,<3" },
     { name = "torch", marker = "extra == 'rl'", specifier = ">=2.3,<3" },
     { name = "twine", marker = "extra == 'release'", specifier = ">=5,<7" },
     { name = "typer", specifier = ">=0.12,<1" },
     { name = "types-pyyaml", marker = "extra == 'dev'", specifier = ">=6.0.12,<7" },
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'all'", specifier = ">=0.30,<1" },
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'service'", specifier = ">=0.30,<1" },
-    { name = "xlrd", specifier = ">=2,<3" },
+    { name = "xlrd", marker = "extra == 'all'", specifier = ">=2,<3" },
+    { name = "xlrd", marker = "extra == 'legacy-data'", specifier = ">=2,<3" },
 ]
-provides-extras = ["all", "dev", "hpo", "llm", "ray", "release", "rl", "service"]
+provides-extras = ["all", "dev", "hpo", "legacy-data", "llm", "ray", "release", "rl", "service"]
 
 [[package]]
 name = "cryptography"

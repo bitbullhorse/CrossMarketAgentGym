@@ -1,221 +1,126 @@
 # CrossMarketAgentGym
 
-CrossMarketAgentGym is an auditable research platform for cross-market portfolio
-reinforcement learning, configurable LLM-agent teams, and hyperparameter optimization.
-It targets daily OHLCV data from the CN, HK, JP, and US equity markets.
+CrossMarketAgentGym is an auditable research platform for cross-market portfolio reinforcement
+learning, configurable LLM Agent teams, and hyperparameter optimization over daily CN, HK, JP,
+and US OHLCV data.
 
-## Installation
+The current candidate is `v1.0.0-rc1`. It freezes the interface for independent reproduction; it
+is not the final v1.0.0 release and contains no formal paper benchmark.
 
-CrossMarketAgentGym supports Python 3.11 and 3.12. The CPU research installation is:
+## Installation and CPU quickstart
+
+Python 3.11 and 3.12 are supported. From a source checkout:
 
 ```bash
-python -m pip install "crossmarket-agent-gym[rl]"
+export PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+python -m pip install -c constraints-cpu.txt -e ".[dev,legacy-data,release,service]"
+cmag --help
 cmag quickstart --smoke-steps 64
 ```
 
-From a source checkout, use the Tsinghua mirror and install development, service, and release
-tools when needed:
+The quickstart uses only the packaged deterministic sample. It performs no data download, LLM
+request, model training, tuning, test evaluation, or account mutation. See
+[installation](docs/installation.md) and [quickstart](docs/quickstart.md).
 
-```bash
-export PIP_INDEX_URL="https://pypi.tuna.tsinghua.edu.cn/simple"
-python -m pip install -e ".[dev,rl,service,release]"
-```
+## Core capabilities
 
-The quickstart uses the packaged deterministic four-market sample. It performs no data download,
-LLM call, training, tuning, or account mutation.
-
-The project is being implemented in the ordered phases defined in
-[`CrossMarketAgentGym_详细执行报告.md`](CrossMarketAgentGym_详细执行报告.md). Phases 0–7
-provide the installable skeleton, canonical daily OHLCV contract, mixed legacy adapters,
-non-destructive quality reports, hashed manifests, a redistributable four-market sample, and a
-leakage-safe Gymnasium portfolio environment with deterministic risk/accounting plus CPU-first
-PPO, SAC, TD3, baselines, callbacks, and reproducible checkpoints.
+- Hashed, versioned daily OHLCV manifests and mixed CSV/Excel adapters.
+- Leakage-safe next-open execution, asynchronous calendars, FX conversion, market rules,
+  deterministic risk projection, and accounting reconciliation.
+- CPU-first PPO, SAC, and TD3 with separate train/validation selection and locked test evaluation.
+- One `AgentRuntime` for single and multi-Agent teams with configurable type, count, tools, model,
+  topology, rounds, quorum, retries, and conflict resolution.
+- Independently switchable Research Orchestration, Risk Management, and Hierarchical Strategy
+  Agents.
+- Online OpenAI-compatible DeepSeek provider fixed to `deepseek-v4-pro`, plus offline Mock and
+  exact Replay providers.
+- Random, Grid, TPE, CMA-ES, NSGA-II, PSO, Genetic, Differential Evolution, and Simulated
+  Annealing searchers.
+- ASHA, HyperBand, and Population Based Training as independent resource schedulers.
+- Immutable run evidence, format schemas, reproducibility checks, SoftwareX reports, and optional
+  Ray/GPU/read-only service profiles.
 
 ## Non-negotiable safety boundaries
 
-- Signals available after close on day `t` execute no earlier than the corresponding market open
-  on day `t+1`.
-- Hyperparameter optimization can read training and validation results, never test results.
-- LLM output is schema-validated and cannot mutate account state or bypass deterministic risk
-  projection.
-- API credentials are read only from environment variables and are redacted from logs.
-- Search algorithms and resource schedulers are separate abstractions.
+- A signal available after close on day `t` executes no earlier than the eligible open on `t+1`.
+- HPO, early stopping, and parameter selection can read training and validation results, never
+  test results.
+- LLM output is schema-validated and cannot mutate account state or bypass deterministic
+  administrator risk constraints.
+- API credentials exist only in process environment variables and are redacted from logs.
+- Search algorithms, resource schedulers, and execution backends are separate abstractions.
+- Accounting, information-leakage, security, or deterministic-replay defects block release.
 
-## Phase 0 quickstart
+## Reproduction commands
 
-```bash
-python -m pip install -e ".[dev]"
-cmag --help
-python -m pytest
-ruff check .
-mypy src
-```
-
-The default LLM model policy is `deepseek-v4-pro`. Set credentials only in the process
-environment:
+The Phase 11 clean-user path is:
 
 ```bash
-export DEEPSEEK_API_KEY="..."
-export DEEPSEEK_BASE_URL="https://api.deepseek.com"
-```
-
-No network call is made by Phase 0.
-
-## Phase 1 data validation
-
-```bash
+pip install -e ".[dev]"
 cmag data validate --config configs/data/sample.yaml
-cmag data validate --config configs/data/local_stock_data.yaml
+cmag env check --config configs/env/sample_cross_market.yaml
+cmag train --config configs/train/ppo_quickstart.yaml
+cmag agent run --config configs/agents/research_single_mock.yaml
+cmag agent run --config configs/agents/risk_committee_mock.yaml
+cmag tune --config configs/tune/ppo_pso_quickstart.yaml
+cmag report --run-id repro-ppo-quickstart
+cmag reproduce --run-id repro-ppo-quickstart
 ```
 
-The first command validates the packaged synthetic sample and all recorded hashes. The second
-performs a bounded read-only smoke test against the local mixed CSV/Excel source tree. Use
-`configs/data/local_stock_data_full.yaml` for a full source audit.
+These examples are development/reproduction checks only. They must not be reused as Phase 12
+formal results.
 
-## Phase 2 environment validation
+## Online DeepSeek provider
+
+Install the `llm` extra and set credentials only in the process environment:
 
 ```bash
-python -m pip install -c constraints-cpu.txt -e ".[dev,rl]"
-cmag env check --config configs/env/cross_market.yaml
+export DEEPSEEK_API_KEY="set-in-your-shell"
+export DEEPSEEK_BASE_URL="https://api.deepseek.com"
+cmag agent run --config configs/agents/full_stack.yaml
 ```
 
-This runs Gymnasium and Stable-Baselines3 compatibility checks plus 1,000 seeded random actions
-against the synthetic four-market sample. The exact timing, projection, currency, accounting, and
-audit guarantees are defined in [`docs/environment-contract.md`](docs/environment-contract.md).
+Never store a real key in YAML, source, tests, reports, or run artifacts. All shipped online Agent
+configs use model `deepseek-v4-pro`.
 
-## Phase 3 DRL quickstart
+## Documentation
 
-```bash
-cmag train --config configs/train/ppo.yaml
-cmag evaluate --run-id phase3_ppo_cpu
-```
+- [Data schema](docs/data_schema.md), [environment](docs/environment.md), and
+  [market rules](docs/market_rules.md)
+- [RL training](docs/rl_training.md) and [tuning](docs/tuning.md)
+- [LLM Agents](docs/llm_agents.md) and [multi-Agent runtime](docs/multi_agent.md)
+- [Reproducibility](docs/reproducibility.md), [API reference](docs/api-reference.md), and
+  [stable API catalog](docs/stable-api.md), and [CLI reference](docs/cli-reference.md)
+- [API stability](docs/api_stability.md), [versioning](docs/versioning_policy.md), and
+  [deprecation](docs/deprecation_policy.md)
+- [Security](docs/security.md), [troubleshooting](docs/troubleshooting.md), and [FAQ](docs/faq.md)
 
-The first command uses train and validation only. The second is the separate locked-test boundary.
-SAC and TD3 configurations are under `configs/train/`; all seven non-RL baselines can be exercised
-with `python examples/evaluate_baselines.py`. See
-[`docs/training-contract.md`](docs/training-contract.md) for partition and artifact guarantees.
+Ordered Phase 0–9 and Phase 10–17 requirements are in
+[the detailed execution report](CrossMarketAgentGym_详细执行报告.md) and
+[the later-phase report](CrossMarketAgentGym_Phase10-17_执行报告.md).
 
-## Phase 4 HPO quickstart
+## Release preparation
 
-```bash
-cmag tune --config configs/tune/ppo_pso_cpu.yaml
-```
-
-Search algorithms and resource schedulers are independent. The CPU Stage A example uses
-train/validation only, resumes from SQLite, locks validation-selected parameters, and retrains
-them independently before any test evaluation.
-
-## Phase 5 Provider quickstart
+Local preparation does not publish:
 
 ```bash
-python -m pip install -e ".[llm]"
-cmag agent provider-check --config configs/agents/provider_offline.yaml
-```
-
-This command performs a no-network Mock → read-only tool → structured response workflow and then
-verifies exact Replay. The OpenAI-compatible DeepSeek adapter reads credentials only from
-`DEEPSEEK_API_KEY`; see [`docs/provider-tool-contract.md`](docs/provider-tool-contract.md).
-
-## Phase 6 AgentRuntime quickstart
-
-```bash
-cmag agent run --config configs/agents/runtime_single_offline.yaml
-cmag agent run --config configs/agents/runtime_team_offline.yaml
-```
-
-Both commands are CPU-only and make no network calls. The first runs one Agent through the same
-runtime used by teams. The second expands a parallel 1+3+2 committee, injects one deterministic
-Provider failure, applies the static risk fallback, and resolves with the most-conservative
-structured policy. Six topologies, custom Python/entry-point roles, serial/parallel scheduling,
-timeouts, retries, and quorum are defined in
-[`docs/agent-runtime-contract.md`](docs/agent-runtime-contract.md).
-
-`configs/agents/runtime_deepseek_team.yaml` uses the same runtime with the online Provider and reads
-the API key from `DEEPSEEK_API_KEY`; it never stores a credential value.
-
-## Phase 7 three-layer fusion quickstart
-
-```bash
-cmag agent run --config configs/agents/phase7_no_llm.yaml
-cmag agent run --config configs/agents/phase7_full_stack_offline.yaml
-```
-
-The first command performs administrator-only deterministic projection and starts zero Provider
-runtimes. The second runs Research Orchestration, a three-Agent most-conservative Risk committee,
-and Hierarchical Strategy through the same `AgentRuntime`, then intersects validated directives
-with hard limits and verifies exact Replay. Both are CPU-only and offline. The online
-`configs/agents/full_stack.yaml` uses `deepseek-v4-pro` and reads the key only from
-`DEEPSEEK_API_KEY`.
-
-The directive schemas, 12 research tools, validation-only and compute-budget gates, cadence, six
-presets, fusion order, and no-account-mutation boundary are defined in
-[`docs/directive-fusion-contract.md`](docs/directive-fusion-contract.md).
-
-## Phase 8 reporting quickstart
-
-```bash
-cmag report softwarex --config configs/reporting/softwarex.yaml
-```
-
-This CPU-only command generates deterministic Markdown, HTML, four CSV tables, four SVG figures, a
-static run browser, JSON payloads, and a hashed manifest under `reports/phase8-softwarex/`.
-Comparison is descriptive and has no hyperparameter-selection authority; missing experiments and
-metrics remain explicitly planned, partial, or `N/A`.
-
-The optional local read-only browser is:
-
-```bash
-python -m pip install -e ".[service]"
-cmag service run --config configs/reporting/service.yaml
-```
-
-It binds to `127.0.0.1` by default. See
-[`docs/reporting-service-contract.md`](docs/reporting-service-contract.md) for indexing,
-provenance, route, and security guarantees.
-
-## Phase 9 reproduction and release
-
-Verify a recorded run in one read-only command:
-
-```bash
-cmag reproduce --run-id phase3_ppo_cpu
-cmag reproduce --run-id phase7-full-stack-offline
-```
-
-The command verifies recorded configuration, data and source fingerprints, checkpoint archive,
-train/validation selection boundary, Agent Replay journals, or exact Phase 7 directive projection
-as applicable. It never retrains, contacts a Provider, uses test metrics for HPO, or mutates account
-state.
-
-Local release preparation is:
-
-```bash
+python scripts/verify_docs.py
+cmag release freeze --workspace-root .
 cmag release check --workspace-root .
-python -m build
-python -m twine check dist/*
-cmag release verify --dist-dir dist
-cmag release manifest --dist-dir dist
+bash scripts/verify_release.sh
 ```
 
-PyPI Trusted Publishing, GitHub Release, and Zenodo archival are configured but require an
-explicit authorized tag or workflow dispatch. Container and archival instructions are in
-[`docs/release.md`](docs/release.md); the Python and CLI surfaces are documented in
-[`docs/api-reference.md`](docs/api-reference.md) and
-[`docs/cli-reference.md`](docs/cli-reference.md).
-
-Optional Ray/GPU Trial evaluation is configured independently from searchers and schedulers; see
-[`docs/scaling.md`](docs/scaling.md) and `configs/tune/ppo_pso_ray_gpu.yaml`.
+PyPI, GitHub Release, and Zenodo changes require an explicitly authorized tag or workflow
+dispatch. Phase 10 may create only the rc1 candidate after all exit gates, including Docker and
+clean-wheel tests, pass.
 
 ## Citation
 
-Please cite the software using [`CITATION.cff`](CITATION.cff). The Zenodo DOI will be added only
-after Zenodo returns a real concept/version DOI; no placeholder DOI is claimed.
+Please cite the software through [CITATION.cff](CITATION.cff). No placeholder DOI is claimed.
 
 ```text
-CrossMarketAgentGym contributors (2026). CrossMarketAgentGym 0.1.0. Apache-2.0.
+CrossMarketAgentGym contributors (2026). CrossMarketAgentGym 1.0.0-rc1. Apache-2.0.
 ```
 
-## Project status
-
-Phase status, design decisions, tests, acceptance evidence, and open issues are recorded under
-[`docs/phases/`](docs/phases/).
+Phase status, tests, acceptance evidence, and unresolved blockers are recorded under
+[docs/phases](docs/phases/).

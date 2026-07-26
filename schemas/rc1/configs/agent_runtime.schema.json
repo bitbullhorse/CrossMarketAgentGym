@@ -1,0 +1,607 @@
+{
+  "$defs": {
+    "AgentDecision": {
+      "additionalProperties": false,
+      "description": "Provider-neutral structured envelope used by every Phase 6 role.",
+      "properties": {
+        "confidence": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "constraints": {
+          "$ref": "#/$defs/DecisionConstraints"
+        },
+        "decision": {
+          "enum": [
+            "approve",
+            "revise",
+            "reject",
+            "abstain"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        },
+        "risk_score": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Risk Score",
+          "type": "number"
+        },
+        "summary": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision",
+        "summary"
+      ],
+      "title": "AgentDecision",
+      "type": "object"
+    },
+    "AgentSpec": {
+      "additionalProperties": false,
+      "description": "One configurable Agent role, expanded into ``count`` independent instances.",
+      "properties": {
+        "allowed_permissions": {
+          "default": [
+            "compute",
+            "read"
+          ],
+          "items": {
+            "enum": [
+              "read",
+              "compute",
+              "write",
+              "expensive"
+            ],
+            "type": "string"
+          },
+          "title": "Allowed Permissions",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "api_key_env": {
+          "default": "DEEPSEEK_API_KEY",
+          "title": "Api Key Env",
+          "type": "string"
+        },
+        "base_url_env": {
+          "default": "DEEPSEEK_BASE_URL",
+          "title": "Base Url Env",
+          "type": "string"
+        },
+        "count": {
+          "default": 1,
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Count",
+          "type": "integer"
+        },
+        "default_base_url": {
+          "default": "https://api.deepseek.com",
+          "title": "Default Base Url",
+          "type": "string"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "endpoint": {
+          "default": "/chat/completions",
+          "title": "Endpoint",
+          "type": "string"
+        },
+        "fallback": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentDecision"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "max_expensive_tool_calls": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Max Expensive Tool Calls",
+          "type": "integer"
+        },
+        "max_retries": {
+          "default": 2,
+          "maximum": 10,
+          "minimum": 0,
+          "title": "Max Retries",
+          "type": "integer"
+        },
+        "max_tokens": {
+          "default": 2048,
+          "maximum": 131072,
+          "minimum": 1,
+          "title": "Max Tokens",
+          "type": "integer"
+        },
+        "max_tool_calls": {
+          "default": 20,
+          "minimum": 0,
+          "title": "Max Tool Calls",
+          "type": "integer"
+        },
+        "max_tool_rounds": {
+          "default": 3,
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Max Tool Rounds",
+          "type": "integer"
+        },
+        "max_tool_seconds": {
+          "default": 300.0,
+          "minimum": 0.0,
+          "title": "Max Tool Seconds",
+          "type": "number"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "mock_scripts": {
+          "default": [],
+          "items": {
+            "items": {
+              "$ref": "#/$defs/MockTurn"
+            },
+            "type": "array"
+          },
+          "title": "Mock Scripts",
+          "type": "array"
+        },
+        "model": {
+          "default": "deepseek-v4-pro",
+          "title": "Model",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "prompt_template": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Prompt Template"
+        },
+        "provider": {
+          "default": "openai_compatible",
+          "enum": [
+            "openai_compatible",
+            "mock",
+            "replay"
+          ],
+          "title": "Provider",
+          "type": "string"
+        },
+        "replay_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replay Path"
+        },
+        "require_budget_before_expensive": {
+          "default": true,
+          "title": "Require Budget Before Expensive",
+          "type": "boolean"
+        },
+        "retry_backoff_seconds": {
+          "default": 0.25,
+          "maximum": 30.0,
+          "minimum": 0.0,
+          "title": "Retry Backoff Seconds",
+          "type": "number"
+        },
+        "structured_output_mode": {
+          "default": "json_object",
+          "enum": [
+            "json_object",
+            "json_schema"
+          ],
+          "title": "Structured Output Mode",
+          "type": "string"
+        },
+        "temperature": {
+          "default": 0.0,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "timeout_seconds": {
+          "default": 120.0,
+          "exclusiveMinimum": 0.0,
+          "maximum": 600.0,
+          "title": "Timeout Seconds",
+          "type": "number"
+        },
+        "tools": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Tools",
+          "type": "array"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        },
+        "weight": {
+          "default": 1.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ],
+      "title": "AgentSpec",
+      "type": "object"
+    },
+    "DecisionConstraints": {
+      "additionalProperties": false,
+      "description": "Optional structured limits that conservative arbitration can intersect.",
+      "properties": {
+        "allow_new_positions": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Allow New Positions"
+        },
+        "cash_floor": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cash Floor"
+        },
+        "max_asset_weight": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Asset Weight"
+        },
+        "max_market_weights": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Max Market Weights",
+          "type": "object"
+        },
+        "max_turnover": {
+          "anyOf": [
+            {
+              "maximum": 2.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Turnover"
+        }
+      },
+      "title": "DecisionConstraints",
+      "type": "object"
+    },
+    "MockTurn": {
+      "additionalProperties": false,
+      "description": "One scripted response or deliberate safe failure.",
+      "properties": {
+        "content": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "additionalProperties": true,
+              "type": "object"
+            }
+          ],
+          "default": "",
+          "title": "Content"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "error_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Message"
+        },
+        "tool_calls": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ToolCall"
+          },
+          "title": "Tool Calls",
+          "type": "array"
+        },
+        "usage": {
+          "$ref": "#/$defs/TokenUsage"
+        }
+      },
+      "title": "MockTurn",
+      "type": "object"
+    },
+    "TeamSpec": {
+      "additionalProperties": false,
+      "description": "Communication topology and deterministic arbitration policy.",
+      "properties": {
+        "agents": {
+          "items": {
+            "$ref": "#/$defs/AgentSpec"
+          },
+          "title": "Agents",
+          "type": "array"
+        },
+        "conflict_policy": {
+          "default": "most_conservative",
+          "enum": [
+            "weighted_vote",
+            "majority_vote",
+            "judge",
+            "most_conservative",
+            "reject"
+          ],
+          "title": "Conflict Policy",
+          "type": "string"
+        },
+        "judge": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Judge"
+        },
+        "max_rounds": {
+          "default": 3,
+          "maximum": 10,
+          "minimum": 1,
+          "title": "Max Rounds",
+          "type": "integer"
+        },
+        "max_workers": {
+          "default": 8,
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Max Workers",
+          "type": "integer"
+        },
+        "parallel": {
+          "default": true,
+          "title": "Parallel",
+          "type": "boolean"
+        },
+        "quorum": {
+          "default": 0.5,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Quorum",
+          "type": "number"
+        },
+        "supervisor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supervisor"
+        },
+        "topology": {
+          "enum": [
+            "single",
+            "pipeline",
+            "supervisor_worker",
+            "committee_vote",
+            "debate_then_judge",
+            "map_reduce"
+          ],
+          "title": "Topology",
+          "type": "string"
+        }
+      },
+      "required": [
+        "topology",
+        "agents"
+      ],
+      "title": "TeamSpec",
+      "type": "object"
+    },
+    "TokenUsage": {
+      "additionalProperties": false,
+      "description": "Normalized provider token accounting.",
+      "properties": {
+        "completion_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Completion Tokens",
+          "type": "integer"
+        },
+        "prompt_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Prompt Tokens",
+          "type": "integer"
+        },
+        "total_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Total Tokens",
+          "type": "integer"
+        }
+      },
+      "title": "TokenUsage",
+      "type": "object"
+    },
+    "ToolCall": {
+      "additionalProperties": false,
+      "description": "One model-requested tool invocation with parsed arguments.",
+      "properties": {
+        "arguments": {
+          "additionalProperties": true,
+          "title": "Arguments",
+          "type": "object"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "ToolCall",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Complete credential-free Phase 6 CLI configuration.",
+  "properties": {
+    "load_entry_points": {
+      "default": true,
+      "title": "Load Entry Points",
+      "type": "boolean"
+    },
+    "objective": {
+      "minLength": 1,
+      "title": "Objective",
+      "type": "string"
+    },
+    "output_dir": {
+      "default": "runs",
+      "format": "path",
+      "title": "Output Dir",
+      "type": "string"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "prompt_version": {
+      "default": "phase6.v1",
+      "minLength": 1,
+      "title": "Prompt Version",
+      "type": "string"
+    },
+    "run_id": {
+      "default": "phase6-runtime-offline",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "seed": {
+      "default": 1024,
+      "maximum": 4294967295,
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "team": {
+      "$ref": "#/$defs/TeamSpec"
+    },
+    "workspace_root": {
+      "default": ".",
+      "format": "path",
+      "title": "Workspace Root",
+      "type": "string"
+    }
+  },
+  "required": [
+    "objective",
+    "team"
+  ],
+  "title": "AgentRuntimeConfig",
+  "type": "object"
+}

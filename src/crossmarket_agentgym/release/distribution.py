@@ -17,14 +17,23 @@ _WHEEL_REQUIRED = (
     "crossmarket_agentgym/_version.py",
     "crossmarket_agentgym/py.typed",
     "crossmarket_agentgym/resources/configs/env/cross_market.yaml",
+    "crossmarket_agentgym/resources/configs/env/sample_cross_market.yaml",
     "crossmarket_agentgym/resources/data/sample/dataset_manifest.json",
+    "crossmarket_agentgym/resources/release/api_inventory.csv",
+    "crossmarket_agentgym/resources/schemas/rc1/checksums.json",
 )
 _SDIST_REQUIRED = (
     "README.md",
     "CITATION.cff",
     "LICENSE",
+    "constraints-cpu.txt",
+    "environment-cpu.yml",
     "pyproject.toml",
     "paper/softwarex-paper-outline.md",
+    "release/api_inventory.csv",
+    "schemas/rc1/checksums.json",
+    "scripts/verify_release.sh",
+    "uv.lock",
 )
 _FORBIDDEN_COMPONENTS = frozenset(
     {

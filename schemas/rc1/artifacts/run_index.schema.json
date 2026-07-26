@@ -1,0 +1,154 @@
+{
+  "$defs": {
+    "RunRecord": {
+      "additionalProperties": false,
+      "description": "Whitelisted metadata extracted from one run directory.",
+      "properties": {
+        "algorithm": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Algorithm"
+        },
+        "artifact_count": {
+          "minimum": 0,
+          "title": "Artifact Count",
+          "type": "integer"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Attributes",
+          "type": "object"
+        },
+        "fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "training",
+            "tuning",
+            "agent",
+            "phase7"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "metrics": {
+          "additionalProperties": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object"
+          },
+          "title": "Metrics",
+          "type": "object"
+        },
+        "partitions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Partitions",
+          "type": "array"
+        },
+        "relative_path": {
+          "title": "Relative Path",
+          "type": "string"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        },
+        "source_files": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Files",
+          "type": "array"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "warnings": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "run_id",
+        "kind",
+        "relative_path",
+        "status",
+        "artifact_count",
+        "source_files",
+        "fingerprint"
+      ],
+      "title": "RunRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Deterministically ordered run browser payload.",
+  "properties": {
+    "fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "runs": {
+      "items": {
+        "$ref": "#/$defs/RunRecord"
+      },
+      "title": "Runs",
+      "type": "array"
+    },
+    "runs_root": {
+      "title": "Runs Root",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "runs_root",
+    "runs",
+    "fingerprint"
+  ],
+  "title": "RunIndex",
+  "type": "object"
+}

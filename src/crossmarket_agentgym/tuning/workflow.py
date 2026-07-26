@@ -5,10 +5,12 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict
 
+from crossmarket_agentgym.audit import write_run_manifest
+from crossmarket_agentgym.data.manifests import sha256_file
 from crossmarket_agentgym.rl.config import (
     TrainerConfig,
     TrainRunConfig,
@@ -32,6 +34,7 @@ class TuningRunSummary(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
+    schema_version: Literal["1.0"] = "1.0"
     study_name: str
     trial_count: int
     completed_count: int
@@ -255,5 +258,22 @@ def execute_tuning_run(
     (run_dir / "tuning_summary.json").write_text(
         summary.model_dump_json(indent=2),
         encoding="utf-8",
+    )
+    resolved_base = base_train_config
+    if resolved_base is None and config.objective.base_train_config is not None:
+        resolved_base = load_train_run_config(config.objective.base_train_config)
+    dataset_sha256 = (
+        sha256_file(resolved_base.dataset_root / "dataset_manifest.json")
+        if resolved_base is not None
+        else None
+    )
+    write_run_manifest(
+        run_dir,
+        workspace_root=Path.cwd(),
+        run_id=config.study_name,
+        kind="tuning",
+        config_path=run_dir / "resolved_tuning_config.json",
+        dataset_sha256=dataset_sha256,
+        seed=config.searcher.seed,
     )
     return summary

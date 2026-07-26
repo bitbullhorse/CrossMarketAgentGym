@@ -1,0 +1,87 @@
+{
+  "$defs": {
+    "ToolCall": {
+      "additionalProperties": false,
+      "description": "One model-requested tool invocation with parsed arguments.",
+      "properties": {
+        "arguments": {
+          "additionalProperties": true,
+          "title": "Arguments",
+          "type": "object"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "ToolCall",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Provider-neutral chat message.",
+  "properties": {
+    "content": {
+      "default": "",
+      "title": "Content",
+      "type": "string"
+    },
+    "name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Name"
+    },
+    "role": {
+      "enum": [
+        "system",
+        "user",
+        "assistant",
+        "tool"
+      ],
+      "title": "Role",
+      "type": "string"
+    },
+    "tool_call_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tool Call Id"
+    },
+    "tool_calls": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ToolCall"
+      },
+      "title": "Tool Calls",
+      "type": "array"
+    }
+  },
+  "required": [
+    "role"
+  ],
+  "title": "Message",
+  "type": "object"
+}

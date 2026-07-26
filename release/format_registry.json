@@ -1,0 +1,154 @@
+{
+  "formats": [
+    {
+      "name": "dataset_manifest",
+      "schema_path": "schemas/rc1/artifacts/dataset_manifest.schema.json",
+      "schema_sha256": "0ff8429315f9c4fa2d141a8c857776be868dde98f987be3e7419dc2256e4f6aa",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "directive_record",
+      "schema_path": "schemas/rc1/artifacts/directive_record.schema.json",
+      "schema_sha256": "1efd504a3c642767b532cf1cac449050c7e1af9bd1ea7b68c5205bc174241522",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "evaluation_result",
+      "schema_path": "schemas/rc1/artifacts/evaluation_result.schema.json",
+      "schema_sha256": "66cac5c4b9fa40c155ce940af0f27864e7682a4f350f3b9f428446a942c6b3e8",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "ohlcv_record",
+      "schema_path": "schemas/rc1/artifacts/ohlcv_record.schema.json",
+      "schema_sha256": "4c690c34184c7f412b9f960dc0abea362b6019909edc23143c36c763d3524eab",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "phase7_summary",
+      "schema_path": "schemas/rc1/artifacts/phase7_summary.schema.json",
+      "schema_sha256": "4367998a8849d512e487f91a5f71b2b66246cb5bc318c2c4721fcd87b65d60c2",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "provider_message",
+      "schema_path": "schemas/rc1/artifacts/provider_message.schema.json",
+      "schema_sha256": "522a8a4500527a74d211c2efd5069ce37d17c02f85dbba2a61dd335c3adc4af4",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "provider_replay",
+      "schema_path": "schemas/rc1/artifacts/provider_replay.schema.json",
+      "schema_sha256": "2aae1b01f64cef0a27a0763c23e5612224247eda7a46b3615da09819a0c12046",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "provider_response",
+      "schema_path": "schemas/rc1/artifacts/provider_response.schema.json",
+      "schema_sha256": "3ff79f8429888eb980dd7c18bba4947feec683025fab2dde4e053a5840e8c5d5",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "release_manifest",
+      "schema_path": "schemas/rc1/artifacts/release_manifest.schema.json",
+      "schema_sha256": "af01b7ed0fb82dfa1be24debef805e5e7953dc6a85de657141575406baef097d",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "report_manifest",
+      "schema_path": "schemas/rc1/artifacts/report_manifest.schema.json",
+      "schema_sha256": "3326ec90aa6d5d9650fdf3d243b9842214ea09f4360fbd6240e913eb841c8b96",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "reproduction_result",
+      "schema_path": "schemas/rc1/artifacts/reproduction_result.schema.json",
+      "schema_sha256": "5bacf69f1925f0432bb26eefd12649e7e053d2e33e94f25850909bae02a41fbb",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "run_index",
+      "schema_path": "schemas/rc1/artifacts/run_index.schema.json",
+      "schema_sha256": "38329cdbb0416e8fcecbe896511cae0f04aaba7f4b2b8a36c7dea5b58a238c9e",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "run_manifest",
+      "schema_path": "schemas/rc1/artifacts/run_manifest.schema.json",
+      "schema_sha256": "2d01be56d0908a58a5670f8232727071cf240993a9fad23a31196dc6f5f48020",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "study_state",
+      "schema_path": "schemas/rc1/artifacts/study_state.schema.json",
+      "schema_sha256": "2e0cb56ba1e9f007c3331e40845fde1b300cff6f7c9d7c1da490f1981152fae0",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "team_result",
+      "schema_path": "schemas/rc1/artifacts/team_result.schema.json",
+      "schema_sha256": "004766322856012d2de7cd3f886055d405c15216a41c34fcaa0f319163f98795",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "training_metadata",
+      "schema_path": "schemas/rc1/artifacts/training_metadata.schema.json",
+      "schema_sha256": "d52382feac5d80278176e4ac4751cf180355add3b4dbc8f5206953db556cc0c6",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "training_summary",
+      "schema_path": "schemas/rc1/artifacts/training_summary.schema.json",
+      "schema_sha256": "5fe927990290ff7e59193dc51669c1a4908eda1e43dbeac8954912d97bf434b1",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "trial_result",
+      "schema_path": "schemas/rc1/artifacts/trial_result.schema.json",
+      "schema_sha256": "493aeabf09b5c844ce32fb6630e849d4091eda48ecf7a4eac85a1eb90f96b2ed",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "trial_suggestion",
+      "schema_path": "schemas/rc1/artifacts/trial_suggestion.schema.json",
+      "schema_sha256": "e7f9e15eb104a8387316f0ed91d1043cfb19db7a1934d9447311a2c820f3f535",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "tuning_summary",
+      "schema_path": "schemas/rc1/artifacts/tuning_summary.schema.json",
+      "schema_sha256": "a422ae8cc45f49b0fe317c43c52b4ec0fb5ec4c6b207d2fea43ad66c939d3c2e",
+      "storage": "json_or_jsonl",
+      "version": "1.0"
+    },
+    {
+      "name": "hpo_sqlite",
+      "schema_path": null,
+      "schema_sha256": null,
+      "storage": "sqlite",
+      "version": "1"
+    }
+  ],
+  "release": "1.0.0-rc1",
+  "schema_version": "1.0",
+  "unlisted_interfaces": "internal"
+}

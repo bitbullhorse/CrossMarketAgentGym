@@ -1,0 +1,502 @@
+{
+  "$defs": {
+    "CallbackConfig": {
+      "additionalProperties": false,
+      "description": "Cadence and thresholds for every required training callback.",
+      "properties": {
+        "audit_freq": {
+          "default": 1,
+          "minimum": 0,
+          "title": "Audit Freq",
+          "type": "integer"
+        },
+        "checkpoint_freq": {
+          "default": 250,
+          "minimum": 0,
+          "title": "Checkpoint Freq",
+          "type": "integer"
+        },
+        "early_stop_patience": {
+          "default": 5,
+          "minimum": 0,
+          "title": "Early Stop Patience",
+          "type": "integer"
+        },
+        "finite_guard": {
+          "default": true,
+          "title": "Finite Guard",
+          "type": "boolean"
+        },
+        "max_drawdown": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 0.8,
+          "title": "Max Drawdown"
+        },
+        "metrics_freq": {
+          "default": 1,
+          "minimum": 0,
+          "title": "Metrics Freq",
+          "type": "integer"
+        },
+        "resource_monitor_freq": {
+          "default": 100,
+          "minimum": 0,
+          "title": "Resource Monitor Freq",
+          "type": "integer"
+        },
+        "validation_freq": {
+          "default": 250,
+          "minimum": 0,
+          "title": "Validation Freq",
+          "type": "integer"
+        }
+      },
+      "title": "CallbackConfig",
+      "type": "object"
+    },
+    "EnvironmentConfig": {
+      "additionalProperties": false,
+      "description": "Immutable hard constraints and daily execution settings.",
+      "properties": {
+        "accounting_tolerance": {
+          "default": 1e-08,
+          "exclusiveMinimum": 0.0,
+          "maximum": 0.001,
+          "title": "Accounting Tolerance",
+          "type": "number"
+        },
+        "allow_short": {
+          "default": false,
+          "title": "Allow Short",
+          "type": "boolean"
+        },
+        "base_currency": {
+          "default": "USD",
+          "title": "Base Currency",
+          "type": "string"
+        },
+        "cash_floor": {
+          "default": 0.05,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Cash Floor",
+          "type": "number"
+        },
+        "cvar_alpha": {
+          "default": 0.05,
+          "exclusiveMinimum": 0.0,
+          "maximum": 0.5,
+          "title": "Cvar Alpha",
+          "type": "number"
+        },
+        "cvar_penalty": {
+          "default": 0.5,
+          "minimum": 0.0,
+          "title": "Cvar Penalty",
+          "type": "number"
+        },
+        "drawdown_penalty": {
+          "default": 0.5,
+          "minimum": 0.0,
+          "title": "Drawdown Penalty",
+          "type": "number"
+        },
+        "execution_protocol": {
+          "const": "close_signal_next_open",
+          "default": "close_signal_next_open",
+          "title": "Execution Protocol",
+          "type": "string"
+        },
+        "initial_cash": {
+          "default": 1000000.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Initial Cash",
+          "type": "number"
+        },
+        "lookback": {
+          "default": 20,
+          "minimum": 1,
+          "title": "Lookback",
+          "type": "integer"
+        },
+        "lot_sizes": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Lot Sizes",
+          "type": "object"
+        },
+        "market_weight_overrides": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "propertyNames": {
+            "enum": [
+              "CN",
+              "HK",
+              "JP",
+              "US"
+            ]
+          },
+          "title": "Market Weight Overrides",
+          "type": "object"
+        },
+        "max_asset_weight": {
+          "default": 0.1,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Max Asset Weight",
+          "type": "number"
+        },
+        "max_episode_steps": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Episode Steps"
+        },
+        "max_leverage": {
+          "default": 1.0,
+          "maximum": 3.0,
+          "minimum": 1.0,
+          "title": "Max Leverage",
+          "type": "number"
+        },
+        "max_market_weight": {
+          "default": 0.4,
+          "exclusiveMinimum": 0.0,
+          "maximum": 3.0,
+          "title": "Max Market Weight",
+          "type": "number"
+        },
+        "max_turnover": {
+          "default": 1.0,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Max Turnover",
+          "type": "number"
+        },
+        "reward": {
+          "default": "risk_adjusted",
+          "enum": [
+            "log_return",
+            "return_minus_cost",
+            "risk_adjusted",
+            "differential_sharpe",
+            "drawdown_penalty",
+            "cvar_penalty"
+          ],
+          "title": "Reward",
+          "type": "string"
+        },
+        "risk_aversion": {
+          "default": 0.1,
+          "minimum": 0.0,
+          "title": "Risk Aversion",
+          "type": "number"
+        },
+        "slippage_bps": {
+          "default": 5.0,
+          "maximum": 1000.0,
+          "minimum": 0.0,
+          "title": "Slippage Bps",
+          "type": "number"
+        },
+        "t_plus_one_markets": {
+          "default": [
+            "CN"
+          ],
+          "items": {
+            "enum": [
+              "CN",
+              "HK",
+              "JP",
+              "US"
+            ],
+            "type": "string"
+          },
+          "title": "T Plus One Markets",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "transaction_cost_bps": {
+          "default": 10.0,
+          "maximum": 1000.0,
+          "minimum": 0.0,
+          "title": "Transaction Cost Bps",
+          "type": "number"
+        }
+      },
+      "title": "EnvironmentConfig",
+      "type": "object"
+    },
+    "TemporalSplitConfig": {
+      "additionalProperties": false,
+      "description": "Non-overlapping outcome intervals with shared boundary observations.",
+      "properties": {
+        "test_end_execution_index": {
+          "anyOf": [
+            {
+              "minimum": 3,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Test End Execution Index"
+        },
+        "train_end_execution_index": {
+          "minimum": 1,
+          "title": "Train End Execution Index",
+          "type": "integer"
+        },
+        "validation_end_execution_index": {
+          "minimum": 2,
+          "title": "Validation End Execution Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "train_end_execution_index",
+        "validation_end_execution_index"
+      ],
+      "title": "TemporalSplitConfig",
+      "type": "object"
+    },
+    "TrainerConfig": {
+      "additionalProperties": false,
+      "description": "Algorithm and policy settings shared by every SB3 trainer.",
+      "properties": {
+        "action_noise_std": {
+          "default": 0.1,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Action Noise Std",
+          "type": "number"
+        },
+        "algorithm": {
+          "default": "PPO",
+          "enum": [
+            "PPO",
+            "SAC",
+            "TD3",
+            "A2C"
+          ],
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "batch_size": {
+          "default": 32,
+          "minimum": 2,
+          "title": "Batch Size",
+          "type": "integer"
+        },
+        "buffer_size": {
+          "default": 10000,
+          "minimum": 2,
+          "title": "Buffer Size",
+          "type": "integer"
+        },
+        "deterministic_eval": {
+          "default": true,
+          "title": "Deterministic Eval",
+          "type": "boolean"
+        },
+        "device": {
+          "default": "cpu",
+          "enum": [
+            "auto",
+            "cpu",
+            "cuda"
+          ],
+          "title": "Device",
+          "type": "string"
+        },
+        "eval_episodes": {
+          "default": 1,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Eval Episodes",
+          "type": "integer"
+        },
+        "features_dim": {
+          "default": 64,
+          "maximum": 1024,
+          "minimum": 8,
+          "title": "Features Dim",
+          "type": "integer"
+        },
+        "gamma": {
+          "default": 0.99,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Gamma",
+          "type": "number"
+        },
+        "gradient_steps": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Gradient Steps",
+          "type": "integer"
+        },
+        "learning_rate": {
+          "default": 0.0003,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Learning Rate",
+          "type": "number"
+        },
+        "learning_starts": {
+          "default": 10,
+          "minimum": 0,
+          "title": "Learning Starts",
+          "type": "integer"
+        },
+        "n_epochs": {
+          "default": 4,
+          "minimum": 1,
+          "title": "N Epochs",
+          "type": "integer"
+        },
+        "n_steps": {
+          "default": 64,
+          "minimum": 2,
+          "title": "N Steps",
+          "type": "integer"
+        },
+        "net_arch": {
+          "default": [
+            64,
+            64
+          ],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Net Arch",
+          "type": "array"
+        },
+        "policy": {
+          "default": "shared_mlp",
+          "enum": [
+            "mlp",
+            "shared_mlp",
+            "transformer"
+          ],
+          "title": "Policy",
+          "type": "string"
+        },
+        "seed": {
+          "default": 1024,
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "tau": {
+          "default": 0.005,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Tau",
+          "type": "number"
+        },
+        "total_timesteps": {
+          "default": 1000,
+          "minimum": 1,
+          "title": "Total Timesteps",
+          "type": "integer"
+        },
+        "train_freq": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Train Freq",
+          "type": "integer"
+        },
+        "transformer_heads": {
+          "default": 4,
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Transformer Heads",
+          "type": "integer"
+        },
+        "transformer_layers": {
+          "default": 1,
+          "maximum": 8,
+          "minimum": 1,
+          "title": "Transformer Layers",
+          "type": "integer"
+        },
+        "transformer_model_dim": {
+          "default": 32,
+          "maximum": 512,
+          "minimum": 4,
+          "title": "Transformer Model Dim",
+          "type": "integer"
+        },
+        "verbose": {
+          "default": 0,
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Verbose",
+          "type": "integer"
+        }
+      },
+      "title": "TrainerConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Complete local training workflow configuration.",
+  "properties": {
+    "callbacks": {
+      "$ref": "#/$defs/CallbackConfig"
+    },
+    "dataset_root": {
+      "format": "path",
+      "title": "Dataset Root",
+      "type": "string"
+    },
+    "environment": {
+      "$ref": "#/$defs/EnvironmentConfig"
+    },
+    "output_dir": {
+      "default": "runs",
+      "format": "path",
+      "title": "Output Dir",
+      "type": "string"
+    },
+    "run_name": {
+      "default": "ppo_cpu_quickstart",
+      "title": "Run Name",
+      "type": "string"
+    },
+    "split": {
+      "$ref": "#/$defs/TemporalSplitConfig"
+    },
+    "trainer": {
+      "$ref": "#/$defs/TrainerConfig"
+    }
+  },
+  "required": [
+    "dataset_root",
+    "split"
+  ],
+  "title": "TrainRunConfig",
+  "type": "object"
+}

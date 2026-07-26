@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -14,6 +14,7 @@ class TrainingMetadata(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
+    schema_version: Literal["1.0"] = "1.0"
     algorithm: str
     policy: str
     requested_timesteps: int = Field(ge=1)

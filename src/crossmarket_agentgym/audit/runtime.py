@@ -50,6 +50,7 @@ class RuntimeAuditWriter:
         self._write_json(
             self.agent_dir / "team.resolved.json",
             {
+                "schema_version": "1.0",
                 "team": team.model_dump(mode="json", exclude={"agents"}),
                 "agents": [
                     {
@@ -73,6 +74,7 @@ class RuntimeAuditWriter:
         with self._lock:
             self._sequence += 1
             payload = {
+                "schema_version": "1.0",
                 "sequence": self._sequence,
                 "timestamp": datetime.now(UTC).isoformat(),
                 "event": "agent_invocation",

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
 
 import yaml
 from pydantic import Field, model_validator
@@ -13,9 +14,9 @@ from crossmarket_agentgym.reporting.models import StrictReportModel
 class ServiceConfig(StrictReportModel):
     """Local-first service settings with explicit remote opt-in."""
 
-    workspace_root: Path = Path(".")
-    runs_root: Path = Path("runs")
-    reports_root: Path = Path("reports")
+    workspace_root: Path = Field(default=cast(Path, "."), validate_default=True)
+    runs_root: Path = Field(default=cast(Path, "runs"), validate_default=True)
+    reports_root: Path = Field(default=cast(Path, "reports"), validate_default=True)
     host: str = "127.0.0.1"
     port: int = Field(default=8000, ge=1, le=65535)
     allow_remote: bool = False
@@ -37,4 +38,3 @@ def load_service_config(path: Path) -> ServiceConfig:
     if not isinstance(raw, dict):
         raise TypeError("service configuration must be a mapping")
     return ServiceConfig.model_validate(raw)
-

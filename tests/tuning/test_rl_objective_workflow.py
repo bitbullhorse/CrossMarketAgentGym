@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from crossmarket_agentgym.audit.run_manifest import verify_run_manifest
 from crossmarket_agentgym.rl import CallbackConfig, load_train_run_config
 from crossmarket_agentgym.tuning.config import (
     ObjectiveConfig,
@@ -109,6 +110,9 @@ def test_pso_four_by_two_cpu_study_is_resumable(tmp_path: Path) -> None:
     assert first.best_trial_id is not None
     assert first.test_set_accessed is False
     assert Path(first.report_json).exists()
+    manifest = verify_run_manifest(tmp_path / "runs" / config.study_name)
+    assert manifest.kind == "tuning"
+    assert manifest.run_id == config.study_name
 
 
 def test_locked_ppo_parameters_are_independently_retrained_without_test(

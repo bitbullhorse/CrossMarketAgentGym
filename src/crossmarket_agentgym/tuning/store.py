@@ -18,6 +18,7 @@ from crossmarket_agentgym.tuning.models import (
 )
 
 _TERMINAL_STATUSES: tuple[TrialStatus, ...] = ("completed", "failed", "pruned")
+STUDY_SCHEMA_VERSION = 1
 
 
 def _now() -> str:
@@ -47,6 +48,14 @@ class SQLiteStudyStore:
         self._create_schema()
 
     def _create_schema(self) -> None:
+        stored_version = int(
+            self._connection.execute("PRAGMA user_version").fetchone()[0]
+        )
+        if stored_version > STUDY_SCHEMA_VERSION:
+            self._connection.close()
+            raise RuntimeError(
+                "study database schema is newer than this software supports"
+            )
         self._connection.executescript(
             """
             CREATE TABLE IF NOT EXISTS studies (
@@ -88,6 +97,7 @@ class SQLiteStudyStore:
             self._connection.execute(
                 "ALTER TABLE studies ADD COLUMN metadata_json TEXT NOT NULL DEFAULT '{}'"
             )
+        self._connection.execute(f"PRAGMA user_version = {STUDY_SCHEMA_VERSION}")
         self._connection.commit()
 
     def create_study(

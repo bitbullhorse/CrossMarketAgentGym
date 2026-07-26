@@ -1,0 +1,182 @@
+{
+  "additionalProperties": false,
+  "description": "Immutable hard constraints and daily execution settings.",
+  "properties": {
+    "accounting_tolerance": {
+      "default": 1e-08,
+      "exclusiveMinimum": 0.0,
+      "maximum": 0.001,
+      "title": "Accounting Tolerance",
+      "type": "number"
+    },
+    "allow_short": {
+      "default": false,
+      "title": "Allow Short",
+      "type": "boolean"
+    },
+    "base_currency": {
+      "default": "USD",
+      "title": "Base Currency",
+      "type": "string"
+    },
+    "cash_floor": {
+      "default": 0.05,
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Cash Floor",
+      "type": "number"
+    },
+    "cvar_alpha": {
+      "default": 0.05,
+      "exclusiveMinimum": 0.0,
+      "maximum": 0.5,
+      "title": "Cvar Alpha",
+      "type": "number"
+    },
+    "cvar_penalty": {
+      "default": 0.5,
+      "minimum": 0.0,
+      "title": "Cvar Penalty",
+      "type": "number"
+    },
+    "drawdown_penalty": {
+      "default": 0.5,
+      "minimum": 0.0,
+      "title": "Drawdown Penalty",
+      "type": "number"
+    },
+    "execution_protocol": {
+      "const": "close_signal_next_open",
+      "default": "close_signal_next_open",
+      "title": "Execution Protocol",
+      "type": "string"
+    },
+    "initial_cash": {
+      "default": 1000000.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Initial Cash",
+      "type": "number"
+    },
+    "lookback": {
+      "default": 20,
+      "minimum": 1,
+      "title": "Lookback",
+      "type": "integer"
+    },
+    "lot_sizes": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Lot Sizes",
+      "type": "object"
+    },
+    "market_weight_overrides": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "propertyNames": {
+        "enum": [
+          "CN",
+          "HK",
+          "JP",
+          "US"
+        ]
+      },
+      "title": "Market Weight Overrides",
+      "type": "object"
+    },
+    "max_asset_weight": {
+      "default": 0.1,
+      "exclusiveMinimum": 0.0,
+      "maximum": 1.0,
+      "title": "Max Asset Weight",
+      "type": "number"
+    },
+    "max_episode_steps": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Max Episode Steps"
+    },
+    "max_leverage": {
+      "default": 1.0,
+      "maximum": 3.0,
+      "minimum": 1.0,
+      "title": "Max Leverage",
+      "type": "number"
+    },
+    "max_market_weight": {
+      "default": 0.4,
+      "exclusiveMinimum": 0.0,
+      "maximum": 3.0,
+      "title": "Max Market Weight",
+      "type": "number"
+    },
+    "max_turnover": {
+      "default": 1.0,
+      "maximum": 2.0,
+      "minimum": 0.0,
+      "title": "Max Turnover",
+      "type": "number"
+    },
+    "reward": {
+      "default": "risk_adjusted",
+      "enum": [
+        "log_return",
+        "return_minus_cost",
+        "risk_adjusted",
+        "differential_sharpe",
+        "drawdown_penalty",
+        "cvar_penalty"
+      ],
+      "title": "Reward",
+      "type": "string"
+    },
+    "risk_aversion": {
+      "default": 0.1,
+      "minimum": 0.0,
+      "title": "Risk Aversion",
+      "type": "number"
+    },
+    "slippage_bps": {
+      "default": 5.0,
+      "maximum": 1000.0,
+      "minimum": 0.0,
+      "title": "Slippage Bps",
+      "type": "number"
+    },
+    "t_plus_one_markets": {
+      "default": [
+        "CN"
+      ],
+      "items": {
+        "enum": [
+          "CN",
+          "HK",
+          "JP",
+          "US"
+        ],
+        "type": "string"
+      },
+      "title": "T Plus One Markets",
+      "type": "array",
+      "uniqueItems": true
+    },
+    "transaction_cost_bps": {
+      "default": 10.0,
+      "maximum": 1000.0,
+      "minimum": 0.0,
+      "title": "Transaction Cost Bps",
+      "type": "number"
+    }
+  },
+  "title": "EnvironmentConfig",
+  "type": "object"
+}

@@ -1,0 +1,207 @@
+{
+  "$defs": {
+    "LLMResponse": {
+      "additionalProperties": false,
+      "description": "Provider-neutral response with validated structured data.",
+      "properties": {
+        "content": {
+          "title": "Content",
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/ProviderMetadata"
+        },
+        "structured_data": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Structured Data"
+        },
+        "tool_calls": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ToolCall"
+          },
+          "title": "Tool Calls",
+          "type": "array"
+        },
+        "usage": {
+          "$ref": "#/$defs/TokenUsage"
+        }
+      },
+      "required": [
+        "content",
+        "metadata"
+      ],
+      "title": "LLMResponse",
+      "type": "object"
+    },
+    "ProviderMetadata": {
+      "additionalProperties": false,
+      "description": "Credential-free metadata persisted beside an Agent run.",
+      "properties": {
+        "attempts": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "base_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Url"
+        },
+        "finish_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Finish Reason"
+        },
+        "latency_seconds": {
+          "default": 0.0,
+          "minimum": 0.0,
+          "title": "Latency Seconds",
+          "type": "number"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "replayed": {
+          "default": false,
+          "title": "Replayed",
+          "type": "boolean"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Request Id"
+        },
+        "request_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Request Sha256",
+          "type": "string"
+        },
+        "structured": {
+          "default": false,
+          "title": "Structured",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "provider",
+        "model",
+        "request_sha256"
+      ],
+      "title": "ProviderMetadata",
+      "type": "object"
+    },
+    "TokenUsage": {
+      "additionalProperties": false,
+      "description": "Normalized provider token accounting.",
+      "properties": {
+        "completion_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Completion Tokens",
+          "type": "integer"
+        },
+        "prompt_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Prompt Tokens",
+          "type": "integer"
+        },
+        "total_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Total Tokens",
+          "type": "integer"
+        }
+      },
+      "title": "TokenUsage",
+      "type": "object"
+    },
+    "ToolCall": {
+      "additionalProperties": false,
+      "description": "One model-requested tool invocation with parsed arguments.",
+      "properties": {
+        "arguments": {
+          "additionalProperties": true,
+          "title": "Arguments",
+          "type": "object"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "ToolCall",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One canonical request identity and its credential-free response.",
+  "properties": {
+    "request_sha256": {
+      "title": "Request Sha256",
+      "type": "string"
+    },
+    "response": {
+      "$ref": "#/$defs/LLMResponse"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "request_sha256",
+    "response"
+  ],
+  "title": "ReplayRecord",
+  "type": "object"
+}

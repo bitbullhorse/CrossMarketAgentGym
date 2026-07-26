@@ -1,7 +1,8 @@
 # CLI reference
 
 The executable is `cmag`. Commands fail closed when required configuration or run identity is
-missing.
+missing. The machine-readable frozen command/parameter tree is
+`release/cli_inventory.json`.
 
 ```text
 cmag --version
@@ -13,7 +14,7 @@ cmag --help
 ```bash
 cmag quickstart --smoke-steps 64
 cmag data validate --config configs/data/sample.yaml
-cmag env check --config configs/env/cross_market.yaml
+cmag env check --config configs/env/sample_cross_market.yaml
 ```
 
 `quickstart` works from a source checkout or an installed wheel because the wheel contains the
@@ -45,6 +46,7 @@ through the same command and remain independently switchable.
 
 ```bash
 cmag report runs --workspace-root . --runs-root runs
+cmag report --run-id <run-id>
 cmag report softwarex --config configs/reporting/softwarex.yaml
 cmag service run --config configs/reporting/service.yaml
 ```
@@ -67,8 +69,9 @@ Provider, read test results into tuning, or mutate account state.
 
 ```bash
 cmag release check --workspace-root .
+cmag release freeze --workspace-root .
 python -m build
-python -m twine check dist/*
+python -m twine check dist/*.whl dist/*.tar.gz
 cmag release verify --dist-dir dist
 cmag release manifest --dist-dir dist
 ```

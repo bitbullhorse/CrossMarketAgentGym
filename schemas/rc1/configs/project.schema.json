@@ -1,0 +1,116 @@
+{
+  "$defs": {
+    "LLMConfig": {
+      "additionalProperties": false,
+      "description": "Credential-free metadata for the required OpenAI-compatible provider.",
+      "properties": {
+        "api_key_env": {
+          "default": "DEEPSEEK_API_KEY",
+          "title": "Api Key Env",
+          "type": "string"
+        },
+        "base_url_env": {
+          "default": "DEEPSEEK_BASE_URL",
+          "title": "Base Url Env",
+          "type": "string"
+        },
+        "max_retries": {
+          "default": 2,
+          "maximum": 10,
+          "minimum": 0,
+          "title": "Max Retries",
+          "type": "integer"
+        },
+        "max_tokens": {
+          "default": 2048,
+          "maximum": 131072,
+          "minimum": 1,
+          "title": "Max Tokens",
+          "type": "integer"
+        },
+        "model": {
+          "default": "deepseek-v4-pro",
+          "title": "Model",
+          "type": "string"
+        },
+        "provider": {
+          "const": "openai_compatible",
+          "default": "openai_compatible",
+          "title": "Provider",
+          "type": "string"
+        },
+        "retry_backoff_seconds": {
+          "default": 0.25,
+          "maximum": 30.0,
+          "minimum": 0.0,
+          "title": "Retry Backoff Seconds",
+          "type": "number"
+        },
+        "structured_output_mode": {
+          "default": "json_object",
+          "enum": [
+            "json_object",
+            "json_schema"
+          ],
+          "title": "Structured Output Mode",
+          "type": "string"
+        },
+        "temperature": {
+          "default": 0.0,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "timeout_seconds": {
+          "default": 120,
+          "maximum": 600,
+          "minimum": 1,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        }
+      },
+      "title": "LLMConfig",
+      "type": "object"
+    },
+    "ProjectConfig": {
+      "additionalProperties": false,
+      "description": "Reproducible project-level settings.",
+      "properties": {
+        "name": {
+          "default": "crossmarket_agent_gym",
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "output_dir": {
+          "default": "runs",
+          "format": "path",
+          "title": "Output Dir",
+          "type": "string"
+        },
+        "seed": {
+          "default": 1024,
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        }
+      },
+      "title": "ProjectConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Minimal root configuration expanded in later phases.",
+  "properties": {
+    "llm": {
+      "$ref": "#/$defs/LLMConfig"
+    },
+    "project": {
+      "$ref": "#/$defs/ProjectConfig"
+    }
+  },
+  "title": "RootConfig",
+  "type": "object"
+}

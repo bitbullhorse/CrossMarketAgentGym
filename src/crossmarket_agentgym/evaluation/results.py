@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Literal, Protocol
 
 import gymnasium as gym
 import numpy as np
@@ -33,6 +33,7 @@ class TradeRecord(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
+    schema_version: Literal["1.0"] = "1.0"
     episode: int
     step: int
     signal_date: str
@@ -49,6 +50,7 @@ class WeightRecord(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
+    schema_version: Literal["1.0"] = "1.0"
     episode: int
     step: int
     execution_date: str
@@ -63,6 +65,7 @@ class EvaluationResult(BaseModel):
 
     model_config = ConfigDict(extra="forbid", frozen=True)
 
+    schema_version: Literal["1.0"] = "1.0"
     algorithm: str
     partition: str
     episodes: int = Field(ge=1)

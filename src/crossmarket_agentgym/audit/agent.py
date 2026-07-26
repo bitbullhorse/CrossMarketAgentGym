@@ -42,6 +42,7 @@ class AgentAuditWriter:
         self.prompt_version = prompt_version
         self._sequence = 0
         self._provider_document: dict[str, Any] = {
+            "schema_version": "1.0",
             "prompt_version": prompt_version,
             "config": redact_value(provider_config),
             "responses": [],
@@ -51,6 +52,7 @@ class AgentAuditWriter:
     def _event(self, payload: dict[str, Any]) -> dict[str, Any]:
         self._sequence += 1
         return {
+            "schema_version": "1.0",
             "sequence": self._sequence,
             "timestamp": datetime.now(UTC).isoformat(),
             **payload,

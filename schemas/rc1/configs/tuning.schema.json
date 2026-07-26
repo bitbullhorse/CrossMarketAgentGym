@@ -1,0 +1,607 @@
+{
+  "$defs": {
+    "ExecutorConfig": {
+      "additionalProperties": false,
+      "description": "Optional resource placement independent of search and scheduling.",
+      "properties": {
+        "address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Address"
+        },
+        "num_cpus_per_trial": {
+          "default": 1.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Num Cpus Per Trial",
+          "type": "number"
+        },
+        "num_gpus_per_trial": {
+          "default": 0.0,
+          "minimum": 0.0,
+          "title": "Num Gpus Per Trial",
+          "type": "number"
+        },
+        "shutdown_on_close": {
+          "default": true,
+          "title": "Shutdown On Close",
+          "type": "boolean"
+        },
+        "type": {
+          "default": "local",
+          "enum": [
+            "local",
+            "ray"
+          ],
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "title": "ExecutorConfig",
+      "type": "object"
+    },
+    "ObjectiveConfig": {
+      "additionalProperties": false,
+      "description": "Benchmark or partition-safe PPO validation objective.",
+      "properties": {
+        "base_train_config": {
+          "anyOf": [
+            {
+              "format": "path",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Base Train Config"
+        },
+        "budget_stage": {
+          "default": "stage_b",
+          "enum": [
+            "stage_a",
+            "stage_b"
+          ],
+          "title": "Budget Stage",
+          "type": "string"
+        },
+        "include_training_time": {
+          "default": false,
+          "title": "Include Training Time",
+          "type": "boolean"
+        },
+        "mode": {
+          "default": "robust",
+          "enum": [
+            "robust",
+            "multi_objective"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "seeds": {
+          "default": [
+            1024,
+            2048,
+            4096,
+            8192,
+            16384
+          ],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Seeds",
+          "type": "array"
+        },
+        "total_timesteps": {
+          "default": 8,
+          "minimum": 1,
+          "title": "Total Timesteps",
+          "type": "integer"
+        },
+        "type": {
+          "default": "sphere",
+          "enum": [
+            "sphere",
+            "rosenbrock",
+            "ppo_validation"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "walk_forward_folds": {
+          "default": 3,
+          "minimum": 1,
+          "title": "Walk Forward Folds",
+          "type": "integer"
+        },
+        "walk_forward_stride": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Walk Forward Stride"
+        }
+      },
+      "title": "ObjectiveConfig",
+      "type": "object"
+    },
+    "ParameterSpec": {
+      "additionalProperties": false,
+      "description": "One scalar, categorical, or conditional search parameter.",
+      "properties": {
+        "choices": {
+          "anyOf": [
+            {
+              "items": {},
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Choices"
+        },
+        "condition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Condition"
+        },
+        "high": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "High"
+        },
+        "kind": {
+          "enum": [
+            "float",
+            "int",
+            "categorical",
+            "bool"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "log": {
+          "default": false,
+          "title": "Log",
+          "type": "boolean"
+        },
+        "low": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Low"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "step": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Step"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "title": "ParameterSpec",
+      "type": "object"
+    },
+    "SchedulerConfig": {
+      "additionalProperties": false,
+      "description": "Independent resource scheduler settings.",
+      "properties": {
+        "direction": {
+          "anyOf": [
+            {
+              "enum": [
+                "maximize",
+                "minimize"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Direction"
+        },
+        "grace_period": {
+          "default": 1.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Grace Period",
+          "type": "number"
+        },
+        "max_resource": {
+          "default": 81.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Max Resource",
+          "type": "number"
+        },
+        "min_resource": {
+          "default": 1.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Min Resource",
+          "type": "number"
+        },
+        "min_trials": {
+          "default": 3,
+          "minimum": 1,
+          "title": "Min Trials",
+          "type": "integer"
+        },
+        "perturbation_factors": {
+          "default": [
+            0.8,
+            1.2
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Perturbation Factors",
+          "type": "array"
+        },
+        "perturbation_interval": {
+          "default": 10.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Perturbation Interval",
+          "type": "number"
+        },
+        "quantile_fraction": {
+          "default": 0.25,
+          "exclusiveMinimum": 0.0,
+          "maximum": 0.5,
+          "title": "Quantile Fraction",
+          "type": "number"
+        },
+        "reduction_factor": {
+          "default": 3,
+          "minimum": 2,
+          "title": "Reduction Factor",
+          "type": "integer"
+        },
+        "type": {
+          "default": "fifo",
+          "enum": [
+            "fifo",
+            "median",
+            "asha",
+            "hyperband",
+            "pbt"
+          ],
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "title": "SchedulerConfig",
+      "type": "object"
+    },
+    "SearchSpace": {
+      "additionalProperties": false,
+      "description": "Ordered mixed search space with safe conditional constraints.",
+      "properties": {
+        "constraints": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Constraints",
+          "type": "array"
+        },
+        "parameters": {
+          "items": {
+            "$ref": "#/$defs/ParameterSpec"
+          },
+          "title": "Parameters",
+          "type": "array"
+        }
+      },
+      "required": [
+        "parameters"
+      ],
+      "title": "SearchSpace",
+      "type": "object"
+    },
+    "SearcherConfig": {
+      "additionalProperties": false,
+      "description": "Union-like strict settings for all nine built-in search algorithms.",
+      "properties": {
+        "candidate_count": {
+          "default": 32,
+          "minimum": 2,
+          "title": "Candidate Count",
+          "type": "integer"
+        },
+        "cognitive": {
+          "default": 1.49,
+          "minimum": 0.0,
+          "title": "Cognitive",
+          "type": "number"
+        },
+        "cooling": {
+          "default": 0.95,
+          "exclusiveMaximum": 1.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Cooling",
+          "type": "number"
+        },
+        "crossover_rate": {
+          "default": 0.7,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Crossover Rate",
+          "type": "number"
+        },
+        "differential_weight": {
+          "default": 0.8,
+          "exclusiveMinimum": 0.0,
+          "title": "Differential Weight",
+          "type": "number"
+        },
+        "gamma": {
+          "default": 0.25,
+          "exclusiveMaximum": 1.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Gamma",
+          "type": "number"
+        },
+        "inertia": {
+          "default": 0.72,
+          "minimum": 0.0,
+          "title": "Inertia",
+          "type": "number"
+        },
+        "mutation_rate": {
+          "default": 0.15,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Mutation Rate",
+          "type": "number"
+        },
+        "population_size": {
+          "default": 8,
+          "minimum": 2,
+          "title": "Population Size",
+          "type": "integer"
+        },
+        "seed": {
+          "default": 1024,
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "sigma": {
+          "default": 0.25,
+          "exclusiveMinimum": 0.0,
+          "title": "Sigma",
+          "type": "number"
+        },
+        "social": {
+          "default": 1.49,
+          "minimum": 0.0,
+          "title": "Social",
+          "type": "number"
+        },
+        "startup_trials": {
+          "default": 8,
+          "minimum": 2,
+          "title": "Startup Trials",
+          "type": "integer"
+        },
+        "step_scale": {
+          "default": 0.15,
+          "exclusiveMinimum": 0.0,
+          "title": "Step Scale",
+          "type": "number"
+        },
+        "temperature": {
+          "default": 1.0,
+          "exclusiveMinimum": 0.0,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "type": {
+          "default": "random",
+          "enum": [
+            "random",
+            "grid",
+            "tpe",
+            "cma_es",
+            "nsga_ii",
+            "pso",
+            "genetic",
+            "differential_evolution",
+            "simulated_annealing"
+          ],
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "title": "SearcherConfig",
+      "type": "object"
+    },
+    "SelectionConfig": {
+      "additionalProperties": false,
+      "description": "Configurable final choice from completed or Pareto Trials.",
+      "properties": {
+        "strategy": {
+          "default": "primary",
+          "enum": [
+            "primary",
+            "weighted",
+            "pareto_first"
+          ],
+          "title": "Strategy",
+          "type": "string"
+        },
+        "weights": {
+          "default": [],
+          "items": {
+            "type": "number"
+          },
+          "title": "Weights",
+          "type": "array"
+        }
+      },
+      "title": "SelectionConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Complete CPU-first tuning study configuration.",
+  "properties": {
+    "batch_size": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Batch Size",
+      "type": "integer"
+    },
+    "directions": {
+      "default": [
+        "maximize"
+      ],
+      "items": {
+        "enum": [
+          "maximize",
+          "minimize"
+        ],
+        "type": "string"
+      },
+      "title": "Directions",
+      "type": "array"
+    },
+    "executor": {
+      "$ref": "#/$defs/ExecutorConfig"
+    },
+    "max_trials": {
+      "default": 8,
+      "minimum": 1,
+      "title": "Max Trials",
+      "type": "integer"
+    },
+    "objective": {
+      "$ref": "#/$defs/ObjectiveConfig"
+    },
+    "output_dir": {
+      "default": "runs/tuning",
+      "format": "path",
+      "title": "Output Dir",
+      "type": "string"
+    },
+    "retrain_locked": {
+      "default": true,
+      "title": "Retrain Locked",
+      "type": "boolean"
+    },
+    "retrain_seed": {
+      "default": 7777,
+      "maximum": 4294967295,
+      "minimum": 0,
+      "title": "Retrain Seed",
+      "type": "integer"
+    },
+    "retrain_timesteps": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Retrain Timesteps"
+    },
+    "scheduler": {
+      "$ref": "#/$defs/SchedulerConfig"
+    },
+    "search_space": {
+      "$ref": "#/$defs/SearchSpace"
+    },
+    "searcher": {
+      "$ref": "#/$defs/SearcherConfig"
+    },
+    "selection": {
+      "$ref": "#/$defs/SelectionConfig"
+    },
+    "storage_path": {
+      "default": "runs/tuning/study.sqlite3",
+      "format": "path",
+      "title": "Storage Path",
+      "type": "string"
+    },
+    "study_name": {
+      "title": "Study Name",
+      "type": "string"
+    }
+  },
+  "required": [
+    "study_name",
+    "search_space"
+  ],
+  "title": "TuningRunConfig",
+  "type": "object"
+}

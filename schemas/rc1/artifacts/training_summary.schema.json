@@ -1,0 +1,54 @@
+{
+  "additionalProperties": false,
+  "description": "Serializable CLI result for a completed training run.",
+  "properties": {
+    "algorithm": {
+      "title": "Algorithm",
+      "type": "string"
+    },
+    "checkpoint": {
+      "title": "Checkpoint",
+      "type": "string"
+    },
+    "requested_timesteps": {
+      "title": "Requested Timesteps",
+      "type": "integer"
+    },
+    "run_dir": {
+      "title": "Run Dir",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "trained_timesteps": {
+      "title": "Trained Timesteps",
+      "type": "integer"
+    },
+    "validation_metrics": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Validation Metrics",
+      "type": "object"
+    }
+  },
+  "required": [
+    "run_id",
+    "run_dir",
+    "algorithm",
+    "checkpoint",
+    "requested_timesteps",
+    "trained_timesteps",
+    "validation_metrics"
+  ],
+  "title": "TrainingRunSummary",
+  "type": "object"
+}
