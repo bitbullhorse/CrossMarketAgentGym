@@ -23,8 +23,8 @@ jobs:
       PIP_INDEX_URL: https://pypi.tuna.tsinghua.edu.cn/simple
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
           cache: pip
@@ -58,13 +58,13 @@ jobs:
         run: cmag release verify --dist-dir dist
       - name: Write distribution manifest
         run: cmag release manifest --dist-dir dist
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-distributions
           path: dist/
 
   publish-pypi:
-    if: startsWith(github.ref, 'refs/tags/v') || inputs.publish
+    if: github.event_name == 'workflow_dispatch' && inputs.publish
     needs: build
     runs-on: ubuntu-latest
     environment:
@@ -73,7 +73,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: release-distributions
           path: dist
@@ -90,7 +90,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: release-distributions
           path: dist

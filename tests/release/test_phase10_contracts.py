@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -29,6 +30,28 @@ def test_phase10_frozen_contracts_match_code() -> None:
     assert result.api_records >= 200
     assert result.config_schemas == 11
     assert result.artifact_schemas >= 20
+
+
+def test_gitignore_does_not_hide_python_source_files() -> None:
+    if shutil.which("git") is None or not (PROJECT_ROOT / ".git").exists():
+        pytest.skip("source-ignore audit requires a Git worktree")
+    source_files = sorted(
+        path.relative_to(PROJECT_ROOT).as_posix()
+        for path in (PROJECT_ROOT / "src").rglob("*.py")
+        if "__pycache__" not in path.parts
+    )
+    completed = subprocess.run(
+        ["git", "check-ignore", "--no-index", "--stdin"],
+        cwd=PROJECT_ROOT,
+        input="\n".join(source_files),
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 1, (
+        "Python source files must never be hidden by .gitignore:\n"
+        f"{completed.stdout}{completed.stderr}"
+    )
 
 
 def test_phase11_public_configs_are_strictly_loadable() -> None:
@@ -152,3 +175,29 @@ def test_cli_inventory_covers_phase11_protocol() -> None:
         for option in parameter["options"]
     }
     assert "--run-id" in report_options
+
+
+def test_release_tag_cannot_implicitly_publish_to_pypi() -> None:
+    workflow = (PROJECT_ROOT / ".github/workflows/release.yml").read_text(
+        encoding="utf-8"
+    )
+    assert (
+        "if: github.event_name == 'workflow_dispatch' && inputs.publish" in workflow
+    )
+    assert "if: startsWith(github.ref, 'refs/tags/v') || inputs.publish" not in workflow
+
+
+def test_github_actions_use_node24_generations() -> None:
+    workflows = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (
+            PROJECT_ROOT / ".github/workflows/ci.yml",
+            PROJECT_ROOT / ".github/workflows/release.yml",
+        )
+    )
+    assert "actions/checkout@v7" in workflows
+    assert "actions/setup-python@v6" in workflows
+    assert "actions/upload-artifact@v7" in workflows
+    assert "actions/checkout@v4" not in workflows
+    assert "actions/setup-python@v5" not in workflows
+    assert "actions/upload-artifact@v4" not in workflows
