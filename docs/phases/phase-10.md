@@ -70,6 +70,12 @@ repository.
 12. GitHub Actions uses Node 24 action generations. A release-candidate tag may create a GitHub
     prerelease, but PyPI publishing requires an explicit manual `workflow_dispatch` with
     `publish=true`; stable PyPI publication remains Phase 14 work.
+13. `click` is a direct runtime dependency because release commands import its public API
+    directly; clean release environments must not rely on an implementation detail of Typer.
+    The release workflow combines `release`, `rl`, and `llm` extras because contract verification
+    loads the frozen RL Schemas and online-provider public API, while the release extra itself
+    remains build-tool-only. It installs through `constraints-cpu.txt` so a newer transitive
+    CLI dependency cannot silently change the frozen public interface.
 
 ## Automated local results
 
@@ -87,6 +93,7 @@ repository.
 | HPO resume | second run returned the same four trials and selected parameters |
 | Build | wheel and sdist built; Twine/archive checks passed |
 | Clean wheel | Python 3.11.15 and 3.12.13 installs, CLI help, packaged quickstart, and `pip check` passed |
+| Clean release environment | constrained `release,rl,llm` install; contract freeze and release readiness passed |
 | Reproducible build | two wheel/sdist builds were byte-identical at one source epoch |
 | Bash syntax | three required shell wrappers passed Git Bash `bash -n` |
 | Docker | Linux image build and non-root quickstart passed |

@@ -182,6 +182,10 @@ def test_release_tag_cannot_implicitly_publish_to_pypi() -> None:
         encoding="utf-8"
     )
     assert (
+        'python -m pip install -c constraints-cpu.txt -e ".[release,rl,llm]"'
+        in workflow
+    )
+    assert (
         "if: github.event_name == 'workflow_dispatch' && inputs.publish" in workflow
     )
     assert "if: startsWith(github.ref, 'refs/tags/v') || inputs.publish" not in workflow

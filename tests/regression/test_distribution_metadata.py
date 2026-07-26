@@ -18,6 +18,10 @@ def test_distribution_import_and_cli_names_remain_stable() -> None:
     assert metadata["project"]["scripts"]["cmag"] == "crossmarket_agentgym.cli.app:main"
     assert metadata["project"]["requires-python"] == ">=3.11,<3.13"
     assert metadata["project"]["dynamic"] == ["version"]
+    assert any(
+        dependency.startswith("click>=")
+        for dependency in metadata["project"]["dependencies"]
+    )
     assert metadata["tool"]["hatch"]["version"]["path"].endswith("_version.py")
     assert metadata["project"]["urls"] == {
         "Documentation": "https://github.com/bitbullhorse/CrossMarketAgentGym#readme",

@@ -1,5 +1,6 @@
 # Phase 0 compatibility envelope. Exact transitive versions are recorded in uv.lock.
 # Install with: python -m pip install -c constraints-cpu.txt -e ".[dev,rl,hpo,llm]"
+click==8.4.2
 gymnasium==1.1.1
 jinja2==3.1.6
 numpy==2.1.3
