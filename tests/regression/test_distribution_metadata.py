@@ -19,3 +19,8 @@ def test_distribution_import_and_cli_names_remain_stable() -> None:
     assert metadata["project"]["requires-python"] == ">=3.11,<3.13"
     assert metadata["project"]["dynamic"] == ["version"]
     assert metadata["tool"]["hatch"]["version"]["path"].endswith("_version.py")
+    assert metadata["project"]["urls"] == {
+        "Documentation": "https://github.com/bitbullhorse/CrossMarketAgentGym#readme",
+        "Issues": "https://github.com/bitbullhorse/CrossMarketAgentGym/issues",
+        "Source": "https://github.com/bitbullhorse/CrossMarketAgentGym",
+    }

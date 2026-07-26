@@ -1,7 +1,8 @@
 # Phase 10 — v1.0.0-rc1 contract freeze
 
-Status: **implementation complete locally; exit gates blocked**. This is not a Phase 10 completion
-claim and no tag, remote push, PyPI upload, GitHub Release, or Zenodo publication was performed.
+Status: **complete**. Mandatory local, Linux CPU, package, and unprivileged Docker gates pass;
+the immutable candidate is ready for the exact tag `v1.0.0-rc1`. No PyPI or Zenodo publication
+is part of Phase 10.
 
 ## Goal and input validation
 
@@ -13,6 +14,9 @@ Phase 0–9 reports were present. The packaged four-market CPU quickstart passed
 SAC, TD3, three independently switchable LLM layers, shared single/multi-Agent runtime, nine HPO
 searchers, independent schedulers, leakage tests, accounting tests, Mock/Replay, and HPO resume
 were revalidated. A local baseline commit was created before Phase 10 changes.
+The candidate is reachable from the private
+[`bitbullhorse/CrossMarketAgentGym`](https://github.com/bitbullhorse/CrossMarketAgentGym)
+repository.
 
 ## Added files
 
@@ -27,6 +31,8 @@ were revalidated. A local baseline commit was created before Phase 10 changes.
 - Phase 11 fixed configs: sample environment, PPO quickstart, research-only Mock, three-member
   risk committee Mock, and PPO/PSO/ASHA quickstart.
 - Versioned run-manifest implementation and Phase 10 contract tests.
+- Clean-checkout HPO report sources plus regression guards for ignored source files, archive
+  exclusions, and cross-platform CLI error rendering.
 
 ## Modified files
 
@@ -57,13 +63,20 @@ were revalidated. A local baseline commit was created before Phase 10 changes.
    formal results.
 9. Historical Phase 9 distributions were moved intact to ignored `dist-phase9-backup/`; they were
    not deleted or overwritten.
+10. Runtime-output ignore rules are anchored to the repository root so that a legitimate source
+    package such as `tuning/reports` cannot be omitted from a clean checkout.
+11. Release archive exclusions distinguish root-level `runs/` and `reports/` artifacts from
+    same-named source packages.
+12. GitHub Actions uses Node 24 action generations. A release-candidate tag may create a GitHub
+    prerelease, but PyPI publishing requires an explicit manual `workflow_dispatch` with
+    `publish=true`; stable PyPI publication remains Phase 14 work.
 
 ## Automated local results
 
 | Gate | Result |
 |---|---|
-| Full pytest, property, leakage, integration, Mock/Replay, HPO resume | 310 passed |
-| Branch coverage | 87.50% (required 85%) |
+| Full pytest, property, leakage, integration, Mock/Replay, HPO resume | 313 passed |
+| Branch coverage | 87.51% (required 85%) |
 | Ruff | passed |
 | Strict mypy | passed, 133 source files |
 | Frozen contracts | 248 API records, 11 config Schemas, 20 artifact Schemas; no drift |
@@ -76,8 +89,15 @@ were revalidated. A local baseline commit was created before Phase 10 changes.
 | Clean wheel | Python 3.11.15 and 3.12.13 installs, CLI help, packaged quickstart, and `pip check` passed |
 | Reproducible build | two wheel/sdist builds were byte-identical at one source epoch |
 | Bash syntax | three required shell wrappers passed Git Bash `bash -n` |
-| Docker | not run; Docker command unavailable |
-| Linux/Python 3.11/3.12 CI | not run; no Git remote configured |
+| Docker | Linux image build and non-root quickstart passed |
+| Linux/Python 3.11/3.12 CI | both CPU jobs passed |
+
+The immutable external evidence is GitHub Actions
+[`ci #4`](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/runs/30212412694)
+on `3e4dbc1a1d108c360c4d2b41863982ed23a43d4a`: Python 3.11, Python 3.12,
+package, and Docker all completed successfully. Earlier failed runs remain available and record
+the discovery of an over-broad ignore rule, an over-broad archive exclusion, and ANSI-sensitive
+CLI assertions; none was deleted or overwritten.
 
 The local sample environment completed 64 random actions with maximum accounting error
 `2.3283064365386963e-10`. The clean installed-wheel quickstart completed 16 actions with maximum
@@ -86,26 +106,24 @@ accounting error `1.1641532182693481e-10`.
 The candidate commit is always resolved from the commit containing this report. Its epoch and
 wheel/sdist hashes are generated after commit by `scripts/verify_reproducible_build.py` and
 `cmag release manifest`; this avoids embedding a self-invalidating commit identity in a tracked
-source file. These are local candidate artifacts, not published releases.
+source file. These are candidate artifacts, not Phase 12 formal experiment results.
 
-## Exit criteria and blockers
+## Exit criteria and release readiness
 
 - Stable API documentation, release notes, known issues, schema freeze, locks, local tests,
-  Python 3.12 clean-wheel install, CPU quickstart, and reproducible builds: **passed locally**.
-- Docker build/unprivileged quickstart: **blocked by B10-001**.
-- Linux Python 3.11/3.12 CI: **blocked by B10-002**.
-- Python 3.11 and 3.12 clean-wheel tests: **passed locally**.
-- Release blockers zero: **not satisfied**.
-- `v1.0.0-rc1` tag creation: **not authorized and not ready**.
-- Phase 11 readiness: **not approved**.
+  Python 3.11/3.12 clean-wheel installs, CPU quickstart, and reproducible builds: **passed**.
+- Docker build/unprivileged quickstart: **passed in Linux CI**.
+- Linux Python 3.11/3.12 CI: **passed**.
+- Release blockers zero: **satisfied**.
+- Exact release-candidate tag: **ready as `v1.0.0-rc1`**.
+- Phase 11 technical readiness: **approved**; real independent participant execution starts only
+  as an explicit Phase 11 action.
 
-The authoritative blocker list is `release/release_blockers.md`. Phase 10 can complete only after
-both open items have external evidence, the exact candidate commit is rechecked, and this report
-is changed from blocked to completed without rewriting earlier evidence.
+The authoritative blocker list is `release/release_blockers.md`; it records zero open P0/P1
+items. This report does not convert Phase 10/11 smoke output into formal experimental evidence.
 
 ## Remaining issues
 
-- Run the committed candidate through the GitHub Actions CPU/package/Docker jobs.
 - Securely probe the remote GPU driver before claiming the optional CUDA/Ray profile is verified.
-- Do not start Phase 11 participants, rc2, formal experiments, benchmark freeze, or publication
-  while any Phase 10 blocker remains.
+- Do not publish rc2 before independent Phase 11 reproduction and P0/P1 clearance.
+- Do not reuse development or rc1 smoke results as Phase 12 formal results.

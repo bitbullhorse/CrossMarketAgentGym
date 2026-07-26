@@ -106,9 +106,9 @@ cmag = "crossmarket_agentgym.cli.app:main"
 # Third-party agents register here from their own distributions.
 
 [project.urls]
-Documentation = "https://github.com/crossmarket-agent-gym/crossmarket-agent-gym#readme"
-Issues = "https://github.com/crossmarket-agent-gym/crossmarket-agent-gym/issues"
-Source = "https://github.com/crossmarket-agent-gym/crossmarket-agent-gym"
+Documentation = "https://github.com/bitbullhorse/CrossMarketAgentGym#readme"
+Issues = "https://github.com/bitbullhorse/CrossMarketAgentGym/issues"
+Source = "https://github.com/bitbullhorse/CrossMarketAgentGym"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/crossmarket_agentgym"]

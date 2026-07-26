@@ -9,5 +9,5 @@
   release gates use Mock or Replay providers and require no credential.
 
 Security, accounting, information leakage, installation, or deterministic replay defects are not
-accepted known issues; they are release blockers. Current external gate blockers are listed in
-`release_blockers.md`.
+accepted known issues; they are release blockers. `release_blockers.md` records that no Phase 10
+P0/P1 blocker remains open.

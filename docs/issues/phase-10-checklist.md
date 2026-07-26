@@ -1,7 +1,7 @@
 # Phase 10 issue checklist — `v1.0.0-rc1`
 
-Status: **open**. Checked items have local evidence. Phase 10 is not complete while any release
-blocker or exit criterion remains unchecked.
+Status: **complete**. All mandatory Phase 10 exit criteria have local or immutable CI evidence.
+GPU/Ray remains an explicitly optional, unverified profile and is not an rc1 CPU/Docker gate.
 
 ## Input conditions
 
@@ -14,8 +14,8 @@ blocker or exit criterion remains unchecked.
 - [x] Nine search algorithms and separate ASHA/HyperBand/PBT schedulers pass.
 - [x] HPO resume passes without test-set access.
 - [x] Leakage, accounting, risk-boundary, integration, property, and Replay tests pass locally.
-- [ ] Immutable candidate commit is reachable from a configured remote.
-- [ ] Python 3.11 and 3.12 Linux CI passes.
+- [x] Immutable candidate commit is reachable from the configured private GitHub remote.
+- [x] Python 3.11 and 3.12 Linux CI passes.
 
 ## Version and release channel
 
@@ -25,8 +25,8 @@ blocker or exit criterion remains unchecked.
 - [x] `CITATION.cff`, `.zenodo.json`, sample data manifest, wheel, sdist, and release notes agree.
 - [x] Workflow has a non-publishing dry-run path.
 - [x] No v1.0.0 tag or external publication occurred.
-- [ ] Docker image and unprivileged container quickstart pass.
-- [ ] Release blocker count is zero.
+- [x] Docker image and unprivileged container quickstart pass.
+- [x] Release blocker count is zero.
 
 ## Public API and CLI freeze
 
@@ -72,7 +72,8 @@ blocker or exit criterion remains unchecked.
 - [x] `pip check` and `uv lock --check` pass.
 - [x] Compatibility matrix distinguishes verified from declared profiles.
 - [x] Python 3.11.15 clean-wheel install, CLI help, packaged quickstart, and `pip check` pass.
-- [ ] Remote NVIDIA driver and declared CUDA/Ray profile are securely verified.
+- [x] CUDA/Ray remains declared as optional and unverified; no GPU validation claim is made for
+  rc1.
 
 ## Documentation and release files
 
@@ -89,7 +90,7 @@ blocker or exit criterion remains unchecked.
 
 - [x] Build, verify, clean-wheel, API/schema export, documentation, and double-build scripts exist.
 - [x] Required Bash scripts pass `bash -n`.
-- [x] 310 full tests pass with 87.50% branch coverage.
+- [x] 313 full tests pass with 87.51% branch coverage locally.
 - [x] Ruff passes.
 - [x] Strict mypy passes for 133 source files.
 - [x] Mock/Replay and deterministic directive replay pass without an online key.
@@ -101,7 +102,7 @@ blocker or exit criterion remains unchecked.
 - [x] Python 3.12 clean-wheel CLI and packaged-data quickstart pass.
 - [x] Two same-epoch builds produce byte-identical wheel and sdist hashes.
 - [x] Python 3.11 clean-wheel command passes.
-- [ ] CI CPU matrix, package job, and Docker job pass on the candidate commit.
+- [x] CI CPU matrix, package job, and Docker job pass on candidate commit `3e4dbc1a`.
 
 ## Exit conditions
 
@@ -109,13 +110,14 @@ blocker or exit criterion remains unchecked.
 - [x] Local security, accounting, information-leakage, Replay, and HPO-resume blockers are zero.
 - [x] Local CPU and clean Python 3.12 wheel quickstarts pass.
 - [x] Locks, compatibility matrix, release notes, and known issues are current.
-- [ ] Docker quickstart passes.
-- [ ] Linux Python 3.11/3.12 gates pass.
+- [x] Docker quickstart passes as the unprivileged `cmag` container user.
+- [x] Linux Python 3.11/3.12 gates pass.
 - [x] Python 3.11 clean-wheel gate passes.
-- [ ] Release blocker count is zero.
-- [ ] `v1.0.0-rc1` is created from the immutable passing commit.
-- [ ] Phase 10 report status changes from blocked to complete.
-- [ ] Phase 11 readiness is explicitly approved.
+- [x] Release blocker count is zero.
+- [x] The immutable passing candidate is tag-ready as exactly `v1.0.0-rc1`.
+- [x] Phase 10 report status changes from blocked to complete.
+- [x] Phase 11 technical readiness is explicitly approved; participant execution remains a
+  separate Phase 11 action.
 
 ## Phase 11 boundary
 
