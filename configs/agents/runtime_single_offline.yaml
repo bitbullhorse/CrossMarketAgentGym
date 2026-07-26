@@ -1,0 +1,38 @@
+run_id: phase6-single-offline
+workspace_root: .
+output_dir: runs
+prompt_version: phase6.v1
+seed: 1024
+objective: Inspect the canonical sample dataset and return a structured research decision.
+payload:
+  partition_authority: validation_only
+load_entry_points: false
+team:
+  topology: single
+  max_rounds: 1
+  quorum: 1.0
+  conflict_policy: reject
+  parallel: false
+  agents:
+    - type: research_coordinator
+      name: research
+      count: 1
+      provider: mock
+      model: deepseek-v4-pro
+      tools: [inspect_dataset]
+      allowed_permissions: [read]
+      max_tool_calls: 1
+      mock_scripts:
+        -
+          - tool_calls:
+              - id: inspect-sample
+                name: inspect_dataset
+                arguments:
+                  manifest_path: data/sample/dataset_manifest.json
+          - content:
+              decision: approve
+              summary: Canonical sample manifest was inspected without network access.
+              confidence: 1.0
+              risk_score: 0.0
+              payload:
+                markets: [CN, HK, JP, US]

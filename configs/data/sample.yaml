@@ -1,0 +1,3 @@
+dataset:
+  root: data/sample
+  layout: canonical_manifest

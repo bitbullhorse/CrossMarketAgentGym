@@ -1,0 +1,47 @@
+{
+  "phase": 9,
+  "package": "crossmarket-agent-gym",
+  "version": "0.1.0",
+  "python": "3.12.13",
+  "tests": {
+    "passed": 302,
+    "failed": 0,
+    "warnings": 12,
+    "branch_coverage_percent": 87.58,
+    "coverage_gate_percent": 85.0
+  },
+  "static_checks": {
+    "ruff": "passed",
+    "mypy": "passed",
+    "mypy_source_files": 130,
+    "pip_check": "passed",
+    "uv_lock_packages": 134
+  },
+  "release": {
+    "version_source": "src/crossmarket_agentgym/_version.py",
+    "twine": "passed",
+    "distribution_content": "passed",
+    "manifest": "dist/release-manifest.json",
+    "installed_wheel_quickstart": "passed"
+  },
+  "reproduction": {
+    "phase3_training_provenance": "passed",
+    "phase7_deterministic_projection": "passed",
+    "cpu_tuning_resume": "passed"
+  },
+  "safety": {
+    "network_or_llm_used": false,
+    "test_metrics_used_for_hpo": false,
+    "agent_direct_account_mutation": false,
+    "credentials_persisted": false
+  },
+  "unavailable_local_gates": {
+    "docker_build": "docker command unavailable",
+    "real_ray_cuda": "requires secure remote authentication channel"
+  },
+  "external_actions": {
+    "pypi_published": false,
+    "github_release_created": false,
+    "zenodo_doi_minted": false
+  }
+}

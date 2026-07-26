@@ -1,0 +1,53 @@
+run_id: phase5-provider-offline
+workspace_root: .
+output_dir: runs
+prompt_version: phase5.v1
+max_rounds: 3
+verify_replay: true
+
+provider:
+  provider: mock
+  model: deepseek-v4-pro
+  api_key_env: DEEPSEEK_API_KEY
+  base_url_env: DEEPSEEK_BASE_URL
+  default_base_url: https://api.deepseek.com
+  endpoint: /chat/completions
+  structured_output_mode: json_object
+  generation:
+    temperature: 0.0
+    max_tokens: 2048
+    timeout_seconds: 120
+    max_retries: 2
+    retry_backoff_seconds: 0.25
+    seed: 1024
+
+messages:
+  - role: system
+    content: Inspect only through registered tools and return the required JSON object.
+  - role: user
+    content: Inspect the canonical sample dataset and decide whether offline research may continue.
+
+tool_names: [inspect_dataset]
+tool_policy:
+  allowed_permissions: [read]
+  allowed_tools: [inspect_dataset]
+  max_total_calls: 2
+  max_expensive_calls: 0
+  max_cumulative_seconds: 30
+
+mock_script:
+  - content: ""
+    tool_calls:
+      - id: inspect-sample
+        name: inspect_dataset
+        arguments:
+          manifest_path: data/sample/dataset_manifest.json
+  - content:
+      status: validated
+      markets: [CN, HK, JP, US]
+      safe_to_continue: true
+
+fallback:
+  status: safe_default
+  markets: []
+  safe_to_continue: false

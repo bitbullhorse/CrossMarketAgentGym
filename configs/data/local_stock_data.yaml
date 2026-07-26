@@ -1,0 +1,10 @@
+dataset:
+  root: stock_data
+  layout: legacy_mixed
+  markets:
+    A股: CN
+    港股: HK
+    日股: JP
+    美股: US
+  mutation_policy: reject
+  max_files_per_market: 1

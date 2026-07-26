@@ -1,0 +1,27 @@
+{
+  "title": "CrossMarketAgentGym",
+  "description": "Auditable cross-market portfolio reinforcement learning, configurable LLM-agent orchestration, deterministic risk enforcement, and hyperparameter optimization.",
+  "creators": [
+    {
+      "name": "CrossMarketAgentGym contributors"
+    }
+  ],
+  "license": "Apache-2.0",
+  "upload_type": "software",
+  "access_right": "open",
+  "version": "0.1.0",
+  "keywords": [
+    "algorithmic trading",
+    "reinforcement learning",
+    "multi-agent systems",
+    "hyperparameter optimization",
+    "reproducible research"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/crossmarket-agent-gym/crossmarket-agent-gym",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

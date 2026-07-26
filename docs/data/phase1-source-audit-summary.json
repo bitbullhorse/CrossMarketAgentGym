@@ -1,0 +1,31 @@
+{
+  "audit_date": "2026-07-26",
+  "config": "configs/data/local_stock_data_full.yaml",
+  "mutation_policy": "reject",
+  "adapter_errors": 0,
+  "files_checked": 978,
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "rows_checked": 2036819,
+  "is_valid": false,
+  "issue_objects": 1800,
+  "issue_objects_by_code": {
+    "invalid_high": 170,
+    "invalid_low": 167,
+    "invalid_numeric": 1179,
+    "null_required_value": 236,
+    "unsorted_trade_date": 48
+  },
+  "affected_items_by_code": {
+    "invalid_high": 4443,
+    "invalid_low": 2295,
+    "invalid_numeric": 26579,
+    "null_required_value": 5316,
+    "unsorted_trade_date": 846
+  },
+  "decision": "No source rows were deleted, sorted, filled, or rewritten."
+}

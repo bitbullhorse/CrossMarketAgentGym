@@ -1,0 +1,31 @@
+run_id: phase7-no-llm
+workspace_root: .
+output_dir: runs
+prompt_version: phase7.v1
+seed: 1024
+load_entry_points: false
+preset: no_llm
+objective: Project one DRL action with administrator constraints and no LLM dependency.
+as_of_index: 0
+layers:
+  research:
+    enabled: false
+    mode: plan_only
+  risk:
+    enabled: false
+    mode: enforced
+    cadence: weekly
+  hierarchical:
+    enabled: false
+    fusion: constraint
+    cadence: monthly
+administrator_environment:
+  max_asset_weight: 0.20
+  max_market_weight: 0.40
+  cash_floor: 0.10
+  max_turnover: 0.80
+market_membership: [CN, HK, JP, US]
+raw_action: [0.0, 0.40, 0.30, 0.20, 0.10]
+current_weights: [1.0, 0.0, 0.0, 0.0, 0.0]
+tradable_mask: [true, true, true, true]
+verify_directive_replay: true

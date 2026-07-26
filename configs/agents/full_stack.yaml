@@ -1,0 +1,95 @@
+run_id: phase7-full-stack-deepseek
+workspace_root: .
+output_dir: runs
+prompt_version: phase7.v1
+seed: 1024
+load_entry_points: true
+preset: full_stack
+objective: Produce validation-only research, risk, and hierarchical constraint directives.
+research_payload:
+  dataset_manifest: data/sample/dataset_manifest.json
+risk_context:
+  portfolio_value: 1000000.0
+  current_drawdown: 0.08
+  rolling_volatility: 0.22
+  rolling_cvar: 0.04
+  turnover: 0.30
+  market_exposures: {CN: 0.15, HK: 0.10, JP: 0.10, US: 0.20}
+  asset_exposures: {}
+  liquidity_flags: {}
+  regime_features: {volatility_zscore: 1.2}
+hierarchical_features:
+  volatility_zscore: 1.2
+as_of_index: 0
+layers:
+  research:
+    enabled: true
+    mode: dry_run
+    team:
+      topology: single
+      max_rounds: 1
+      quorum: 1.0
+      conflict_policy: reject
+      parallel: false
+      agents:
+        - type: research_coordinator
+          name: research
+          provider: openai_compatible
+          model: deepseek-v4-pro
+          api_key_env: DEEPSEEK_API_KEY
+          base_url_env: DEEPSEEK_BASE_URL
+          metadata: {directive_schema: research}
+          tools: [inspect_dataset]
+          allowed_permissions: [read, compute]
+          max_tool_calls: 1
+  risk:
+    enabled: true
+    mode: enforced
+    cadence: weekly
+    team:
+      topology: committee_vote
+      max_rounds: 1
+      quorum: 0.5
+      conflict_policy: most_conservative
+      parallel: true
+      max_workers: 3
+      agents:
+        - type: risk_manager
+          name: risk_committee
+          count: 3
+          provider: openai_compatible
+          model: deepseek-v4-pro
+          api_key_env: DEEPSEEK_API_KEY
+          base_url_env: DEEPSEEK_BASE_URL
+          metadata: {directive_schema: risk}
+          tools: []
+  hierarchical:
+    enabled: true
+    fusion: constraint
+    cadence: monthly
+    team:
+      topology: single
+      max_rounds: 1
+      quorum: 1.0
+      conflict_policy: reject
+      parallel: false
+      agents:
+        - type: market_regime
+          name: hierarchical
+          provider: openai_compatible
+          model: deepseek-v4-pro
+          api_key_env: DEEPSEEK_API_KEY
+          base_url_env: DEEPSEEK_BASE_URL
+          metadata: {directive_schema: hierarchical}
+          tools: []
+administrator_environment:
+  max_asset_weight: 0.20
+  max_market_weight: 0.40
+  market_weight_overrides: {CN: 0.35, HK: 0.30, JP: 0.30, US: 0.40}
+  cash_floor: 0.10
+  max_turnover: 0.80
+market_membership: [CN, HK, JP, US]
+raw_action: [0.0, 0.40, 0.30, 0.20, 0.10]
+current_weights: [1.0, 0.0, 0.0, 0.0, 0.0]
+tradable_mask: [true, true, true, true]
+verify_directive_replay: true

@@ -1,0 +1,30 @@
+{
+  "phase": 2,
+  "date": "2026-07-26",
+  "platform": "Windows",
+  "python": "3.12.13",
+  "environment_check": {
+    "is_valid": true,
+    "gymnasium_check": "passed",
+    "sb3_check": "passed",
+    "smoke_steps": 1000,
+    "resets": 333,
+    "finite_observations": true,
+    "finite_rewards": true,
+    "finite_values": true,
+    "max_accounting_error": 4.656612873077393e-10,
+    "min_portfolio_value": 992977.20771455,
+    "execution_protocol": "close_signal_next_open"
+  },
+  "quality_gates": {
+    "pytest": "89 passed",
+    "branch_coverage_percent": 88.22,
+    "ruff": "passed",
+    "mypy": "passed for 59 source files",
+    "pip_check": "no broken requirements",
+    "uv_lock_check": "passed; 111 packages resolved"
+  },
+  "non_failing_warnings": [
+    "Stable-Baselines3 treats the required [N,L,F] market_window as image-like; Phase 3 must provide a custom Dict feature extractor."
+  ]
+}

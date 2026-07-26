@@ -1,0 +1,60 @@
+{
+  "phase": 8,
+  "date": "2026-07-26",
+  "status": "passed",
+  "platform": "Windows",
+  "python": "3.12.13",
+  "report": {
+    "report_id": "phase8-softwarex",
+    "command": "cmag report softwarex --config configs/reporting/softwarex.yaml",
+    "run_count": 8,
+    "benchmark_rows": 3,
+    "table_count": 4,
+    "figure_count": 4,
+    "artifact_count": 13,
+    "selection_authority": false,
+    "manifest_file_sha256": "71cb3e2d075a69746a3db19cdf0bdcbf11ac9c71f71f8ecc16e6239694996551",
+    "source_index_sha256": "68bc3eed92b98f4c5d7b6a9dbed7dcd63c8821ab585971f9099051160e65becc",
+    "config_sha256": "1e3b9d25a7d80f9bf603632eec79195d833e700795358bca084116aafad17236",
+    "evidence_sha256": "b54d7e901f3c5f3c039220c45e61f6d8811a89381e2ab22675df8e9c2d079733",
+    "repeat_manifest_identical": true
+  },
+  "experiments": {
+    "required_categories": 6,
+    "completed": 2,
+    "partial": 2,
+    "planned": 2,
+    "fabricated_results": false
+  },
+  "service": {
+    "optional_dependency": true,
+    "default_host": "127.0.0.1",
+    "read_only": true,
+    "remote_requires_opt_in": true,
+    "canonical_report_redirect": "passed",
+    "browser_render": "passed",
+    "svg_assets_loaded": 4,
+    "svg_natural_dimensions": "900x460",
+    "arbitrary_run_file_route": false,
+    "mutation_routes": false
+  },
+  "quality_gates": {
+    "pytest_passed": 289,
+    "branch_coverage_percent": 87.71,
+    "warnings": 4,
+    "warning_scope": "existing Stable-Baselines3 observation-shape heuristics",
+    "ruff": "passed",
+    "mypy": "passed",
+    "mypy_source_files": 119,
+    "pip_check": "no broken requirements",
+    "uv_lock_check": "111 packages resolved; passed"
+  },
+  "security": {
+    "whitelist_index": "passed",
+    "path_containment": "passed",
+    "non_finite_rejection": "passed",
+    "secret_exclusion": "passed",
+    "test_to_hpo_authority": false,
+    "account_state_mutation": false
+  }
+}

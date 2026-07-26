@@ -1,0 +1,48 @@
+{
+  "branch_coverage_percent": 87.68,
+  "credentials": {
+    "api_key_persisted": false,
+    "api_key_source": "named environment variable only",
+    "provided_password_persisted": false
+  },
+  "dependencies": {
+    "httpx": "0.28.1",
+    "python": "3.12.13",
+    "uv_lock_packages": 111
+  },
+  "fallback_run": {
+    "error_code": "invalid_json",
+    "network_used": false,
+    "safe_to_continue": false,
+    "used_fallback": true
+  },
+  "offline_run": {
+    "markets": [
+      "CN",
+      "HK",
+      "JP",
+      "US"
+    ],
+    "model": "deepseek-v4-pro",
+    "network_used": false,
+    "provider": "mock",
+    "replay_verified": true,
+    "rounds": 2,
+    "tool_calls": 1,
+    "used_fallback": false
+  },
+  "phase": 5,
+  "providers": [
+    "mock",
+    "replay",
+    "openai_compatible"
+  ],
+  "quality_gates": {
+    "mypy": "passed (99 source files)",
+    "pip_check": "passed",
+    "pytest": "213 passed",
+    "ruff": "passed",
+    "uv_lock_check": "passed"
+  },
+  "status": "passed"
+}

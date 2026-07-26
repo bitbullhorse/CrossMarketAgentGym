@@ -1,0 +1,58 @@
+study_name: phase4-ppo-pso-stage-a
+output_dir: runs/tuning
+storage_path: runs/tuning/phase4-ppo-pso-stage-a.sqlite3
+max_trials: 8
+batch_size: 4
+directions: [maximize]
+
+search_space:
+  parameters:
+    learning_rate:
+      kind: float
+      low: 0.0001
+      high: 0.001
+      log: true
+    gamma:
+      kind: float
+      low: 0.95
+      high: 0.999
+    n_steps:
+      kind: int
+      low: 4
+      high: 8
+      step: 4
+    batch_size:
+      kind: int
+      low: 2
+      high: 4
+      step: 2
+  constraints:
+    - batch_size <= n_steps
+
+searcher:
+  type: pso
+  seed: 1024
+  population_size: 4
+
+scheduler:
+  type: asha
+  grace_period: 2
+  max_resource: 8
+  reduction_factor: 2
+
+objective:
+  type: ppo_validation
+  base_train_config: ../train/ppo_tune_smoke.yaml
+  budget_stage: stage_a
+  seeds: [1024]
+  walk_forward_folds: 1
+  total_timesteps: 8
+  mode: robust
+  include_training_time: false
+
+selection:
+  strategy: primary
+
+retrain_locked: true
+retrain_seed: 7777
+retrain_timesteps: 8

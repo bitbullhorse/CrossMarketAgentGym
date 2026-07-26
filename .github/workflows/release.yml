@@ -1,0 +1,92 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish the validated artifacts to PyPI"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PIP_INDEX_URL: https://pypi.tuna.tsinghua.edu.cn/simple
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install release tools
+        run: python -m pip install -e ".[release]"
+      - name: Validate version and release assets
+        env:
+          RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+        run: |
+          python - <<'PY'
+          import os
+          from crossmarket_agentgym import __version__
+          tag = os.environ["RELEASE_TAG"]
+          if tag and tag != f"v{__version__}":
+              raise SystemExit(f"tag {tag!r} does not match v{__version__}")
+          PY
+          cmag release check --workspace-root .
+      - name: Build distributions
+        run: python -m build
+      - name: Validate distributions
+        run: python -m twine check dist/*
+      - name: Inspect distribution contents
+        run: cmag release verify --dist-dir dist
+      - name: Write distribution manifest
+        run: cmag release manifest --dist-dir dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-distributions
+          path: dist/
+
+  publish-pypi:
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.publish
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/crossmarket-agent-gym
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-distributions
+          path: dist
+      - name: Keep PyPI directory distribution-only
+        run: rm dist/release-manifest.json
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+
+  github-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-distributions
+          path: dist
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes

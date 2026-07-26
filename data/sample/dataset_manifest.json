@@ -1,0 +1,139 @@
+{
+  "adjustment_rule": "raw synthetic OHLC; adjusted_close equals close; no corporate actions",
+  "created_at": "2026-07-26T00:00:00Z",
+  "dataset_name": "crossmarket_agentgym_synthetic_sample",
+  "date_end": "2024-01-06",
+  "date_start": "2024-01-02",
+  "files": [
+    {
+      "date_end": "2024-01-06",
+      "date_start": "2024-01-02",
+      "format": "parquet",
+      "markets": [],
+      "path": "fx_rates.parquet",
+      "role": "fx",
+      "row_count": 20,
+      "sha256": "fd5e8e7dc64f58e48863df869492283f81d27832e672306d97dd4181cc07a945",
+      "size_bytes": 3453,
+      "symbols": []
+    },
+    {
+      "date_end": null,
+      "date_start": null,
+      "format": "parquet",
+      "markets": [],
+      "path": "instruments.parquet",
+      "role": "instruments",
+      "row_count": 4,
+      "sha256": "d196bfff3294f2c529c3b3942667d1b6fe1c254fd528ebc93c3bf26efc47716e",
+      "size_bytes": 4332,
+      "symbols": []
+    },
+    {
+      "date_end": "2024-01-06",
+      "date_start": "2024-01-02",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "market=CN/year=2024/000001.parquet",
+      "role": "ohlcv",
+      "row_count": 5,
+      "sha256": "9bd8d7cd91f81eecd04a377ed1d4c7fff51aa33b5a36bbadcd315b1f437f3942",
+      "size_bytes": 10508,
+      "symbols": [
+        "000001"
+      ]
+    },
+    {
+      "date_end": "2024-01-06",
+      "date_start": "2024-01-02",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "market=HK/year=2024/0001.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 5,
+      "sha256": "eb2b98624435e20bdb08a05449859bfbec0a1f63b2af707ef0adc686f5a9bcaf",
+      "size_bytes": 10516,
+      "symbols": [
+        "0001.HK"
+      ]
+    },
+    {
+      "date_end": "2024-01-06",
+      "date_start": "2024-01-02",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "market=JP/year=2024/1301.T.parquet",
+      "role": "ohlcv",
+      "row_count": 5,
+      "sha256": "8d80315c0938c026ca3399a72be77a496243cf1a7b778bf3a507e518786dc898",
+      "size_bytes": 10494,
+      "symbols": [
+        "1301.T"
+      ]
+    },
+    {
+      "date_end": "2024-01-06",
+      "date_start": "2024-01-02",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "market=US/year=2024/A.parquet",
+      "role": "ohlcv",
+      "row_count": 5,
+      "sha256": "cda12ec91188862808cd12a69a77e60341d92dd4573993c04c443bc4c8f2c342",
+      "size_bytes": 10546,
+      "symbols": [
+        "A"
+      ]
+    }
+  ],
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "quality": {
+    "error_count": 0,
+    "is_valid": true,
+    "warning_count": 0
+  },
+  "row_count": 20,
+  "schema_columns": [
+    "trade_date",
+    "symbol",
+    "market",
+    "exchange",
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "currency",
+    "timezone",
+    "adjusted",
+    "source",
+    "adjusted_close",
+    "turnover",
+    "suspension_flag",
+    "limit_up",
+    "limit_down",
+    "tradable"
+  ],
+  "schema_version": "1.0.0",
+  "software_version": "0.1.0.dev0",
+  "source": "deterministic synthetic data; not for investment use",
+  "symbols": [
+    "000001",
+    "0001.HK",
+    "1301.T",
+    "A"
+  ]
+}

@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use CrossMarketAgentGym, please cite the software."
+title: "CrossMarketAgentGym"
+type: software
+version: 0.1.0
+date-released: 2026-07-26
+license: Apache-2.0
+authors:
+  - name: "CrossMarketAgentGym contributors"
+repository-code: "https://github.com/crossmarket-agent-gym/crossmarket-agent-gym"
+url: "https://github.com/crossmarket-agent-gym/crossmarket-agent-gym"
+abstract: >-
+  An auditable CPU-first platform for cross-market portfolio reinforcement
+  learning, configurable LLM-agent teams, deterministic risk enforcement,
+  and independently composed hyperparameter search and resource scheduling.
+keywords:
+  - algorithmic trading
+  - reinforcement learning
+  - multi-agent systems
+  - hyperparameter optimization
+  - reproducible research

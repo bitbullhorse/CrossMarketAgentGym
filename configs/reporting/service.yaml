@@ -1,0 +1,9 @@
+workspace_root: .
+runs_root: runs
+reports_root: reports
+host: 127.0.0.1
+port: 8000
+allow_remote: false
+docs_enabled: false
+max_runs: 500
+max_json_bytes: 5000000

@@ -1,0 +1,55 @@
+{
+  "phase": 6,
+  "status": "passed",
+  "model": "deepseek-v4-pro",
+  "online_endpoint_called": false,
+  "offline_runs": {
+    "single": {
+      "run_id": "phase6-single-offline",
+      "configured_instances": 1,
+      "succeeded": 1,
+      "fallback": 0,
+      "network_used": false,
+      "aggregate": "approve"
+    },
+    "team_1_3_2": {
+      "run_id": "phase6-team-offline",
+      "configured_instances": 6,
+      "succeeded": 5,
+      "fallback": 1,
+      "network_used": false,
+      "aggregate": "reject",
+      "cash_floor": 1.0,
+      "max_asset_weight": 0.0,
+      "max_turnover": 0.0,
+      "allow_new_positions": false
+    }
+  },
+  "topologies": [
+    "single",
+    "pipeline",
+    "supervisor_worker",
+    "committee_vote",
+    "debate_then_judge",
+    "map_reduce"
+  ],
+  "conflict_policies": [
+    "weighted_vote",
+    "majority_vote",
+    "judge",
+    "most_conservative",
+    "reject"
+  ],
+  "tests": {
+    "passed": 242,
+    "coverage_percent": 87.88,
+    "ruff": "passed",
+    "mypy_source_files": 107,
+    "mypy": "passed"
+  },
+  "security": {
+    "account_state_import_guard": "passed",
+    "shell_tool_guard": "passed",
+    "credential_scan": "passed"
+  }
+}

@@ -1,0 +1,46 @@
+run_id: phase6-deepseek-team
+workspace_root: .
+output_dir: runs
+prompt_version: phase6.v1
+seed: 1024
+objective: Produce a structured validation-only team review.
+payload:
+  partition_authority: validation_only
+load_entry_points: true
+team:
+  topology: supervisor_worker
+  supervisor: coordinator
+  max_rounds: 2
+  quorum: 0.5
+  conflict_policy: most_conservative
+  parallel: true
+  agents:
+    - type: research_coordinator
+      name: coordinator
+      count: 1
+      provider: openai_compatible
+      model: deepseek-v4-pro
+      api_key_env: DEEPSEEK_API_KEY
+      base_url_env: DEEPSEEK_BASE_URL
+      temperature: 0.0
+      tools: [inspect_dataset]
+      allowed_permissions: [read]
+      max_tool_calls: 1
+    - type: risk_manager
+      name: risk_committee
+      count: 3
+      provider: openai_compatible
+      model: deepseek-v4-pro
+      api_key_env: DEEPSEEK_API_KEY
+      base_url_env: DEEPSEEK_BASE_URL
+      temperature: 0.0
+      tools: []
+    - type: market_regime
+      name: hierarchical_strategy
+      count: 1
+      provider: openai_compatible
+      model: deepseek-v4-pro
+      api_key_env: DEEPSEEK_API_KEY
+      base_url_env: DEEPSEEK_BASE_URL
+      temperature: 0.0
+      tools: []

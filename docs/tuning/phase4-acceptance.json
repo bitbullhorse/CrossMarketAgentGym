@@ -1,0 +1,64 @@
+{
+  "branch_coverage_percent": 88.11,
+  "cpu_quickstart": {
+    "algorithm": "PPO",
+    "best_trial_id": 7,
+    "completed_trials": 8,
+    "failed_trials": 0,
+    "generations": 2,
+    "particles": 4,
+    "resumed_trial_count": 8,
+    "searcher": "pso",
+    "scheduler": "asha"
+  },
+  "evaluation_policy": {
+    "stage_a": "explicit reduced CPU budget",
+    "stage_b_minimum_seeds": 5,
+    "stage_b_minimum_walk_forward_folds": 2
+  },
+  "dependencies": {
+    "numpy": "2.1.3",
+    "python": "3.12.13",
+    "stable_baselines3": "2.6.0",
+    "torch": "2.7.1+cpu",
+    "uv_lock_packages": 111
+  },
+  "phase": 4,
+  "quality_gates": {
+    "mypy": "passed (85 source files)",
+    "pip_check": "passed",
+    "pytest": "192 passed",
+    "ruff": "passed",
+    "uv_lock_check": "passed"
+  },
+  "resource_schedulers": [
+    "fifo",
+    "median",
+    "asha",
+    "hyperband",
+    "pbt"
+  ],
+  "search_algorithms": [
+    "random",
+    "grid",
+    "tpe",
+    "cma_es",
+    "nsga_ii",
+    "pso",
+    "genetic",
+    "differential_evolution",
+    "simulated_annealing"
+  ],
+  "status": "passed",
+  "independent_retrain": {
+    "completed": true,
+    "hpo_seed": 1024,
+    "retrain_seed": 7777,
+    "test_set_accessed": false
+  },
+  "test_partition": {
+    "accessed": false,
+    "artifacts": 0,
+    "validation_audit_files": 8
+  }
+}

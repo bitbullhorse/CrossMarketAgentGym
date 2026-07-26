@@ -1,0 +1,6 @@
+# Use after constraints-cpu.txt in the remote CUDA environment.
+# The CUDA-specific torch wheel/channel is an environment concern, not encoded here.
+-c constraints-cpu.txt
+
+# Ray remains optional; ASHA, HyperBand, and PBT will be scheduler adapters.
+ray[tune]==2.47.1

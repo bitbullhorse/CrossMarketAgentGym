@@ -1,0 +1,165 @@
+run_id: phase7-full-stack-offline
+workspace_root: .
+output_dir: runs
+prompt_version: phase7.v1
+seed: 1024
+load_entry_points: false
+preset: full_stack
+objective: Review and constrain a validation-only cross-market DRL action.
+research_payload:
+  dataset_manifest: data/sample/dataset_manifest.json
+risk_context:
+  portfolio_value: 1000000.0
+  current_drawdown: 0.08
+  rolling_volatility: 0.22
+  rolling_cvar: 0.04
+  turnover: 0.30
+  market_exposures: {CN: 0.15, HK: 0.10, JP: 0.10, US: 0.20}
+  asset_exposures: {}
+  liquidity_flags: {}
+  regime_features: {volatility_zscore: 1.2}
+hierarchical_features:
+  volatility_zscore: 1.2
+  cross_market_correlation: 0.7
+as_of_index: 0
+layers:
+  research:
+    enabled: true
+    mode: dry_run
+    team:
+      topology: single
+      max_rounds: 1
+      quorum: 1.0
+      conflict_policy: reject
+      parallel: false
+      agents:
+        - type: research_coordinator
+          name: research
+          provider: mock
+          model: deepseek-v4-pro
+          metadata:
+            directive_schema: research
+          tools: [inspect_dataset]
+          allowed_permissions: [read, compute]
+          max_tool_calls: 1
+          mock_scripts:
+            -
+              - tool_calls:
+                  - id: inspect-phase7
+                    name: inspect_dataset
+                    arguments:
+                      manifest_path: data/sample/dataset_manifest.json
+              - content:
+                  objective: Review and constrain a validation-only cross-market DRL action.
+                  mode: dry_run
+                  steps:
+                    - id: inspect
+                      action: inspect_dataset
+                      arguments:
+                        manifest_path: data/sample/dataset_manifest.json
+                      expected_artifacts: []
+                    - id: validate
+                      action: validate_experiment_config
+                      arguments:
+                        partition: validation
+                      depends_on: [inspect]
+                      expected_artifacts: []
+                  validation_only: true
+                  test_metrics_accessed: false
+                  safe_to_execute: false
+                  estimated_compute_units: 0.0
+                  rationale: Dry-run research plan passed schema and dataset inspection.
+                  confidence: 0.95
+  risk:
+    enabled: true
+    mode: enforced
+    cadence: weekly
+    team:
+      topology: committee_vote
+      max_rounds: 1
+      quorum: 0.5
+      conflict_policy: most_conservative
+      parallel: true
+      max_workers: 3
+      agents:
+        - type: risk_manager
+          name: risk_committee
+          count: 3
+          provider: mock
+          model: deepseek-v4-pro
+          metadata:
+            directive_schema: risk
+          tools: []
+          mock_scripts:
+            -
+              - content:
+                  risk_budget: 1.0
+                  max_asset_weight: 0.80
+                  max_market_weights: {CN: 0.80, HK: 0.80, JP: 0.80, US: 0.80}
+                  cash_floor: 0.0
+                  max_turnover: 2.0
+                  allow_new_positions: true
+                  rebalance_frequency: daily
+                  rationale: Aggressive proposal that cannot widen administrator limits.
+                  confidence: 0.50
+            -
+              - content:
+                  risk_budget: 0.60
+                  max_asset_weight: 0.15
+                  max_market_weights: {CN: 0.25, HK: 0.20, JP: 0.20, US: 0.25}
+                  cash_floor: 0.30
+                  max_turnover: 0.20
+                  allow_new_positions: false
+                  rebalance_frequency: weekly
+                  rationale: Conservative committee proposal.
+                  confidence: 0.85
+            -
+              - content:
+                  risk_budget: 0.70
+                  max_asset_weight: 0.18
+                  max_market_weights: {CN: 0.30, HK: 0.25, JP: 0.25, US: 0.30}
+                  cash_floor: 0.20
+                  max_turnover: 0.30
+                  allow_new_positions: true
+                  rebalance_frequency: weekly
+                  rationale: Moderate committee proposal.
+                  confidence: 0.75
+  hierarchical:
+    enabled: true
+    fusion: constraint
+    cadence: monthly
+    team:
+      topology: single
+      max_rounds: 1
+      quorum: 1.0
+      conflict_policy: reject
+      parallel: false
+      agents:
+        - type: market_regime
+          name: hierarchical
+          provider: mock
+          model: deepseek-v4-pro
+          metadata:
+            directive_schema: hierarchical
+          tools: []
+          mock_scripts:
+            -
+              - content:
+                  market_regime: high_volatility
+                  market_budgets: {CN: 0.20, HK: 0.18, JP: 0.18, US: 0.22}
+                  sector_budgets: null
+                  global_risk_budget: 0.50
+                  rebalance_interval: 21
+                  objective_weights: {return: 0.30, risk: 0.70}
+                  confidence: 0.90
+administrator_environment:
+  max_asset_weight: 0.20
+  max_market_weight: 0.40
+  market_weight_overrides: {CN: 0.35, HK: 0.30, JP: 0.30, US: 0.40}
+  cash_floor: 0.10
+  max_turnover: 0.80
+market_membership: [CN, HK, JP, US]
+raw_action: [0.0, 0.40, 0.30, 0.20, 0.10]
+current_weights: [1.0, 0.0, 0.0, 0.0, 0.0]
+tradable_mask: [true, true, true, true]
+verify_directive_replay: true

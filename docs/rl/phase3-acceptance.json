@@ -1,0 +1,57 @@
+{
+  "phase": 3,
+  "date": "2026-07-26",
+  "platform": "Windows",
+  "python": "3.12.13",
+  "dependencies": {
+    "stable_baselines3": "2.6.0",
+    "torch": "2.7.1+cpu",
+    "numpy": "2.1.3"
+  },
+  "algorithm_runs": {
+    "PPO": {
+      "requested_timesteps": 1000,
+      "trained_timesteps": 1024,
+      "policy": "shared_mlp",
+      "checkpoint": "passed",
+      "trades_weights_metrics": "passed"
+    },
+    "SAC": {
+      "requested_timesteps": 128,
+      "trained_timesteps": 128,
+      "policy": "mlp",
+      "checkpoint": "passed",
+      "trades_weights_metrics": "passed"
+    },
+    "TD3": {
+      "requested_timesteps": 128,
+      "trained_timesteps": 128,
+      "policy": "transformer",
+      "checkpoint": "passed",
+      "trades_weights_metrics": "passed"
+    },
+    "A2C_optional": {
+      "integration_test": "passed"
+    }
+  },
+  "reproducibility": {
+    "same_checkpoint_two_loads_max_action_difference": 0.0,
+    "same_seed_independent_cpu_runs": "exact action equality"
+  },
+  "partition_safety": {
+    "train_panel_isolated": true,
+    "training_constructs_test_environment": false,
+    "trainer_accepts_test_partition": false,
+    "normalizer_can_fit_validation_or_test": false,
+    "locked_test_evaluation": "passed"
+  },
+  "quality_gates": {
+    "pytest": "115 passed",
+    "branch_coverage_percent": 88.75,
+    "ruff": "passed",
+    "mypy": "passed for 72 source files",
+    "pip_check": "no broken requirements",
+    "uv_lock_check": "passed; 111 packages resolved"
+  },
+  "interpretation": "Synthetic five-session compatibility evidence only; not an investment performance result."
+}

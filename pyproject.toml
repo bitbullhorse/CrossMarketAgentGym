@@ -1,0 +1,201 @@
+[build-system]
+requires = ["hatchling>=1.26,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "crossmarket-agent-gym"
+dynamic = ["version"]
+description = "Auditable cross-market DRL, LLM-agent orchestration, and hyperparameter optimization."
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = { file = "LICENSE" }
+authors = [
+  { name = "CrossMarketAgentGym contributors" },
+]
+keywords = [
+  "algorithmic-trading",
+  "deep-reinforcement-learning",
+  "gymnasium",
+  "large-language-models",
+  "multi-agent",
+  "hyperparameter-optimization",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "gymnasium>=1.0,<1.2",
+  "jinja2>=3.1,<4",
+  "numpy>=1.26,<2.4",
+  "openpyxl>=3.1,<4",
+  "pandas>=2.2,<3",
+  "pyarrow>=16,<24",
+  "pydantic>=2.8,<3",
+  "pydantic-settings>=2.4,<3",
+  "pyyaml>=6,<7",
+  "rich>=13,<15",
+  "typer>=0.12,<1",
+  "xlrd>=2,<3",
+]
+
+[project.optional-dependencies]
+rl = [
+  "stable-baselines3>=2.4,<3",
+  "torch>=2.3,<3",
+]
+hpo = [
+  "optuna>=4,<5",
+  "scipy>=1.13,<2",
+]
+llm = [
+  "httpx>=0.27,<1",
+]
+ray = [
+  "ray[tune]>=2.40,<3",
+]
+service = [
+  "fastapi>=0.115,<1",
+  "uvicorn[standard]>=0.30,<1",
+]
+release = [
+  "build>=1.2,<2",
+  "twine>=5,<7",
+]
+dev = [
+  "coverage[toml]>=7.6,<8",
+  "hypothesis>=6.112,<7",
+  "mypy>=1.11,<2",
+  "pandas-stubs>=2.2.3,<3",
+  "pytest>=8.3,<9",
+  "pytest-cov>=5,<7",
+  "ruff>=0.8,<1",
+  "types-pyyaml>=6.0.12,<7",
+]
+all = [
+  "fastapi>=0.115,<1",
+  "httpx>=0.27,<1",
+  "optuna>=4,<5",
+  "ray[tune]>=2.40,<3",
+  "scipy>=1.13,<2",
+  "stable-baselines3>=2.4,<3",
+  "torch>=2.3,<3",
+  "uvicorn[standard]>=0.30,<1",
+]
+
+[project.scripts]
+cmag = "crossmarket_agentgym.cli.app:main"
+
+[project.entry-points."crossmarket_agentgym.agents"]
+# Third-party agents register here from their own distributions.
+
+[project.urls]
+Documentation = "https://github.com/crossmarket-agent-gym/crossmarket-agent-gym#readme"
+Issues = "https://github.com/crossmarket-agent-gym/crossmarket-agent-gym/issues"
+Source = "https://github.com/crossmarket-agent-gym/crossmarket-agent-gym"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/crossmarket_agentgym"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"configs" = "crossmarket_agentgym/resources/configs"
+"data/sample" = "crossmarket_agentgym/resources/data/sample"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/.env.example",
+  "/.github",
+  "/CHANGELOG.md",
+  "/CITATION.cff",
+  "/CODE_OF_CONDUCT.md",
+  "/CONTRIBUTING.md",
+  "/Dockerfile",
+  "/LICENSE",
+  "/README.md",
+  "/SECURITY.md",
+  "/configs",
+  "/data/sample",
+  "/docs",
+  "/examples",
+  "/paper",
+  "/pyproject.toml",
+  "/src",
+  "/tests",
+]
+exclude = [
+  "/.venv",
+  "/reports",
+  "/runs",
+  "/stock_data",
+]
+
+[tool.hatch.version]
+path = "src/crossmarket_agentgym/_version.py"
+
+[tool.pytest.ini_options]
+addopts = [
+  "-ra",
+  "--strict-config",
+  "--strict-markers",
+  "--cov=crossmarket_agentgym",
+  "--cov-branch",
+  "--cov-report=term-missing",
+  "--cov-fail-under=85",
+  "--basetemp=.pytest-tmp",
+  "-p",
+  "no:cacheprovider",
+]
+testpaths = ["tests"]
+markers = [
+  "integration: tests crossing package or dependency boundaries",
+  "slow: tests excluded from the default CPU smoke suite",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["crossmarket_agentgym"]
+
+[tool.coverage.report]
+exclude_also = [
+  "if TYPE_CHECKING:",
+  "if __name__ == .__main__.:",
+  "raise NotImplementedError",
+]
+show_missing = true
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["B", "E4", "E7", "E9", "F", "I", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["B011"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+pretty = true
+show_error_codes = true
+warn_unreachable = true
+files = ["src"]
+
+[[tool.mypy.overrides]]
+module = [
+  "fastapi.*",
+  "ray",
+  "ray.*",
+  "stable_baselines3.*",
+  "uvicorn",
+  "uvicorn.*",
+  "yaml",
+]
+ignore_missing_imports = true

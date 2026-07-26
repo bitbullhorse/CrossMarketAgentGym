@@ -1,0 +1,10 @@
+searcher:
+  type: random
+  seed: 1024
+
+scheduler:
+  type: fifo
+
+data_access:
+  allowed_partitions: [train, validation]
+  forbidden_partitions: [test]

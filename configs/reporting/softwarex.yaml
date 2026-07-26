@@ -1,0 +1,57 @@
+report_id: phase8-softwarex
+title: CrossMarketAgentGym SoftwareX Evidence
+workspace_root: .
+runs_root: runs
+output_dir: reports
+partition: validation
+max_runs: 500
+max_json_bytes: 5000000
+
+include_run_ids:
+  - phase3_ppo_cpu
+  - phase3_sac_cpu
+  - phase3_td3_cpu
+  - phase4-ppo-pso-stage-a
+  - phase6-single-offline
+  - phase6-team-offline
+  - phase7-no-llm
+  - phase7-full-stack-offline
+
+experiments:
+  - category: environment_correctness
+    label: Environment correctness and market rules
+    status: completed
+    evidence_paths:
+      - docs/environment/phase2-acceptance.json
+    notes: Gymnasium, SB3, timing, accounting, and 1,000-step smoke evidence.
+  - category: algorithm_benchmark
+    label: PPO, SAC, and TD3 comparison
+    status: completed
+    evidence_paths:
+      - runs/phase3_ppo_cpu/validation/metrics.json
+      - runs/phase3_sac_cpu/validation/metrics.json
+      - runs/phase3_td3_cpu/validation/metrics.json
+    notes: Descriptive validation comparison; no HPO selection authority.
+  - category: cross_stock_zero_shot
+    label: Cross-stock zero-shot evaluation
+    status: planned
+    evidence_paths: []
+    notes: Report slot is generated without fabricating an unexecuted experiment.
+  - category: leave_one_market_out
+    label: Leave-one-market-out evaluation
+    status: planned
+    evidence_paths: []
+    notes: Requires dedicated locked experiment runs.
+  - category: market_mechanism_ablation
+    label: Market mechanism ablation
+    status: partial
+    evidence_paths:
+      - docs/environment/phase2-acceptance.json
+    notes: Rules are verified; the comparative ablation matrix remains to be executed.
+  - category: agent_hpo_ablation
+    label: Agent layer and HPO ablation
+    status: partial
+    evidence_paths:
+      - docs/tuning/phase4-acceptance.json
+      - docs/agents/phase7-acceptance.json
+    notes: Runtime presets and PSO/ASHA evidence exist; publication-scale seeds remain pending.

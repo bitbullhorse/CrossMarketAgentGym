@@ -1,0 +1,59 @@
+{
+  "phase": 7,
+  "status": "passed",
+  "model": "deepseek-v4-pro",
+  "online_endpoint_called": false,
+  "presets": [
+    "no_llm",
+    "research_only",
+    "risk_only",
+    "hierarchical_only",
+    "research_plus_risk",
+    "full_stack"
+  ],
+  "offline_runs": {
+    "no_llm": {
+      "run_id": "phase7-no-llm",
+      "provider_runtimes_started": 0,
+      "network_used": false,
+      "directive_replay_verified": true
+    },
+    "full_stack": {
+      "run_id": "phase7-full-stack-offline",
+      "research_instances": 1,
+      "risk_instances": 3,
+      "hierarchical_instances": 1,
+      "network_used": false,
+      "risk_allow_new_positions": false,
+      "effective_cash_floor": 0.5,
+      "effective_max_asset_weight": 0.15,
+      "effective_max_turnover": 0.2,
+      "directive_replay_verified": true
+    }
+  },
+  "research_tools": {
+    "count": 12,
+    "validation_only": true,
+    "budget_required_before_expensive": true
+  },
+  "fusion": {
+    "mode": "constraint",
+    "administrator_limits_immutable": true,
+    "account_state_mutation": false
+  },
+  "tests": {
+    "passed": 278,
+    "coverage_percent": 87.73,
+    "ruff": "passed",
+    "mypy_source_files": 111,
+    "mypy": "passed"
+  },
+  "security": {
+    "no_llm_provider_guard": "passed",
+    "test_partition_guard": "passed",
+    "hard_limit_intersection": "passed",
+    "account_state_import_guard": "passed",
+    "shell_tool_guard": "passed",
+    "directive_tamper_detection": "passed"
+  }
+}

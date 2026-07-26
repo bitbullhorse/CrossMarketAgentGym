@@ -1,0 +1,78 @@
+run_id: phase6-team-offline
+workspace_root: .
+output_dir: runs
+prompt_version: phase6.v1
+seed: 1024
+objective: Review a validation-only cross-market experiment as a 1+3+2 committee.
+payload:
+  partition_authority: validation_only
+  account_state_write_access: false
+load_entry_points: false
+team:
+  topology: committee_vote
+  max_rounds: 3
+  quorum: 0.5
+  conflict_policy: most_conservative
+  parallel: true
+  max_workers: 6
+  agents:
+    - type: research_coordinator
+      name: coordinator
+      count: 1
+      provider: mock
+      model: deepseek-v4-pro
+      tools: []
+      mock_scripts:
+        -
+          - content:
+              decision: approve
+              summary: Research inputs are validation-only and reproducible.
+              confidence: 0.9
+              risk_score: 0.2
+    - type: risk_manager
+      name: risk_committee
+      count: 3
+      provider: mock
+      model: deepseek-v4-pro
+      tools: []
+      mock_scripts:
+        -
+          - content:
+              decision: approve
+              summary: Baseline risk envelope is acceptable.
+              confidence: 0.8
+              risk_score: 0.3
+              constraints:
+                cash_floor: 0.20
+                max_asset_weight: 0.30
+                max_market_weights: {CN: 0.50, HK: 0.40, JP: 0.40, US: 0.50}
+                max_turnover: 0.50
+                allow_new_positions: true
+        -
+          - content:
+              decision: revise
+              summary: Volatility requires a tighter risk envelope.
+              confidence: 0.7
+              risk_score: 0.7
+              constraints:
+                cash_floor: 0.35
+                max_asset_weight: 0.20
+                max_market_weights: {CN: 0.35, HK: 0.30, JP: 0.30, US: 0.35}
+                max_turnover: 0.25
+                allow_new_positions: false
+        -
+          - error_code: offline_risk_failure
+            error_message: Deliberate offline Provider failure.
+    - type: backtest_auditor
+      name: audit_committee
+      count: 2
+      provider: mock
+      model: deepseek-v4-pro
+      tools: []
+      mock_scripts:
+        -
+          - content:
+              decision: approve
+              summary: Backtest evidence preserves validation and test boundaries.
+              confidence: 0.9
+              risk_score: 0.1
