@@ -1,0 +1,11 @@
+{
+  "blocker_code": "GLOBAL_SEQUENCE_ERROR_PREFIX_CENSOR_INVALID",
+  "detected_before_formal_matrix_freeze": true,
+  "formal_results_created": false,
+  "protocol_v3_sha256": "9ec00171a80eda399d800bd0e08803bb847e7aeaf7ab4c27a4c50ceeaf97c180",
+  "reason": "For globally unsorted sources, physical-row prefix censoring could retain a later chronological block and discard the valid formation window. The resulting panel did not become fully valued until 2025-02-25 and could not execute the frozen 2021-02-02 training start.",
+  "replacement_protocol": "protocol-v4",
+  "replacement_protocol_sha256": "90e40d212b5faaff644e0041eeef92c0b0056ce9a834095a047948a1d5e42529",
+  "status": "superseded_blocked",
+  "superseded_protocol": "protocol-v3"
+}

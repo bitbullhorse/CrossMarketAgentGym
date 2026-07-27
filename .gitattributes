@@ -18,3 +18,6 @@ Dockerfile text eol=lf
 *.zip binary
 *.whl binary
 *.gz binary
+
+# Phase 12 immutable protocol inputs are byte-addressed by SHA-256.
+/experiments/** -text -eol whitespace=cr-at-eol

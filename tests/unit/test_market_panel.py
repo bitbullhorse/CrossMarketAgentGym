@@ -9,6 +9,11 @@ import pandas as pd
 import pytest
 
 from crossmarket_agentgym.data.calendars import StaticMarketCalendar
+from crossmarket_agentgym.data.io import write_canonical
+from crossmarket_agentgym.data.manifests import (
+    build_dataset_manifest,
+    write_manifest,
+)
 from crossmarket_agentgym.environments import MarketDataPanel
 from tests.helpers import make_us_ohlcv
 
@@ -21,6 +26,33 @@ def test_manifest_panel_converts_local_prices_before_accounting() -> None:
 
     assert panel.open_prices[0, cn_index] == pytest.approx(10.0 * 0.14)
     assert panel.open_prices[0, us_index] == pytest.approx(100.0)
+
+
+def test_manifest_panel_restores_all_null_optional_control_columns(
+    tmp_path: Path,
+) -> None:
+    """An all-null optional control column keeps its documented default semantics."""
+    frame = make_us_ohlcv(days=3)
+    controls = ("tradable", "suspension_flag", "limit_up", "limit_down")
+    for column in controls:
+        frame[column] = pd.Series([pd.NA] * len(frame), dtype="boolean")
+    bars = tmp_path / "bars.parquet"
+    write_canonical(frame, bars, require_valid=True)
+    manifest = build_dataset_manifest(
+        root=tmp_path,
+        dataset_name="all-null-controls",
+        file_roles={bars: "ohlcv"},
+        source="unit-test",
+        adjustment_rule="none",
+    )
+    write_manifest(manifest, tmp_path / "dataset_manifest.json")
+
+    panel = MarketDataPanel.from_manifest(tmp_path)
+
+    assert panel.tradable_mask.all()
+    assert not panel.suspension_mask.any()
+    assert not panel.limit_up_mask.any()
+    assert not panel.limit_down_mask.any()
 
 
 def test_union_calendar_forward_values_but_never_marks_closure_tradable() -> None:
@@ -41,6 +73,16 @@ def test_union_calendar_forward_values_but_never_marks_closure_tradable() -> Non
         panel.close_prices[closure_index - 1, b_index]
     )
     assert not panel.tradable_mask[closure_index, b_index]
+    assert not panel.tradable_without_suspension_mask[closure_index, b_index]
+
+
+def test_panel_separates_suspension_from_other_tradability_causes() -> None:
+    frame = make_us_ohlcv(days=3)
+    frame.loc[1, "suspension_flag"] = True
+    panel = MarketDataPanel.from_frame(frame)
+
+    assert not panel.tradable_mask[1, 0]
+    assert panel.tradable_without_suspension_mask[1, 0]
 
 
 def test_panel_honors_an_explicit_intersection_or_rebalance_calendar() -> None:

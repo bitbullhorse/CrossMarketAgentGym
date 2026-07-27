@@ -46,9 +46,24 @@ def _asset_action(weights: NDArray[np.floating[Any]]) -> NDArray[np.float32]:
 
 
 def _returns(observation: Observation) -> NDArray[np.float64]:
-    market = np.asarray(observation["market_window"], dtype=np.float64)
+    market = _market_tensor(observation)
     close = np.maximum(market[:, :, 3], 1e-12)
     return np.diff(np.log(close), axis=1)
+
+
+def _market_tensor(observation: Observation) -> NDArray[np.float64]:
+    """Restore the canonical `[asset, lookback, feature]` view from flat adapters."""
+    market = np.asarray(observation["market_window"], dtype=np.float64)
+    if market.ndim == 3:
+        return market
+    if market.ndim != 1:
+        raise ValueError("market_window must be flat or a three-dimensional tensor")
+    asset_count = len(_tradable(observation))
+    feature_count = 6
+    denominator = asset_count * feature_count
+    if denominator == 0 or market.size % denominator:
+        raise ValueError("flat market_window is incompatible with the canonical feature geometry")
+    return market.reshape(asset_count, market.size // denominator, feature_count)
 
 
 class CashBaseline:
@@ -188,7 +203,7 @@ class MomentumBaseline:
     ) -> tuple[NDArray[np.float32], None]:
         """Use positive close-to-close lookback returns."""
         del deterministic
-        market = np.asarray(observation["market_window"], dtype=np.float64)
+        market = _market_tensor(observation)
         start = np.maximum(market[:, 0, 3], 1e-12)
         scores = np.clip(market[:, -1, 3] / start - 1.0, 0.0, None)
         scores *= _tradable(observation)

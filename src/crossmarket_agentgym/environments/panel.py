@@ -61,6 +61,11 @@ class MarketDataPanel:
         """Return union-calendar length."""
         return len(self.dates)
 
+    @property
+    def tradable_without_suspension_mask(self) -> NDArray[np.bool_]:
+        """Restore only observations disabled by the suspension rule."""
+        return self.tradable_mask | self.suspension_mask
+
     @classmethod
     def from_manifest(
         cls,
@@ -81,11 +86,28 @@ class MarketDataPanel:
         if not ohlcv_frames:
             raise ValueError("manifest contains no OHLCV artifacts")
         fx_entries = [entry for entry in manifest.files if entry.role == "fx"]
-        fx_frame = (
-            pd.read_parquet(root / fx_entries[0].path) if fx_entries else None
+        fx_frame = None
+        if fx_entries:
+            fx_path = root / fx_entries[0].path
+            fx_frame = (
+                pd.read_parquet(fx_path)
+                if fx_path.suffix.lower() in {".parquet", ".pq"}
+                else pd.read_csv(fx_path)
+            )
+        combined = pd.concat(
+            [frame.dropna(axis=1, how="all") for frame in ohlcv_frames],
+            ignore_index=True,
         )
+        for control_column in (
+            "tradable",
+            "suspension_flag",
+            "limit_up",
+            "limit_down",
+        ):
+            if control_column not in combined:
+                combined[control_column] = pd.NA
         return cls.from_frame(
-            pd.concat(ohlcv_frames, ignore_index=True),
+            combined,
             fx_rates=fx_frame,
             base_currency=base_currency,
         )
@@ -148,6 +170,7 @@ class MarketDataPanel:
             (session_count, asset_count, len(FEATURE_NAMES)), dtype=np.float32
         )
         tradable = np.zeros((session_count, asset_count), dtype=bool)
+        tradable_without_suspension = np.zeros_like(tradable)
         suspended = np.zeros_like(tradable)
         limit_up = np.zeros_like(tradable)
         limit_down = np.zeros_like(tradable)
@@ -204,13 +227,19 @@ class MarketDataPanel:
                 & (open_base > 0.0)
                 & (close_base > 0.0)
             )
-            tradable[:, asset_index] = (
+            tradable_without_suspension[:, asset_index] = (
                 observed_values
                 & allowed_values
-                & ~suspension_values
                 & finite_bar
             )
-            suspended[:, asset_index] = suspension_values
+            tradable[:, asset_index] = (
+                tradable_without_suspension[:, asset_index]
+                & ~suspension_values
+            )
+            suspended[:, asset_index] = (
+                suspension_values
+                & tradable_without_suspension[:, asset_index]
+            )
             limit_up[:, asset_index] = group["limit_up"].eq(True).to_numpy(dtype=bool)
             limit_down[:, asset_index] = group["limit_down"].eq(True).to_numpy(dtype=bool)
 

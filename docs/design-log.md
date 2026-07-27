@@ -546,3 +546,94 @@
   environments, scores, or participant files absent from the workspace.
 - Reason: the reported clearance is a legitimate release input, but provenance requires a clear
   distinction between supplied attestation and machine-generated evidence.
+
+## DL-0081 — Formal source selection is quality-gated and outcome-independent
+
+- Decision: inventory all 978 source files, reject every source with a remaining OHLCV quality
+  error, and select a fixed per-market universe using a salted SHA-256 of market and symbol.
+- Reason: selecting on return, volatility, benchmark membership, or test-period performance would
+  leak outcomes. Hash order is deterministic and performance-agnostic.
+
+## DL-0082 — Exclude only auditable non-OHLCV records
+
+- Decision: allow one semantic projection before quality validation: a source row may be excluded
+  only when open, high, low, close, and volume are all missing. Record every excluded source
+  index. Do not impute, sort, deduplicate, repair, or partially drop invalid bars.
+- Reason: RESSET workbooks contain financial-report observations alongside daily-price fields.
+  Treating an all-empty price record as a zero-price bar is incorrect, while silently repairing
+  partial bars would make the formal dataset irreproducible.
+
+## DL-0083 — Formal FX is an immutable offline input
+
+- Decision: acquire one official ECB EXR csvdata response before protocol freeze, record its
+  exact bytes and SHA-256, derive local-currency-to-USD rates as
+  `USD-per-EUR / currency-per-EUR`, and use latest-on-or-before lookup.
+- Reason: a live API may revise history or be unavailable. The snapshot makes formal runs
+  network-independent and prevents future-rate lookup.
+
+## DL-0084 — Safety constraints dominate ablation completeness
+
+- Decision: Group D never disables the deterministic risk boundary. The closest permitted
+  comparison is named `minimum_deterministic_risk_projection` and retains hard leverage,
+  non-negative cash, and account-mutation invariants.
+- Reason: the project-wide safety contract forbids LLM or experiment code from bypassing the
+  deterministic risk layer. A paper ablation cannot weaken a release-blocking invariant.
+
+## DL-0085 — Protocol v1 is write-once
+
+- Decision: bind protocol v1 to the source inventory, ECB snapshot, processed dataset manifest,
+  rc2 software release, prompt source, partitions, budgets, methods, seeds, and statistics with
+  SHA-256 `428386c42ef89110b88014a8f3c87ffdddc48810e16d6991d1ee3f74f2789cae`.
+  Any semantic change requires protocol v2 rather than overwrite.
+- Reason: post-result protocol edits permit undisclosed researcher degrees of freedom and break
+  run-to-paper traceability.
+
+## DL-0086 — Future source availability is a blocking universe leak
+
+- Decision: block and supersede protocol-v1 before freezing a formal matrix because its
+  full-window coverage rule observed whether a source remained available through the locked test
+  period. Preserve its protocol and input hashes, publish a structured supersession notice, and
+  accept no v1 development run as a formal result.
+- Reason: performance-independent selection can still leak future information when eligibility
+  depends on future listing or data availability. Survivorship disclosure does not make that
+  selection valid for a no-future-universe protocol.
+
+## DL-0087 — Form the fixed universe before training and censor later failures
+
+- Decision: protocol-v2 forms the universe at `2021-02-01`, begins training at `2021-02-02`,
+  and uses only cutoff-visible coverage, cutoff-visible quality, and salted symbol hashes for
+  selection. A selected source with a later quality error retains its symbol identity and becomes
+  unavailable from the first invalid observation; no repair, replacement, or reselection occurs.
+- Reason: fixed membership avoids future-informed substitution. Prefix censoring is conservative,
+  reproducible, and preserves the economic meaning of an unavailable asset without fabricating
+  prices or allowing later data quality to change the original stock pool.
+
+## DL-0088 — A Prompt hash requires a versioned source path
+
+- Decision: block protocol-v2 before matrix freeze because its Prompt SHA-256 had no resolvable
+  source artifact. Protocol-v3 binds `experiments/agents/prompt_bundle_v1.json`, verifies its
+  hash during every preflight, and injects its exact role strings into formal Agent specs.
+- Reason: a hash without retrievable bytes cannot be independently reproduced. Binding the
+  system prompts and deterministic user-message serialization contract prevents undocumented
+  Prompt drift while the matrix commit binds the runtime renderer implementation.
+
+## DL-0089 — Global sequence failures cannot use physical prefix censoring
+
+- Decision: block protocol-v3 after its real-data CPU gate showed that a globally unsorted source
+  could begin with a later chronological block. Protocol-v4 keeps the fixed symbol but retains
+  only its already validated formation-window observations when the future audit reports an
+  ordering or duplicate-key error. Local bad-bar errors continue to use first-invalid-row prefix
+  censoring.
+- Reason: physical position is a safe causal boundary for a local row defect only when sequence
+  order itself is valid. For a global ordering failure, the formation window is the last
+  chronology-independent set known to be valid without sorting, repairing, or using future data.
+
+## DL-0090 — Formal training boundaries remain private to Phase 12
+
+- Decision: implement the frozen first-outcome date through a Phase 12-private environment and
+  training adapter. Keep the rc2 `TemporalSplitConfig`, `MarketDataPanel`, and exported HPO
+  constructor contracts unchanged. Group B, Group C, locked HPO retraining, and every
+  walk-forward fold use the private adapter.
+- Reason: the experiment protocol needs an exact `2021-02-02` first training execution, but an
+  experiment implementation must not mutate the already frozen release API or Schema. The
+  frozen-contract gate now proves both requirements simultaneously.

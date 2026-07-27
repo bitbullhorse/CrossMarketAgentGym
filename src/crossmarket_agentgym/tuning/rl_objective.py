@@ -11,6 +11,7 @@ from typing import Any
 
 import numpy as np
 
+from crossmarket_agentgym.environments import CrossMarketPortfolioEnv
 from crossmarket_agentgym.evaluation import EvaluationResult, evaluate_policy
 from crossmarket_agentgym.rl.callbacks import build_callbacks
 from crossmarket_agentgym.rl.config import (
@@ -57,12 +58,31 @@ class PPOValidationObjective:
         base_config: TrainRunConfig,
         objective_config: ObjectiveConfig,
         output_dir: Path,
+        fold_splits: tuple[TemporalSplitConfig, ...] | None = None,
     ) -> None:
         if base_config.trainer.algorithm != "PPO":
             raise ValueError("ppo_validation objective requires a PPO base config")
         self.base_config = base_config
         self.objective_config = objective_config
         self.output_dir = output_dir
+        if fold_splits is not None:
+            if len(fold_splits) != objective_config.walk_forward_folds:
+                raise ValueError("explicit fold count differs from objective configuration")
+            if any(split.test_end_execution_index is not None for split in fold_splits):
+                raise ValueError("HPO fold splits cannot expose a test partition")
+        self.fold_splits = fold_splits
+
+    def _build_environments(
+        self,
+        trial_config: TrainRunConfig,
+        fold: int,
+    ) -> dict[str, CrossMarketPortfolioEnv]:
+        """Build train/validation environments without test access."""
+        del fold
+        return build_partitioned_environments(
+            trial_config,
+            include_test=False,
+        )
 
     def _trainer_config(
         self,
@@ -84,6 +104,13 @@ class PPOValidationObjective:
         fold: int,
     ) -> TrainRunConfig:
         """Build an expanding-train, forward-validation split without test."""
+        if self.fold_splits is not None:
+            return self.base_config.model_copy(
+                update={
+                    "trainer": trainer_config,
+                    "split": self.fold_splits[fold],
+                }
+            )
         base_split = self.base_config.split
         validation_width = (
             base_split.validation_end_execution_index
@@ -109,10 +136,7 @@ class PPOValidationObjective:
             for seed in self.objective_config.seeds:
                 trainer_config = self._trainer_config(suggestion.parameters, seed)
                 trial_config = self._fold_config(trainer_config, fold)
-                environments = build_partitioned_environments(
-                    trial_config,
-                    include_test=False,
-                )
+                environments = self._build_environments(trial_config, fold)
                 if set(environments) != {"train", "validation"}:
                     raise PermissionError("HPO objective received a forbidden partition")
                 run_dir = (

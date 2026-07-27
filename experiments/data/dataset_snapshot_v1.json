@@ -1,0 +1,115 @@
+{
+  "dataset_manifest_sha256": "beedc66eb4adc5242b949f8927c8647d8123156c43e88a60a9b50cd325be9ccc",
+  "future_data_used_for_source_selection": true,
+  "fx_snapshot_sha256": "a84793dceb4a5d61f30cf97033c5c51805ee87b41c60df8bb74fa0576294ace1",
+  "held_out_symbols": {
+    "CN": [
+      "000089",
+      "600016",
+      "000011",
+      "000802"
+    ],
+    "HK": [
+      "1398.HK",
+      "1299.HK",
+      "0005.HK",
+      "2319.HK"
+    ],
+    "JP": [
+      "9735.T",
+      "3309.T",
+      "8750.T",
+      "1332.T"
+    ],
+    "US": [
+      "RSG",
+      "DLTR",
+      "DE",
+      "QCOM"
+    ]
+  },
+  "manifest_integrity_valid": true,
+  "ohlcv_row_count": 93407,
+  "output_root": "data/processed/formal_v1",
+  "protocol_id": "protocol-v1",
+  "quality_valid": true,
+  "selected_source_count": 80,
+  "selected_symbol_count": 80,
+  "semantic_excluded_row_count": 219,
+  "source_inventory_sha256": "edf56fa64571e3fae7aec6f014c7cca46b2a2f594a102080b37fb0a51586ca1a",
+  "source_rows_repaired": false,
+  "training_symbols": {
+    "CN": [
+      "000526",
+      "601857",
+      "002140",
+      "600519",
+      "000063",
+      "000719",
+      "600010",
+      "002400",
+      "000617",
+      "000419",
+      "000564",
+      "000600",
+      "000501",
+      "000428",
+      "000555",
+      "600015"
+    ],
+    "HK": [
+      "2018.HK",
+      "0941.HK",
+      "0011.HK",
+      "0688.HK",
+      "1038.HK",
+      "0762.HK",
+      "1088.HK",
+      "0823.HK",
+      "0998.HK",
+      "0700.HK",
+      "1177.HK",
+      "1928.HK",
+      "0003.HK",
+      "0857.HK",
+      "0027.HK",
+      "1109.HK"
+    ],
+    "JP": [
+      "4061.T",
+      "2792.T",
+      "2726.T",
+      "4114.T",
+      "1333.T",
+      "2413.T",
+      "7270.T",
+      "6771.T",
+      "2768.T",
+      "4189.T",
+      "1662.T",
+      "7309.T",
+      "6810.T",
+      "7831.T",
+      "7011.T",
+      "8801.T"
+    ],
+    "US": [
+      "ISRG",
+      "SHW",
+      "DG",
+      "UPS",
+      "DHI",
+      "ORLY",
+      "COF",
+      "KLAC",
+      "ANET",
+      "AVGO",
+      "MU",
+      "EXPE",
+      "LRCX",
+      "AMD",
+      "EQIX",
+      "DUK"
+    ]
+  }
+}

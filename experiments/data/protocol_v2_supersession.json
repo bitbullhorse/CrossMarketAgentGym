@@ -1,0 +1,11 @@
+{
+  "blocker_code": "PROMPT_SOURCE_NOT_AUDITABLE",
+  "detected_before_formal_matrix_freeze": true,
+  "formal_results_created": false,
+  "protocol_v2_sha256": "e81a6bef5227f603cf76ac4d4cb87b4635e6f677298b16044394e2c7f842b239",
+  "reason": "Protocol-v2 recorded a Prompt SHA-256 but did not bind it to a versioned source path, so an independent reviewer could not reconstruct or verify the exact formal Agent prompts.",
+  "replacement_protocol": "protocol-v3",
+  "replacement_protocol_sha256": "9ec00171a80eda399d800bd0e08803bb847e7aeaf7ab4c27a4c50ceeaf97c180",
+  "status": "superseded_blocked",
+  "superseded_protocol": "protocol-v2"
+}

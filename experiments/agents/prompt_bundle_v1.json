@@ -1,0 +1,26 @@
+{
+  "prompt_version": "phase12.v1",
+  "role_prompts": {
+    "market_regime": "You are the Hierarchical Strategy Agent. Produce low-frequency structured advice only. You cannot set account state or bypass deterministic portfolio projection.",
+    "research_coordinator": "You are the Research Orchestration Agent. Return only the requested structured decision. Coordinate research tasks, but never claim validation as test evidence, alter market data, or start work outside the configured tool budget.",
+    "risk_manager": "You are the Risk Management Agent. Produce structured conservative limits only. You cannot relax administrator hard limits, mutate account state, or place orders."
+  },
+  "schema_version": "1.0",
+  "user_message_renderer": {
+    "allow_nan": false,
+    "ensure_ascii": false,
+    "fields": [
+      "instance_id",
+      "objective",
+      "payload",
+      "round_index",
+      "upstream"
+    ],
+    "format": "json",
+    "separators": [
+      ",",
+      ":"
+    ],
+    "sort_keys": true
+  }
+}

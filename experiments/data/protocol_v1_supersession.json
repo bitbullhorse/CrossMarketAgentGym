@@ -1,0 +1,11 @@
+{
+  "blocker_code": "FUTURE_UNIVERSE_AVAILABILITY_USED",
+  "detected_before_formal_matrix_freeze": true,
+  "formal_results_created": false,
+  "protocol_v1_sha256": "428386c42ef89110b88014a8f3c87ffdddc48810e16d6991d1ee3f74f2789cae",
+  "reason": "Protocol-v1 required each selected source to cover the full experiment window through 2025-09-30. That future availability condition creates survivorship and future-universe leakage even though no return or test metric was used.",
+  "replacement_protocol": "protocol-v2",
+  "replacement_protocol_sha256": "e81a6bef5227f603cf76ac4d4cb87b4635e6f677298b16044394e2c7f842b239",
+  "status": "superseded_blocked",
+  "superseded_protocol": "protocol-v1"
+}

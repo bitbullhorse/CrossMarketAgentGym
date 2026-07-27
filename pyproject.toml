@@ -141,6 +141,7 @@ include = [
   "/environment-cpu.yml",
   "/environment-gpu.yml",
   "/examples",
+  "/experiments",
   "/paper",
   "/pyproject.toml",
   "/release",
@@ -153,6 +154,7 @@ include = [
 exclude = [
   "/.venv",
   "/reports",
+  "/results",
   "/runs",
   "/stock_data",
 ]

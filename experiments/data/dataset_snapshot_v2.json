@@ -1,0 +1,115 @@
+{
+  "dataset_manifest_sha256": "53282d8b331a59c98291876afb31932f8491812330974821b4965ff7aee2bf89",
+  "future_data_used_for_source_selection": false,
+  "fx_snapshot_sha256": "a84793dceb4a5d61f30cf97033c5c51805ee87b41c60df8bb74fa0576294ace1",
+  "held_out_symbols": {
+    "CN": [
+      "000543",
+      "300070",
+      "000498",
+      "000425"
+    ],
+    "HK": [
+      "0018.HK",
+      "1033.HK",
+      "0144.HK",
+      "0069.HK"
+    ],
+    "JP": [
+      "9022.T",
+      "2501.T",
+      "6740.T",
+      "2801.T"
+    ],
+    "US": [
+      "CMCSA",
+      "MHK",
+      "WELL",
+      "EW"
+    ]
+  },
+  "manifest_integrity_valid": true,
+  "ohlcv_row_count": 73639,
+  "output_root": "data/processed/formal_v2",
+  "protocol_id": "protocol-v2",
+  "quality_valid": true,
+  "selected_source_count": 80,
+  "selected_symbol_count": 80,
+  "semantic_excluded_row_count": 255,
+  "source_inventory_sha256": "54aa35f1ceac1c20b599970482513d5b6721f174fedad2aebbbeac84737fe072",
+  "source_rows_repaired": false,
+  "training_symbols": {
+    "CN": [
+      "000426",
+      "600030",
+      "000628",
+      "000417",
+      "002607",
+      "000758",
+      "601818",
+      "600150",
+      "000826",
+      "000027",
+      "002878",
+      "000099",
+      "300027",
+      "002195",
+      "601328",
+      "000035"
+    ],
+    "HK": [
+      "0214.HK",
+      "0183.HK",
+      "0061.HK",
+      "0050.HK",
+      "0180.HK",
+      "0242.HK",
+      "0028.HK",
+      "0072.HK",
+      "0027.HK",
+      "0274.HK",
+      "0011.HK",
+      "1044.HK",
+      "0031.HK",
+      "1071.HK",
+      "0103.HK",
+      "0185.HK"
+    ],
+    "JP": [
+      "5803.T",
+      "9202.T",
+      "6301.T",
+      "8425.T",
+      "8253.T",
+      "6701.T",
+      "9201.T",
+      "2702.T",
+      "4189.T",
+      "8001.T",
+      "2871.T",
+      "6501.T",
+      "7762.T",
+      "7735.T",
+      "9505.T",
+      "3405.T"
+    ],
+    "US": [
+      "MSFT",
+      "ANET",
+      "CTVA",
+      "ADBE",
+      "VMC",
+      "BKR",
+      "ABBV",
+      "WMB",
+      "ILMN",
+      "MDT",
+      "LRCX",
+      "CHTR",
+      "DG",
+      "CHD",
+      "LKQ",
+      "HUM"
+    ]
+  }
+}
