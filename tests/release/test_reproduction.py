@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import zipfile
 from pathlib import Path
@@ -33,6 +34,13 @@ from crossmarket_agentgym.tuning.config import load_tuning_run_config
 
 PROJECT_ROOT = Path(__file__).parents[2]
 runner = CliRunner()
+
+
+def _normalized_cli_output(result: object) -> str:
+    stdout = str(getattr(result, "stdout", ""))
+    stderr = str(getattr(result, "stderr", ""))
+    without_ansi = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", stdout + stderr)
+    return " ".join(without_ansi.split())
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -502,9 +510,7 @@ def test_reproduce_cli_requires_explicit_execute_compare_pair(tmp_path: Path) ->
 
     assert incomplete.exit_code == 2
     assert "--execute and --compare must be supplied together" in (
-        incomplete.stdout + incomplete.stderr
+        _normalized_cli_output(incomplete)
     )
     assert conflicting.exit_code == 2
-    assert "--verify-only cannot be combined" in (
-        conflicting.stdout + conflicting.stderr
-    )
+    assert "--verify-only cannot be combined" in _normalized_cli_output(conflicting)
