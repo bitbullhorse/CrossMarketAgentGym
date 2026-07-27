@@ -21,10 +21,10 @@ No. Training and validation are available to HPO. Test is reserved for a locked 
 
 No. They are resource schedulers independent from the nine search algorithms.
 
-## Is rc1 the final v1.0.0 release?
+## Is rc2 the final v1.0.0 release?
 
-No. rc1 freezes the Phase 10 interface for Phase 11 independent reproduction. rc2 and the later
-experiment, benchmark, and formal-release gates must occur in order.
+No. rc2 closes the Phase 11 independent-reproduction gate. The formal experiment, Benchmark
+freeze, paper, and stable-release gates must still occur in order.
 
 ## Where are compatibility and known limitations recorded?
 

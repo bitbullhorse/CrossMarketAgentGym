@@ -14,6 +14,7 @@ from crossmarket_agentgym.data.partitions import PartitionCapability
 from crossmarket_agentgym.environments.accounting import AccountState
 from crossmarket_agentgym.environments.config import EnvironmentConfig
 from crossmarket_agentgym.environments.execution import ExecutionEngine
+from crossmarket_agentgym.environments.observations import ObservationConfig
 from crossmarket_agentgym.environments.panel import MarketDataPanel
 from crossmarket_agentgym.environments.projection import ConstraintProjector
 from crossmarket_agentgym.environments.rewards import RewardCalculator
@@ -34,6 +35,7 @@ class CrossMarketPortfolioEnv(gym.Env[dict[str, NDArray[Any]], NDArray[np.float3
         *,
         render_mode: Literal["human", "ansi", "rgb_array"] | None = None,
         partition: PartitionCapability | None = None,
+        observation: ObservationConfig | None = None,
     ) -> None:
         """Create an environment without accessing future panel rows."""
         super().__init__()
@@ -41,6 +43,7 @@ class CrossMarketPortfolioEnv(gym.Env[dict[str, NDArray[Any]], NDArray[np.float3
             raise ValueError(f"unsupported render mode: {render_mode}")
         self.panel = panel
         self.config = config
+        self.observation_config = observation or ObservationConfig()
         self.render_mode = render_mode
         minimum_start = max(
             config.lookback - 1,
@@ -85,12 +88,18 @@ class CrossMarketPortfolioEnv(gym.Env[dict[str, NDArray[Any]], NDArray[np.float3
             shape=(asset_count + 1,),
             dtype=np.float32,
         )
+        tensor_shape = (asset_count, config.lookback, feature_count)
+        market_window_shape = (
+            (math.prod(tensor_shape),)
+            if self.observation_config.market_window_layout == "flat"
+            else tensor_shape
+        )
         self.observation_space = spaces.Dict(
             {
                 "market_window": spaces.Box(
                     low=-float_limit,
                     high=float_limit,
-                    shape=(asset_count, config.lookback, feature_count),
+                    shape=market_window_shape,
                     dtype=np.float32,
                 ),
                 "portfolio_weights": spaces.Box(
@@ -148,10 +157,13 @@ class CrossMarketPortfolioEnv(gym.Env[dict[str, NDArray[Any]], NDArray[np.float3
         current_date = self.panel.dates[self._index]
         weekday_angle = 2.0 * math.pi * current_date.weekday() / 7.0
         month_angle = 2.0 * math.pi * (current_date.month - 1) / 12.0
+        market_window = self.panel.market_window(
+            self._index, self.config.lookback
+        ).astype(np.float32)
+        if self.observation_config.market_window_layout == "flat":
+            market_window = market_window.reshape(-1)
         return {
-            "market_window": self.panel.market_window(
-                self._index, self.config.lookback
-            ).astype(np.float32),
+            "market_window": market_window,
             "portfolio_weights": weights.astype(np.float32),
             "cash_ratio": np.asarray([weights[0]], dtype=np.float32),
             "tradable_mask": self.panel.tradable_mask[self._index].astype(np.int8),

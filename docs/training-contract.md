@@ -23,7 +23,8 @@ may be transformed with frozen training statistics but cannot refit them.
 
 ## Policies
 
-All policies consume the Phase 2 Dict observation:
+All policies consume the Phase 2 Dict observation. `mlp` accepts the flat `market_window`;
+`shared_mlp` and `transformer` require the tensor layout:
 
 - `mlp`: compact flattened dictionary MLP;
 - `shared_mlp`: one parameter-shared asset encoder followed by cross-asset pooling;
@@ -73,6 +74,13 @@ runs/<run_id>/
 The training artifact records the algorithm, policy, requested and actual timesteps, seed,
 configuration SHA-256, dataset Manifest SHA-256, data partition, checkpoint path, Python, SB3,
 PyTorch, and NumPy versions.
+
+`run_summary.json` additionally records UTC `started_at`/`finished_at`, total/training/evaluation
+runtime seconds, resolved device, Python and PyTorch versions, CPU model, and optional GPU model.
+Evaluation metrics record `evaluation_episodes`, return/reward sample counts, and
+`statistical_warnings`. A single episode may still have `std_return: 0.0`, but it is accompanied
+by an explicit insufficient-sample warning and cannot be presented as a reliable dispersion
+estimate.
 
 `cmag evaluate --run-id <id>` loads the resolved configuration and final checkpoint, constructs only
 the locked test partition, then writes the same metrics/trades/weights schema under `test/`. A

@@ -5,4 +5,4 @@ from crossmarket_agentgym import __version__
 
 def test_version_is_exposed() -> None:
     """The import package exposes the same development version as metadata."""
-    assert __version__ == "1.0.0rc1"
+    assert __version__ == "1.0.0rc2"

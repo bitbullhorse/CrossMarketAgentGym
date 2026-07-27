@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from pathlib import Path
 from typing import Literal
 
@@ -11,6 +12,10 @@ from gymnasium.utils.env_checker import check_env as gymnasium_check_env
 from pydantic import BaseModel, ConfigDict, Field
 
 from crossmarket_agentgym.environments.config import EnvironmentConfig
+from crossmarket_agentgym.environments.observations import (
+    MarketWindowLayout,
+    ObservationConfig,
+)
 from crossmarket_agentgym.environments.panel import MarketDataPanel
 from crossmarket_agentgym.environments.portfolio import CrossMarketPortfolioEnv
 
@@ -23,7 +28,19 @@ class EnvironmentCheckConfig(BaseModel):
     dataset_root: Path
     seed: int = Field(default=1024, ge=0, le=2**32 - 1)
     smoke_steps: int = Field(default=1000, ge=1)
+    observation: ObservationConfig = Field(default_factory=ObservationConfig)
     environment: EnvironmentConfig = Field(default_factory=EnvironmentConfig)
+
+
+class EnvironmentCheckWarning(BaseModel):
+    """One accepted or blocking compatibility warning."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    warning_code: str
+    accepted: bool
+    reason: str
+    required_policy: str | None = None
 
 
 class EnvironmentCheckSummary(BaseModel):
@@ -42,6 +59,8 @@ class EnvironmentCheckSummary(BaseModel):
     max_accounting_error: float
     min_portfolio_value: float
     execution_protocol: str
+    market_window_layout: MarketWindowLayout
+    warnings: tuple[EnvironmentCheckWarning, ...] = ()
 
 
 def load_environment_check_config(path: Path) -> EnvironmentCheckConfig:
@@ -59,16 +78,55 @@ def run_environment_checks(config: EnvironmentCheckConfig) -> EnvironmentCheckSu
         config.dataset_root,
         base_currency=config.environment.base_currency,
     )
-    env = CrossMarketPortfolioEnv(panel, config.environment)
+    env = CrossMarketPortfolioEnv(
+        panel,
+        config.environment,
+        observation=config.observation,
+    )
     gymnasium_check_env(env, skip_render_check=True)
     sb3_status: Literal["passed", "skipped_not_installed"]
+    captured_warnings: list[warnings.WarningMessage] = []
     try:
         from stable_baselines3.common.env_checker import check_env as sb3_check_env
     except ImportError:
         sb3_status = "skipped_not_installed"
     else:
-        sb3_check_env(env, warn=True, skip_render_check=True)
+        with warnings.catch_warnings(record=True) as captured:
+            warnings.simplefilter("always")
+            sb3_check_env(env, warn=True, skip_render_check=True)
+            captured_warnings = list(captured)
         sb3_status = "passed"
+    compatibility_warnings: list[EnvironmentCheckWarning] = []
+    if config.observation.market_window_layout == "tensor":
+        compatibility_warnings.append(
+            EnvironmentCheckWarning(
+                warning_code="SB3_BOX_IMAGE_HEURISTIC",
+                accepted=True,
+                reason="market_window is a financial tensor, not an image",
+                required_policy="custom_features_extractor",
+            )
+        )
+    if captured_warnings:
+        expected_fragments = (
+            "observation market_window is an image",
+            "observation space market_window is an image",
+            "Treating image space as channels-last",
+            "minimal resolution for an image",
+        )
+        for item in captured_warnings:
+            message = str(item.message)
+            expected_tensor_warning = (
+                config.observation.market_window_layout == "tensor"
+                and any(fragment in message for fragment in expected_fragments)
+            )
+            if not expected_tensor_warning:
+                compatibility_warnings.append(
+                    EnvironmentCheckWarning(
+                        warning_code="SB3_UNEXPECTED_WARNING",
+                        accepted=False,
+                        reason=message[:500],
+                    )
+                )
 
     observation, _ = env.reset(seed=config.seed)
     finite_observations = all(np.isfinite(value).all() for value in observation.values())
@@ -100,6 +158,7 @@ def run_environment_checks(config: EnvironmentCheckConfig) -> EnvironmentCheckSu
         and max_accounting_error
         <= config.environment.accounting_tolerance
         * max(1.0, config.environment.initial_cash)
+        and all(item.accepted for item in compatibility_warnings)
     )
     return EnvironmentCheckSummary(
         is_valid=is_valid,
@@ -113,4 +172,6 @@ def run_environment_checks(config: EnvironmentCheckConfig) -> EnvironmentCheckSu
         max_accounting_error=max_accounting_error,
         min_portfolio_value=min_portfolio_value,
         execution_protocol=config.environment.execution_protocol,
+        market_window_layout=config.observation.market_window_layout,
+        warnings=tuple(compatibility_warnings),
     )

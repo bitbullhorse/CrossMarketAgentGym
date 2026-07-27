@@ -308,6 +308,12 @@ class TeamAggregate(StrictAgentModel):
 
     status: Literal["resolved", "rejected", "no_quorum"]
     policy: ConflictPolicy
+    configured_conflict_policy: ConflictPolicy
+    conflict_detected: bool
+    aggregate_decision: DecisionKind
+    selected_directive_confidence: float = Field(ge=0.0, le=1.0)
+    committee_confidence: float = Field(ge=0.0, le=1.0)
+    confidence_aggregation: Literal["minimum"] = "minimum"
     decision: AgentDecision
     participants: tuple[str, ...]
     failed_instances: tuple[str, ...] = ()

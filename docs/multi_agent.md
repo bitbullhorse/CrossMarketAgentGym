@@ -9,6 +9,18 @@ blackboard. Risk committees with more than one active risk manager must use
 `most_conservative`. Provider failures, missing quorum, invalid schemas, and timeouts resolve by a
 declared deterministic fallback; they never widen risk.
 
+Committee output distinguishes configuration from outcome:
+
+- `configured_conflict_policy` is the selected arbitration policy;
+- `conflict_detected` records whether non-abstaining directives disagreed;
+- `aggregate_decision` is the resolved decision;
+- `selected_directive_confidence` records the selected directive;
+- `committee_confidence` is the minimum confidence across valid committee directives, with
+  `confidence_aggregation: minimum`.
+
+The legacy `policy` and nested `decision` field names remain for existing consumers, but must not be
+interpreted as “the policy rejected the proposal.”
+
 Examples:
 
 ```bash

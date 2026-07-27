@@ -11,3 +11,14 @@ Status: **CLOSED**. Phase 10 has zero open P0/P1 release blockers.
 GPU/Ray hardware validation is tracked as a declared but unverified optional profile in
 `compatibility_matrix.md`; it does not replace any CPU/Docker gate. No security, accounting,
 information-leakage, credential, Mock/Replay, HPO-resume, package, or Linux CI blocker is open.
+
+## Phase 11 rc2 audit
+
+The workspace owner reports that multiple independent participants completed the protocol, all
+modules operated normally, and the P0/P1 clearance audit found zero open P0 and P1 issues. No
+participant identity or result is fabricated in this repository; the operator attestation is
+recorded under `reproducibility_tests/independent_audit_attestation.md`.
+
+The only remaining pre-tag gates are successful execution of the dedicated Linux CPU and Docker
+Task B–I workflows, wheel provenance attestation, and creation of the permanent Release evidence
+bundle. Until those workflow run IDs are recorded, `v1.0.0-rc2` remains blocked.

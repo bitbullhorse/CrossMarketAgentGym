@@ -134,6 +134,11 @@
       "title": "Episodes",
       "type": "integer"
     },
+    "evaluation_episodes": {
+      "minimum": 1,
+      "title": "Evaluation Episodes",
+      "type": "integer"
+    },
     "metrics": {
       "additionalProperties": {
         "type": "number"
@@ -145,11 +150,29 @@
       "title": "Partition",
       "type": "string"
     },
+    "return_sample_count": {
+      "minimum": 1,
+      "title": "Return Sample Count",
+      "type": "integer"
+    },
+    "reward_sample_count": {
+      "minimum": 1,
+      "title": "Reward Sample Count",
+      "type": "integer"
+    },
     "schema_version": {
       "const": "1.0",
       "default": "1.0",
       "title": "Schema Version",
       "type": "string"
+    },
+    "statistical_warnings": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Statistical Warnings",
+      "type": "array"
     },
     "total_steps": {
       "minimum": 1,
@@ -175,6 +198,9 @@
     "algorithm",
     "partition",
     "episodes",
+    "evaluation_episodes",
+    "return_sample_count",
+    "reward_sample_count",
     "total_steps",
     "metrics",
     "trades",

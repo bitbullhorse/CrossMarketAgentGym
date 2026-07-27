@@ -94,7 +94,7 @@ def test_benchmark_derives_risk_metrics_and_cross_seed_variance(
     assert all(row.cvar_95 is not None for row in comparison.rows)
     assert all(row.calmar is not None for row in comparison.rows)
     assert all(row.cross_seed_variance is not None for row in comparison.rows)
-    assert comparison.rows[0].runtime_seconds == 1.25
+    assert comparison.rows[0].runtime_seconds == 0.5
 
 
 def test_workflow_generates_reproducible_tables_figures_and_browser(
@@ -147,4 +147,3 @@ def test_phase8_cli_builds_report_from_config(tmp_path: Path) -> None:
     )
     assert result.exit_code == 0
     assert '"figure_count": 4' in result.stdout
-

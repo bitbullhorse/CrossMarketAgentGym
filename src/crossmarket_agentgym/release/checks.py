@@ -28,12 +28,15 @@ _REQUIRED_FILES = (
     "SECURITY.md",
     ".github/workflows/ci.yml",
     ".github/workflows/release.yml",
+    ".github/workflows/phase11-linux-cpu.yml",
+    ".github/workflows/phase11-docker.yml",
     "constraints-cpu.txt",
     "constraints-gpu.txt",
     "environment-cpu.yml",
     "environment-gpu.yml",
     "uv.lock",
     "release/rc1_checklist.md",
+    "release/rc2_checklist.md",
     "release/api_inventory.csv",
     "release/cli_inventory.json",
     "release/config_schema_inventory.csv",
@@ -41,12 +44,16 @@ _REQUIRED_FILES = (
     "release/known_issues.md",
     "release/compatibility_matrix.md",
     "release/release_notes_v1.0.0-rc1.md",
+    "release/release_notes_v1.0.0-rc2.md",
     "release/release_blockers.md",
     "schemas/rc1/checksums.json",
     "scripts/build_release.sh",
     "scripts/verify_release.sh",
     "scripts/create_clean_env_test.sh",
     "scripts/verify_reproducible_build.py",
+    "scripts/run_phase11_tasks.py",
+    "scripts/verify_phase11_distribution.py",
+    "scripts/build_phase11_release_evidence.py",
     "docs/api-reference.md",
     "docs/api_stability.md",
     "docs/cli-reference.md",
@@ -57,6 +64,10 @@ _REQUIRED_FILES = (
     "docs/reproducibility.md",
     "docs/stable-api.md",
     "docs/versioning_policy.md",
+    "docs/issues/phase-11-checklist.md",
+    "docs/phases/phase-11.md",
+    "reproducibility_tests/protocol.md",
+    "reproducibility_tests/independent_audit_attestation.md",
     "paper/README.md",
     "paper/softwarex-paper-outline.md",
     "paper/artifact-map.md",
@@ -174,6 +185,8 @@ def check_release_readiness(
     docker_valid = (
         "USER cmag" in docker_text
         and "ENTRYPOINT [\"cmag\"]" in docker_text
+        and "/build/configs /workspace/configs" in docker_text
+        and "/build/data/sample /workspace/data/sample" in docker_text
         and "COPY . /workspace" not in docker_text
     )
     checks.append(
@@ -200,6 +213,8 @@ def check_release_readiness(
     readme_valid = all(
         token in readme
         for token in (
+            "phase11-linux-cpu.yml/badge.svg",
+            "phase11-docker.yml/badge.svg",
             "pip install",
             "cmag quickstart",
             "cmag reproduce",

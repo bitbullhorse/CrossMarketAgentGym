@@ -17,6 +17,7 @@ from stable_baselines3 import A2C, PPO, SAC, TD3
 from stable_baselines3.common.base_class import BaseAlgorithm
 from stable_baselines3.common.callbacks import BaseCallback, CallbackList
 from stable_baselines3.common.noise import NormalActionNoise
+from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 
 from crossmarket_agentgym.data.partitions import require_partition
 from crossmarket_agentgym.environments import CrossMarketPortfolioEnv
@@ -118,10 +119,22 @@ class SB3Trainer:
         configure_reproducibility(config.seed)
         self.run_dir.mkdir(parents=True, exist_ok=True)
         model_class = _ALGORITHMS[self.algorithm_name]
+        model_kwargs = self._model_kwargs(env, config)
+        extractor = model_kwargs["policy_kwargs"].get("features_extractor_class")
+        if (
+            base_env.observation_config.market_window_layout == "tensor"
+            and (
+                not isinstance(extractor, type)
+                or not issubclass(extractor, BaseFeaturesExtractor)
+            )
+        ):
+            raise ValueError(
+                "tensor market_window requires a custom BaseFeaturesExtractor"
+            )
         model = model_class(
             "MultiInputPolicy",
             env,
-            **self._model_kwargs(env, config),
+            **model_kwargs,
         )
         callback = CallbackList(callbacks) if callbacks else None
         model.learn(

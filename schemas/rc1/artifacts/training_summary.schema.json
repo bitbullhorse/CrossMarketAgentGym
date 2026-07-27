@@ -10,6 +10,38 @@
       "title": "Checkpoint",
       "type": "string"
     },
+    "cpu_model": {
+      "title": "Cpu Model",
+      "type": "string"
+    },
+    "device": {
+      "title": "Device",
+      "type": "string"
+    },
+    "evaluation_runtime_seconds": {
+      "title": "Evaluation Runtime Seconds",
+      "type": "number"
+    },
+    "finished_at": {
+      "format": "date-time",
+      "title": "Finished At",
+      "type": "string"
+    },
+    "gpu_model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Gpu Model"
+    },
+    "python_version": {
+      "title": "Python Version",
+      "type": "string"
+    },
     "requested_timesteps": {
       "title": "Requested Timesteps",
       "type": "integer"
@@ -22,15 +54,32 @@
       "title": "Run Id",
       "type": "string"
     },
+    "runtime_seconds": {
+      "title": "Runtime Seconds",
+      "type": "number"
+    },
     "schema_version": {
       "const": "1.0",
       "default": "1.0",
       "title": "Schema Version",
       "type": "string"
     },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "torch_version": {
+      "title": "Torch Version",
+      "type": "string"
+    },
     "trained_timesteps": {
       "title": "Trained Timesteps",
       "type": "integer"
+    },
+    "training_runtime_seconds": {
+      "title": "Training Runtime Seconds",
+      "type": "number"
     },
     "validation_metrics": {
       "additionalProperties": {
@@ -47,7 +96,17 @@
     "checkpoint",
     "requested_timesteps",
     "trained_timesteps",
-    "validation_metrics"
+    "validation_metrics",
+    "started_at",
+    "finished_at",
+    "runtime_seconds",
+    "training_runtime_seconds",
+    "evaluation_runtime_seconds",
+    "device",
+    "torch_version",
+    "python_version",
+    "cpu_model",
+    "gpu_model"
   ],
   "title": "TrainingRunSummary",
   "type": "object"

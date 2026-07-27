@@ -17,7 +17,7 @@
     {
       "name": "evaluation_result",
       "schema_path": "schemas/rc1/artifacts/evaluation_result.schema.json",
-      "schema_sha256": "66cac5c4b9fa40c155ce940af0f27864e7682a4f350f3b9f428446a942c6b3e8",
+      "schema_sha256": "5d491ec8d26bb4b30ea143e7a0c214dcadcc5f39b4f61b3d83abf1a64d65c440",
       "storage": "json_or_jsonl",
       "version": "1.0"
     },
@@ -31,7 +31,7 @@
     {
       "name": "phase7_summary",
       "schema_path": "schemas/rc1/artifacts/phase7_summary.schema.json",
-      "schema_sha256": "4367998a8849d512e487f91a5f71b2b66246cb5bc318c2c4721fcd87b65d60c2",
+      "schema_sha256": "fd91c59e5a2ad7ecdf04d30eb86df930bf86815b85fbbd59370684f696a7651f",
       "storage": "json_or_jsonl",
       "version": "1.0"
     },
@@ -101,7 +101,7 @@
     {
       "name": "team_result",
       "schema_path": "schemas/rc1/artifacts/team_result.schema.json",
-      "schema_sha256": "004766322856012d2de7cd3f886055d405c15216a41c34fcaa0f319163f98795",
+      "schema_sha256": "7aba79d90d773a5b27a8332425f0b256875abfd13d28d822c15e9c7fac84c00a",
       "storage": "json_or_jsonl",
       "version": "1.0"
     },
@@ -115,7 +115,7 @@
     {
       "name": "training_summary",
       "schema_path": "schemas/rc1/artifacts/training_summary.schema.json",
-      "schema_sha256": "5fe927990290ff7e59193dc51669c1a4908eda1e43dbeac8954912d97bf434b1",
+      "schema_sha256": "fec86d5a8a23345ec767211ad3f9bdd4f069d2e65be8d18e6876f3459f31eadd",
       "storage": "json_or_jsonl",
       "version": "1.0"
     },
@@ -148,7 +148,7 @@
       "version": "1"
     }
   ],
-  "release": "1.0.0-rc1",
+  "release": "1.0.0-rc2",
   "schema_version": "1.0",
   "unlisted_interfaces": "internal"
 }

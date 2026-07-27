@@ -1,6 +1,8 @@
 dataset_root: data/sample
 output_dir: runs
 run_name: phase3_td3_cpu
+observation:
+  market_window_layout: tensor
 environment:
   lookback: 1
   max_asset_weight: 0.40

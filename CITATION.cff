@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use CrossMarketAgentGym, please cite the software."
 title: "CrossMarketAgentGym"
 type: software
-version: 1.0.0-rc1
-date-released: 2026-07-26
+version: 1.0.0-rc2
+date-released: 2026-07-27
 license: Apache-2.0
 authors:
   - name: "CrossMarketAgentGym contributors"

@@ -214,6 +214,46 @@ def test_aggressive_risk_output_is_clipped_by_hard_policy(
     assert "max_turnover" in summary.risk.merge.clipped_fields
 
 
+def test_risk_cash_floor_and_committee_audit_semantics(tmp_path: Path) -> None:
+    config = load_phase7_run_config(
+        Path("configs/agents/risk_committee_mock.yaml")
+    ).model_copy(
+        update={
+            "run_id": "phase11-risk-audit-semantics",
+            "output_dir": tmp_path,
+        }
+    )
+
+    summary = execute_phase7_stack(config)
+
+    assert summary.risk.team is not None
+    aggregate = summary.risk.team.aggregate
+    assert aggregate.configured_conflict_policy == "most_conservative"
+    assert aggregate.conflict_detected is True
+    assert aggregate.aggregate_decision == "revise"
+    assert aggregate.selected_directive_confidence == 0.85
+    assert aggregate.committee_confidence == 0.50
+    assert aggregate.confidence_aggregation == "minimum"
+    assert summary.fusion.cash_floor_derivation.model_dump(mode="json") == {
+        "field": "cash_floor",
+        "agent_value": 0.30,
+        "risk_budget_implied_value": 0.40,
+        "effective_value": 0.40,
+        "operator": "max",
+        "reason": "Invested capital cannot exceed risk budget.",
+    }
+    assert (
+        summary.projection.dominant_projection_reason
+        == "no_new_positions_from_all_cash_state"
+    )
+    assert summary.projection.secondary_projection_reasons == (
+        "max_asset_weight",
+        "cash_floor",
+        "max_turnover",
+        "market_weight_limits",
+    )
+
+
 def test_directive_journal_and_replay_are_hash_verified(tmp_path: Path) -> None:
     config = _preset_config(tmp_path, "full_stack")
     summary = execute_phase7_stack(config)

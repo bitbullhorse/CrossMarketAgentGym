@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import platform
+import time
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
 
+import torch
 from pydantic import BaseModel, ConfigDict
 
 from crossmarket_agentgym.audit import write_run_manifest
@@ -34,6 +38,16 @@ class TrainingRunSummary(BaseModel):
     requested_timesteps: int
     trained_timesteps: int
     validation_metrics: dict[str, float]
+    started_at: datetime
+    finished_at: datetime
+    runtime_seconds: float
+    training_runtime_seconds: float
+    evaluation_runtime_seconds: float
+    device: str
+    torch_version: str
+    python_version: str
+    cpu_model: str
+    gpu_model: str | None
 
 
 def build_partitioned_environments(
@@ -71,6 +85,7 @@ def build_partitioned_environments(
         return CrossMarketPortfolioEnv(
             isolated_panel,
             config.environment,
+            observation=config.observation,
             partition=PartitionCapability(
                 dataset_id=dataset_id,
                 partition=partition,
@@ -102,6 +117,8 @@ def build_partitioned_environments(
 
 def execute_training_run(config: TrainRunConfig) -> TrainingRunSummary:
     """Train on train, select on validation, and never read test."""
+    started_at = datetime.now(UTC)
+    overall_start = time.perf_counter()
     run_dir = config.output_dir / config.run_name
     if (run_dir / "training_artifact.json").exists():
         raise FileExistsError(f"run already exists: {run_dir}")
@@ -113,7 +130,10 @@ def execute_training_run(config: TrainRunConfig) -> TrainingRunSummary:
         run_dir,
         validation_env=environments["validation"],
     )
+    training_start = time.perf_counter()
     artifact = trainer.train(environments["train"], config.trainer, callbacks)
+    training_runtime = time.perf_counter() - training_start
+    evaluation_start = time.perf_counter()
     validation = evaluate_policy(
         environments["validation"],
         artifact.model,
@@ -122,10 +142,19 @@ def execute_training_run(config: TrainRunConfig) -> TrainingRunSummary:
         deterministic=config.trainer.deterministic_eval,
         seed=config.trainer.seed,
     )
+    evaluation_runtime = time.perf_counter() - evaluation_start
     write_evaluation_artifacts(validation, run_dir / "validation")
     (run_dir / "resolved_config.json").write_text(
         config.model_dump_json(indent=2),
         encoding="utf-8",
+    )
+    finished_at = datetime.now(UTC)
+    runtime_seconds = time.perf_counter() - overall_start
+    cpu_model = platform.processor().strip() or platform.machine() or "unknown"
+    gpu_model = (
+        torch.cuda.get_device_name(torch.cuda.current_device())
+        if torch.cuda.is_available()
+        else None
     )
     summary = TrainingRunSummary(
         run_id=config.run_name,
@@ -135,6 +164,16 @@ def execute_training_run(config: TrainRunConfig) -> TrainingRunSummary:
         requested_timesteps=artifact.metadata.requested_timesteps,
         trained_timesteps=artifact.metadata.trained_timesteps,
         validation_metrics=validation.metrics,
+        started_at=started_at,
+        finished_at=finished_at,
+        runtime_seconds=runtime_seconds,
+        training_runtime_seconds=training_runtime,
+        evaluation_runtime_seconds=evaluation_runtime,
+        device=str(artifact.model.device),
+        torch_version=torch.__version__,
+        python_version=platform.python_version(),
+        cpu_model=cpu_model,
+        gpu_model=gpu_model,
     )
     (run_dir / "run_summary.json").write_text(
         summary.model_dump_json(indent=2),

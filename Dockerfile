@@ -7,13 +7,14 @@ ENV PIP_INDEX_URL=${PIP_INDEX_URL} \
     PIP_NO_CACHE_DIR=1
 
 WORKDIR /build
-COPY pyproject.toml README.md LICENSE CITATION.cff ./
+COPY pyproject.toml README.md LICENSE CITATION.cff constraints-cpu.txt ./
 COPY src ./src
 COPY configs ./configs
 COPY data/sample ./data/sample
 COPY release ./release
 COPY schemas/rc1 ./schemas/rc1
 RUN python -m pip wheel \
+    --constraint constraints-cpu.txt \
     --wheel-dir /wheels \
     ".[${CMAG_EXTRAS}]"
 
@@ -33,7 +34,10 @@ RUN python -m pip install --no-index --find-links=/wheels \
     && rm -rf /wheels
 
 WORKDIR /workspace
-RUN chown cmag:cmag /workspace
+COPY --from=builder --chown=10001:10001 /build/configs /workspace/configs
+COPY --from=builder --chown=10001:10001 /build/data/sample /workspace/data/sample
+RUN mkdir -p /workspace/runs \
+    && chown -R cmag:cmag /workspace
 USER cmag
 
 ENTRYPOINT ["cmag"]

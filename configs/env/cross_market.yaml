@@ -2,6 +2,9 @@ dataset_root: data/sample
 seed: 1024
 smoke_steps: 1000
 
+observation:
+  market_window_layout: flat
+
 environment:
   execution_protocol: close_signal_next_open
   base_currency: USD

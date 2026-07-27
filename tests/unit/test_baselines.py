@@ -51,3 +51,11 @@ def test_baseline_evaluation_produces_trades_weights_and_metrics() -> None:
     assert len(result.trades) == result.total_steps
     assert len(result.weights) == result.total_steps
     assert "mean_return" in result.metrics
+    assert result.evaluation_episodes == 1
+    assert result.return_sample_count == 1
+    assert result.reward_sample_count == 1
+    assert result.metrics["std_return"] == 0.0
+    assert result.statistical_warnings == (
+        "Insufficient samples for reliable return dispersion estimates.",
+        "Insufficient samples for reliable reward dispersion estimates.",
+    )

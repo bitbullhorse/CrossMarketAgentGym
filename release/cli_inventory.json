@@ -388,7 +388,7 @@
     },
     {
       "command": "cmag reproduce",
-      "help": "Verify and replay a recorded run without network or account mutation.",
+      "help": "Verify artifacts or explicitly execute an isolated computational replay.",
       "hidden": false,
       "parameters": [
         {
@@ -426,6 +426,66 @@
           "required": false,
           "secondary_options": [],
           "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": false,
+          "kind": "option",
+          "name": "verify_only",
+          "nargs": 1,
+          "options": [
+            "--verify-only"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.BoolParamType"
+        },
+        {
+          "default": false,
+          "kind": "option",
+          "name": "execute",
+          "nargs": 1,
+          "options": [
+            "--execute"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.BoolParamType"
+        },
+        {
+          "default": false,
+          "kind": "option",
+          "name": "compare",
+          "nargs": 1,
+          "options": [
+            "--compare"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.BoolParamType"
+        },
+        {
+          "default": null,
+          "kind": "option",
+          "name": "tolerance_config",
+          "nargs": 1,
+          "options": [
+            "--tolerance-config"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": null,
+          "kind": "option",
+          "name": "replay_run_id",
+          "nargs": 1,
+          "options": [
+            "--replay-run-id"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.StringParamType"
         }
       ]
     },
@@ -493,6 +553,6 @@
       ]
     }
   ],
-  "release": "1.0.0-rc1",
+  "release": "1.0.0-rc2",
   "schema_version": "1.0"
 }

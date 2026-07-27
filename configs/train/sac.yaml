@@ -1,6 +1,8 @@
 dataset_root: data/sample
 output_dir: runs
 run_name: phase3_sac_cpu
+observation:
+  market_window_layout: flat
 environment:
   lookback: 1
   max_asset_weight: 0.40

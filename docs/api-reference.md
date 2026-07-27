@@ -95,7 +95,10 @@ All online Agent configurations require model `deepseek-v4-pro`; credentials are
 - `run_cpu_quickstart(workspace_root=".", smoke_steps=64)` validates the packaged sample and
   environment without network or LLM use.
 - `reproduce_run(workspace_root, runs_root, run_id)` verifies provenance and performs the
-  available deterministic Replay without retraining or account mutation.
+  available bounded Replay without retraining or account mutation. This frozen rc1 API retains
+  artifact-verification semantics.
+- `cmag reproduce --execute --compare` is the Phase 11 computational-training replay surface. It
+  is intentionally explicit and writes only to an isolated reproduction directory.
 - `check_release_readiness(workspace_root=".")` validates local release metadata and security
   assets without publishing.
 - `build_release_manifest(dist_dir)` hashes built wheel/source archives into a credential-free

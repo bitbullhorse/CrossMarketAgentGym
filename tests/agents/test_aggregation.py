@@ -76,6 +76,12 @@ def test_most_conservative_intersects_structured_limits() -> None:
     assert aggregate.decision.constraints.max_market_weights == {"US": 0.2}
     assert aggregate.decision.constraints.max_turnover == 0.25
     assert aggregate.decision.constraints.allow_new_positions is False
+    assert aggregate.configured_conflict_policy == "most_conservative"
+    assert aggregate.conflict_detected is True
+    assert aggregate.aggregate_decision == "revise"
+    assert aggregate.selected_directive_confidence == 0.8
+    assert aggregate.committee_confidence == 0.8
+    assert aggregate.confidence_aggregation == "minimum"
 
 
 def test_weighted_vote_and_conservative_tie_break_are_structured() -> None:
@@ -115,6 +121,23 @@ def test_no_quorum_and_reject_on_disagreement_fail_closed() -> None:
     assert no_quorum.decision.decision == "reject"
     assert no_quorum.failed_instances == ("b",)
     assert conflict.status == "rejected"
+    assert conflict.configured_conflict_policy == "reject"
+    assert conflict.conflict_detected is True
+    assert conflict.aggregate_decision == "reject"
+
+
+def test_reject_policy_without_conflict_can_approve() -> None:
+    aggregate = aggregate_results(
+        [_result("a", "approve"), _result("b", "approve")],
+        policy="reject",
+        quorum=1.0,
+        expected_instances=["a", "b"],
+    )
+
+    assert aggregate.configured_conflict_policy == "reject"
+    assert aggregate.conflict_detected is False
+    assert aggregate.aggregate_decision == "approve"
+    assert aggregate.status == "resolved"
 
 
 def test_judge_policy_selects_only_configured_judge_decision() -> None:

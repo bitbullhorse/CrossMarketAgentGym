@@ -10,6 +10,7 @@ from crossmarket_agentgym.environments import (
     CrossMarketPortfolioEnv,
     EnvironmentConfig,
     MarketDataPanel,
+    ObservationConfig,
 )
 
 
@@ -28,6 +29,34 @@ def test_gymnasium_check_env_passes() -> None:
     )
 
     check_env(env, skip_render_check=True)
+
+
+def test_market_window_layouts_preserve_tensor_values() -> None:
+    panel = MarketDataPanel.from_frame(make_us_ohlcv(days=5))
+    config = EnvironmentConfig(lookback=2)
+    tensor_env = CrossMarketPortfolioEnv(
+        panel,
+        config,
+        observation=ObservationConfig(market_window_layout="tensor"),
+    )
+    flat_env = CrossMarketPortfolioEnv(
+        panel,
+        config,
+        observation=ObservationConfig(market_window_layout="flat"),
+    )
+
+    tensor, _ = tensor_env.reset(seed=11)
+    flat, _ = flat_env.reset(seed=11)
+
+    assert tensor["market_window"].shape == (1, 2, len(panel.feature_names))
+    assert flat["market_window"].shape == (
+        tensor["market_window"].size,
+    )
+    np.testing.assert_array_equal(
+        flat["market_window"],
+        tensor["market_window"].reshape(-1),
+    )
+    assert flat["market_window"].dtype == np.float32
 
 
 def test_step_executes_next_open_and_returns_auditable_info() -> None:

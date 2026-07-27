@@ -35,7 +35,7 @@ The observation is a Gymnasium `spaces.Dict` containing:
 
 | Field | Shape | Meaning |
 |---|---:|---|
-| `market_window` | `[N, L, F]` | Per-asset feature history ending at the current close |
+| `market_window` | `[N×L×F]` or `[N,L,F]` | Per-asset feature history ending at the current close |
 | `portfolio_weights` | `[N+1]` | Cash followed by signed asset weights |
 | `cash_ratio` | `[1]` | Current base-currency cash weight |
 | `tradable_mask` | `[N]` | Current-session execution eligibility |
@@ -43,6 +43,18 @@ The observation is a Gymnasium `spaces.Dict` containing:
 | `currency_ids` | `[N]` | Stable CNY/HKD/JPY/USD identifiers |
 | `risk_state` | `[4]` | Drawdown, rolling volatility, gross exposure, turnover |
 | `time_features` | `[4]` | Cyclical weekday and month encoding |
+
+`observation.market_window_layout` controls only the public observation layout:
+
+- `flat` reshapes `[N,L,F]` to `[N×L×F]` in C order and is the default for the packaged
+  PPO/SAC SB3 quickstarts;
+- `tensor` exposes `[N,L,F]` and requires an explicitly configured custom
+  `BaseFeaturesExtractor` for SB3.
+
+Both modes retain `float32` OHLCV semantics. Values are never converted to `uint8` or scaled to
+`[0,255]`, and the environment retains the original tensor internally. `cmag env check` captures
+SB3 warnings. A tensor image-heuristic warning is represented as the accepted structured warning
+`SB3_BOX_IMAGE_HEURISTIC`; any unexpected warning is blocking.
 
 Actions have shape `[N+1]`, with cash first. The deterministic pipeline is:
 
@@ -86,6 +98,6 @@ portfolio value; drawdown; accounting error; and market exposure.
 
 ## DRL adapter note
 
-Gymnasium and Stable-Baselines3 validation pass. Stable-Baselines3 warns that the required
-three-dimensional `market_window` resembles an image. Phase 3 must use a custom dictionary feature
-extractor; the default CNN policy is not an approved adapter for this observation contract.
+Gymnasium and Stable-Baselines3 validation pass without image warnings for the packaged flat
+quickstart. Tensor policies use the project feature-extractor registry; the default CNN policy is
+not an approved adapter for financial tensors.

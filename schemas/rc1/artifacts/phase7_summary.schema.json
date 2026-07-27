@@ -220,10 +220,62 @@
       "title": "AgentExecutionResult",
       "type": "object"
     },
+    "CashFloorDerivation": {
+      "additionalProperties": false,
+      "description": "Auditable link from risk budget to the effective cash reserve.",
+      "properties": {
+        "agent_value": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Agent Value",
+          "type": "number"
+        },
+        "effective_value": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Effective Value",
+          "type": "number"
+        },
+        "field": {
+          "const": "cash_floor",
+          "default": "cash_floor",
+          "title": "Field",
+          "type": "string"
+        },
+        "operator": {
+          "const": "max",
+          "default": "max",
+          "title": "Operator",
+          "type": "string"
+        },
+        "reason": {
+          "const": "Invested capital cannot exceed risk budget.",
+          "default": "Invested capital cannot exceed risk budget.",
+          "title": "Reason",
+          "type": "string"
+        },
+        "risk_budget_implied_value": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Risk Budget Implied Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "agent_value",
+        "risk_budget_implied_value",
+        "effective_value"
+      ],
+      "title": "CashFloorDerivation",
+      "type": "object"
+    },
     "ConstraintFusionResult": {
       "additionalProperties": false,
       "description": "Proof that Agent budgets only tightened administrator constraints.",
       "properties": {
+        "cash_floor_derivation": {
+          "$ref": "#/$defs/CashFloorDerivation"
+        },
         "constraints": {
           "$ref": "#/$defs/EffectiveConstraintSet"
         },
@@ -260,6 +312,7 @@
         "constraints",
         "risk",
         "hierarchical",
+        "cash_floor_derivation",
         "tightened_fields"
       ],
       "title": "ConstraintFusionResult",
@@ -345,6 +398,10 @@
           "title": "Clipping Reasons",
           "type": "array"
         },
+        "dominant_projection_reason": {
+          "title": "Dominant Projection Reason",
+          "type": "string"
+        },
         "fusion": {
           "$ref": "#/$defs/ConstraintFusionResult"
         },
@@ -369,6 +426,13 @@
           "title": "Raw Action",
           "type": "array"
         },
+        "secondary_projection_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Secondary Projection Reasons",
+          "type": "array"
+        },
         "unresolved_constraints": {
           "items": {
             "type": "string"
@@ -383,6 +447,8 @@
         "projected_weights",
         "clipping_reasons",
         "unresolved_constraints",
+        "dominant_projection_reason",
+        "secondary_projection_reasons",
         "fusion"
       ],
       "title": "DirectiveProjection",
@@ -1100,6 +1166,43 @@
       "additionalProperties": false,
       "description": "Deterministic structured team resolution.",
       "properties": {
+        "aggregate_decision": {
+          "enum": [
+            "approve",
+            "revise",
+            "reject",
+            "abstain"
+          ],
+          "title": "Aggregate Decision",
+          "type": "string"
+        },
+        "committee_confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Committee Confidence",
+          "type": "number"
+        },
+        "confidence_aggregation": {
+          "const": "minimum",
+          "default": "minimum",
+          "title": "Confidence Aggregation",
+          "type": "string"
+        },
+        "configured_conflict_policy": {
+          "enum": [
+            "weighted_vote",
+            "majority_vote",
+            "judge",
+            "most_conservative",
+            "reject"
+          ],
+          "title": "Configured Conflict Policy",
+          "type": "string"
+        },
+        "conflict_detected": {
+          "title": "Conflict Detected",
+          "type": "boolean"
+        },
         "decision": {
           "$ref": "#/$defs/AgentDecision"
         },
@@ -1129,6 +1232,12 @@
           "title": "Policy",
           "type": "string"
         },
+        "selected_directive_confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Selected Directive Confidence",
+          "type": "number"
+        },
         "status": {
           "enum": [
             "resolved",
@@ -1142,6 +1251,11 @@
       "required": [
         "status",
         "policy",
+        "configured_conflict_policy",
+        "conflict_detected",
+        "aggregate_decision",
+        "selected_directive_confidence",
+        "committee_confidence",
         "decision",
         "participants"
       ],

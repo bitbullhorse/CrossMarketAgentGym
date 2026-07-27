@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC
 from pathlib import Path
 
 import pytest
@@ -81,6 +82,23 @@ def test_training_never_reads_test_and_locked_evaluation_is_separate(
         json.loads((run_dir / "test" / "weights.json").read_text(encoding="utf-8")),
         list,
     )
+    assert summary.started_at.tzinfo == UTC
+    assert summary.finished_at >= summary.started_at
+    assert summary.runtime_seconds > 0.0
+    assert summary.training_runtime_seconds > 0.0
+    assert summary.evaluation_runtime_seconds > 0.0
+    assert summary.device == "cpu"
+    assert summary.torch_version
+    assert summary.python_version
+    assert summary.cpu_model
+    assert summary.gpu_model is None
+    assert metrics["evaluation_episodes"] == 1
+    assert metrics["return_sample_count"] == 1
+    assert metrics["reward_sample_count"] == 1
+    assert metrics["statistical_warnings"] == [
+        "Insufficient samples for reliable return dispersion estimates.",
+        "Insufficient samples for reliable reward dispersion estimates.",
+    ]
     with pytest.raises(FileExistsError, match="already exists"):
         evaluate_saved_run(run_dir)
 
@@ -93,3 +111,12 @@ def test_all_required_algorithm_configs_load() -> None:
     }
 
     assert algorithms == {"PPO", "SAC", "TD3"}
+
+
+def test_flat_layout_rejects_tensor_only_extractors() -> None:
+    base = load_train_run_config(Path("configs/train/ppo.yaml"))
+    raw = base.model_dump(mode="json")
+    raw["observation"] = {"market_window_layout": "flat"}
+
+    with pytest.raises(ValueError, match="flat market_window"):
+        type(base).model_validate(raw)

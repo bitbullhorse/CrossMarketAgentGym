@@ -175,6 +175,19 @@ def test_cli_inventory_covers_phase11_protocol() -> None:
         for option in parameter["options"]
     }
     assert "--run-id" in report_options
+    reproduce_options = {
+        option
+        for parameter in commands["cmag reproduce"]["parameters"]
+        for option in parameter["options"]
+    }
+    assert {
+        "--run-id",
+        "--verify-only",
+        "--execute",
+        "--compare",
+        "--tolerance-config",
+        "--replay-run-id",
+    } <= reproduce_options
 
 
 def test_release_tag_cannot_implicitly_publish_to_pypi() -> None:

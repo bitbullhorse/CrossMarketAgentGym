@@ -226,6 +226,43 @@
       "additionalProperties": false,
       "description": "Deterministic structured team resolution.",
       "properties": {
+        "aggregate_decision": {
+          "enum": [
+            "approve",
+            "revise",
+            "reject",
+            "abstain"
+          ],
+          "title": "Aggregate Decision",
+          "type": "string"
+        },
+        "committee_confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Committee Confidence",
+          "type": "number"
+        },
+        "confidence_aggregation": {
+          "const": "minimum",
+          "default": "minimum",
+          "title": "Confidence Aggregation",
+          "type": "string"
+        },
+        "configured_conflict_policy": {
+          "enum": [
+            "weighted_vote",
+            "majority_vote",
+            "judge",
+            "most_conservative",
+            "reject"
+          ],
+          "title": "Configured Conflict Policy",
+          "type": "string"
+        },
+        "conflict_detected": {
+          "title": "Conflict Detected",
+          "type": "boolean"
+        },
         "decision": {
           "$ref": "#/$defs/AgentDecision"
         },
@@ -255,6 +292,12 @@
           "title": "Policy",
           "type": "string"
         },
+        "selected_directive_confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Selected Directive Confidence",
+          "type": "number"
+        },
         "status": {
           "enum": [
             "resolved",
@@ -268,6 +311,11 @@
       "required": [
         "status",
         "policy",
+        "configured_conflict_policy",
+        "conflict_detected",
+        "aggregate_decision",
+        "selected_directive_confidence",
+        "committee_confidence",
         "decision",
         "participants"
       ],

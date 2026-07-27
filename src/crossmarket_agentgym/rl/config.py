@@ -10,6 +10,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from crossmarket_agentgym.environments import EnvironmentConfig
+from crossmarket_agentgym.environments.observations import ObservationConfig
 from crossmarket_agentgym.rl.policies import PolicyName
 
 AlgorithmName = Literal["PPO", "SAC", "TD3", "A2C"]
@@ -115,6 +116,7 @@ class TrainRunConfig(StrictRLModel):
     dataset_root: Path
     output_dir: Path = Field(default=cast(Path, "runs"), validate_default=True)
     run_name: str = "ppo_cpu_quickstart"
+    observation: ObservationConfig = Field(default_factory=ObservationConfig)
     environment: EnvironmentConfig = Field(default_factory=EnvironmentConfig)
     split: TemporalSplitConfig
     trainer: TrainerConfig = Field(default_factory=TrainerConfig)
@@ -127,6 +129,18 @@ class TrainRunConfig(StrictRLModel):
         if _RUN_NAME.fullmatch(value) is None:
             raise ValueError("run_name contains unsupported path characters")
         return value
+
+    @model_validator(mode="after")
+    def validate_observation_policy(self) -> TrainRunConfig:
+        """Keep tensor-only extractors away from flattened market windows."""
+        if (
+            self.observation.market_window_layout == "flat"
+            and self.trainer.policy in {"shared_mlp", "transformer"}
+        ):
+            raise ValueError(
+                "flat market_window requires the mlp custom features extractor"
+            )
+        return self
 
 
 def load_train_run_config(path: Path) -> TrainRunConfig:

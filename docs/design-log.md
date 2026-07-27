@@ -455,3 +455,94 @@
   components.
 - Reason: `twine check` validates metadata rendering but does not prove that an archive is usable
   offline or free of local data, credentials, runs, environments, and checkpoints.
+
+## DL-0070 — Artifact verification is not computational reproduction
+
+- Decision: retain the frozen `reproduce_run()` artifact-verification API and describe its level
+  as `artifact_verified`. Require the explicit CLI pair `--execute --compare` before any training
+  is rerun.
+- Reason: hashes establish provenance and integrity but cannot establish that the computation can
+  be repeated. Explicit execution also prevents a historically bounded command from unexpectedly
+  consuming training resources.
+
+## DL-0071 — Immutable isolated replay directories
+
+- Decision: store every training replay below
+  `runs/reproductions/<source-run-id>/<new-replay-run-id>`, snapshot every source file before
+  execution, reject an existing replay ID, and retain failed replay directories.
+- Reason: reproducibility evidence must not overwrite the run being tested or erase failures.
+
+## DL-0072 — Ordered reproduction levels and reviewed tolerances
+
+- Decision: classify results as `artifact_verified`, `bitwise_reproduced`,
+  `numerically_reproduced`, `statistically_reproduced`, or `failed`. Compare five validation
+  metrics with reviewed absolute/relative tolerances and require exact timesteps, algorithm,
+  dataset hash, TrainerConfig hash, execution protocol, and checkpoint loadability. CPU
+  quickstart requires at least numerical reproduction.
+- Reason: SB3 checkpoint archives may differ byte-for-byte while loaded policies and evaluated
+  results remain numerically identical. A single Boolean cannot express that distinction or a
+  controlled repeated-run statistical fallback.
+
+## DL-0073 — Explicit financial-tensor observation layout
+
+- Decision: preserve `[N,L,F]` internally, expose configurable `flat` and `tensor` layouts, use
+  `flat` for packaged PPO/SAC SB3 quickstarts, and require a custom `BaseFeaturesExtractor` for
+  `tensor`.
+- Reason: SB3's Box heuristic treats a three-dimensional float tensor as an image. Flattening the
+  adapter view removes false image requirements without changing OHLCV dtype, scale, ordering, or
+  information content.
+
+## DL-0074 — Runtime and sample sufficiency are first-class evidence
+
+- Decision: persist wall, training, and evaluation durations plus runtime identity in every
+  training summary; persist evaluation episode/sample counts and warnings when dispersion has
+  fewer than two samples.
+- Reason: a null runtime and an unqualified `std_return: 0.0` obscure whether a run executed and
+  whether its reported dispersion has statistical meaning.
+
+## DL-0075 — Cash floor proves its risk-budget derivation
+
+- Decision: compute
+  `max(administrator/Agent cash floor, 1 - effective risk budget)` and journal both inputs,
+  effective output, `max` operator, and invariant reason.
+- Reason: a stricter effective cash floor can otherwise look like an unexplained Agent override;
+  the derivation proves that invested capital cannot exceed the deterministic risk budget.
+
+## DL-0076 — Separate committee configuration, conflict, and outcome
+
+- Decision: record configured conflict policy, detected conflict, aggregate decision, selected
+  directive confidence, minimum committee confidence, and dominant/secondary projection reasons
+  as distinct fields.
+- Reason: fields such as `policy: reject` and `decision: approve` conflate arbitration rules with
+  outcomes and make safe projection causes ambiguous during review.
+
+## DL-0077 — Phase 11 evidence executes the built artifact
+
+- Decision: the Linux CPU gate builds a wheel from the tested commit, attests that exact wheel,
+  installs it into a new virtual environment, and executes Tasks B–I with CUDA unavailable.
+- Reason: an editable checkout can pass while the published wheel is missing configs, sample data,
+  or Provider code; provenance must bind the tested bytes to the source workflow.
+
+## DL-0078 — Docker reproduction is offline and resource bounded
+
+- Decision: rebuild with `--pull --no-cache`, expose packaged configs/sample data inside the
+  non-root runtime image, and execute Tasks B–I under `--network none`, 2 CPU, 7 GB memory, and
+  disabled CUDA visibility.
+- Reason: container reproduction should demonstrate a bounded CPU artifact rather than depend on
+  host files, runtime downloads, GPU availability, or unrestricted resources.
+
+## DL-0079 — Workflow artifacts are staging, not archival evidence
+
+- Decision: both workflows emit the same `11_3_task_summary` schema plus logs, runs, identities,
+  and SHA-256 records. After both pass on the tag commit, combine them deterministically and attach
+  the bundle plus checksum to the GitHub Release.
+- Reason: ordinary Actions artifacts expire, while a Release asset provides a stable,
+  commit-bound evidence source for later audit.
+
+## DL-0080 — Record independent clearance without inventing participants
+
+- Decision: accept the release operator's statement that multiple independent participants
+  completed review and P0/P1 are zero, while explicitly declining to fabricate names,
+  environments, scores, or participant files absent from the workspace.
+- Reason: the reported clearance is a legitimate release input, but provenance requires a clear
+  distinction between supplied attestation and machine-generated evidence.

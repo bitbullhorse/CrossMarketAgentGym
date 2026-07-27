@@ -79,7 +79,7 @@ One configurable Agent role, expanded into ``count`` independent instances.
 Proof that Agent budgets only tightened administrator constraints.
 
 ```text
-(*, hard_environment: crossmarket_agentgym.environments.config.EnvironmentConfig, effective_environment: crossmarket_agentgym.environments.config.EnvironmentConfig, constraints: crossmarket_agentgym.agents.directives.EffectiveConstraintSet, risk: crossmarket_agentgym.agents.directives.RiskMergeResult, hierarchical: crossmarket_agentgym.agents.directives.HierarchicalDirective | None, tightened_fields: tuple[str, ...])
+(*, hard_environment: crossmarket_agentgym.environments.config.EnvironmentConfig, effective_environment: crossmarket_agentgym.environments.config.EnvironmentConfig, constraints: crossmarket_agentgym.agents.directives.EffectiveConstraintSet, risk: crossmarket_agentgym.agents.directives.RiskMergeResult, hierarchical: crossmarket_agentgym.agents.directives.HierarchicalDirective | None, cash_floor_derivation: crossmarket_agentgym.agents.directives.CashFloorDerivation, tightened_fields: tuple[str, ...])
 ```
 
 ## `crossmarket_agentgym.agents.DecisionConstraints`
@@ -95,7 +95,7 @@ Optional structured limits that conservative arbitration can intersect.
 Projected DRL action; this object contains no account mutation method.
 
 ```text
-(*, raw_action: tuple[float, ...], normalized_weights: tuple[float, ...], projected_weights: tuple[float, ...], clipping_reasons: tuple[str, ...], unresolved_constraints: tuple[str, ...], fusion: crossmarket_agentgym.agents.directives.ConstraintFusionResult)
+(*, raw_action: tuple[float, ...], normalized_weights: tuple[float, ...], projected_weights: tuple[float, ...], clipping_reasons: tuple[str, ...], unresolved_constraints: tuple[str, ...], dominant_projection_reason: str, secondary_projection_reasons: tuple[str, ...], fusion: crossmarket_agentgym.agents.directives.ConstraintFusionResult)
 ```
 
 ## `crossmarket_agentgym.agents.HierarchicalDirective`
@@ -167,7 +167,7 @@ Auditable proposed/effective risk directive and every clipped field.
 Deterministic structured team resolution.
 
 ```text
-(*, status: Literal['resolved', 'rejected', 'no_quorum'], policy: Literal['weighted_vote', 'majority_vote', 'judge', 'most_conservative', 'reject'], decision: crossmarket_agentgym.agents.models.AgentDecision, participants: tuple[str, ...], failed_instances: tuple[str, ...] = ())
+(*, status: Literal['resolved', 'rejected', 'no_quorum'], policy: Literal['weighted_vote', 'majority_vote', 'judge', 'most_conservative', 'reject'], configured_conflict_policy: Literal['weighted_vote', 'majority_vote', 'judge', 'most_conservative', 'reject'], conflict_detected: bool, aggregate_decision: Literal['approve', 'revise', 'reject', 'abstain'], selected_directive_confidence: float, committee_confidence: float, confidence_aggregation: Literal['minimum'] = 'minimum', decision: crossmarket_agentgym.agents.models.AgentDecision, participants: tuple[str, ...], failed_instances: tuple[str, ...] = ())
 ```
 
 ## `crossmarket_agentgym.agents.TeamRunResult`
@@ -519,7 +519,7 @@ Apply a fixed, replayable sequence of hard portfolio rules.
 Daily portfolio environment using close signals and next-open execution.
 
 ```text
-(panel: 'MarketDataPanel', config: 'EnvironmentConfig', *, render_mode: "Literal['human', 'ansi', 'rgb_array'] | None" = None, partition: 'PartitionCapability | None' = None) -> 'None'
+(panel: 'MarketDataPanel', config: 'EnvironmentConfig', *, render_mode: "Literal['human', 'ansi', 'rgb_array'] | None" = None, partition: 'PartitionCapability | None' = None, observation: 'ObservationConfig | None' = None) -> 'None'
 ```
 
 ## `crossmarket_agentgym.environments.EnvironmentCheckConfig`
@@ -527,7 +527,7 @@ Daily portfolio environment using close signals and next-open execution.
 Strict configuration for `cmag env check`.
 
 ```text
-(*, dataset_root: pathlib.Path, seed: int = 1024, smoke_steps: int = 1000, environment: crossmarket_agentgym.environments.config.EnvironmentConfig = <factory>)
+(*, dataset_root: pathlib.Path, seed: int = 1024, smoke_steps: int = 1000, observation: crossmarket_agentgym.environments.observations.ObservationConfig = <factory>, environment: crossmarket_agentgym.environments.config.EnvironmentConfig = <factory>)
 ```
 
 ## `crossmarket_agentgym.environments.EnvironmentCheckSummary`
@@ -535,7 +535,15 @@ Strict configuration for `cmag env check`.
 Serializable evidence from compatibility and random-action checks.
 
 ```text
-(*, is_valid: bool, gymnasium_check: Literal['passed'], sb3_check: Literal['passed', 'skipped_not_installed'], smoke_steps: int, resets: int, finite_observations: bool, finite_rewards: bool, finite_values: bool, max_accounting_error: float, min_portfolio_value: float, execution_protocol: str)
+(*, is_valid: bool, gymnasium_check: Literal['passed'], sb3_check: Literal['passed', 'skipped_not_installed'], smoke_steps: int, resets: int, finite_observations: bool, finite_rewards: bool, finite_values: bool, max_accounting_error: float, min_portfolio_value: float, execution_protocol: str, market_window_layout: Literal['flat', 'tensor'], warnings: tuple[crossmarket_agentgym.environments.checks.EnvironmentCheckWarning, ...] = ())
+```
+
+## `crossmarket_agentgym.environments.EnvironmentCheckWarning`
+
+One accepted or blocking compatibility warning.
+
+```text
+(*, warning_code: str, accepted: bool, reason: str, required_policy: str | None = None)
 ```
 
 ## `crossmarket_agentgym.environments.EnvironmentConfig`
@@ -552,6 +560,22 @@ Dense daily arrays aligned on a union calendar.
 
 ```text
 (dates: 'tuple[date, ...]', symbols: 'tuple[str, ...]', markets: 'tuple[Market, ...]', currencies: 'tuple[str, ...]', market_ids: 'NDArray[np.int32]', currency_ids: 'NDArray[np.int32]', features: 'NDArray[np.float32]', open_prices: 'NDArray[np.float64]', close_prices: 'NDArray[np.float64]', tradable_mask: 'NDArray[np.bool_]', suspension_mask: 'NDArray[np.bool_]', limit_up_mask: 'NDArray[np.bool_]', limit_down_mask: 'NDArray[np.bool_]', first_fully_valued_index: 'int', base_currency: 'str', feature_names: 'tuple[str, ...]' = ('open_base', 'high_base', 'low_base', 'close_base', 'volume', 'log_return_base')) -> None
+```
+
+## `crossmarket_agentgym.environments.MarketWindowLayout`
+
+Stable exported integration symbol.
+
+```text
+(*args, **kwargs)
+```
+
+## `crossmarket_agentgym.environments.ObservationConfig`
+
+Presentation layout for the raw ``[N,L,F]`` financial tensor.
+
+```text
+(*, market_window_layout: Literal['flat', 'tensor'] = 'tensor')
 ```
 
 ## `crossmarket_agentgym.environments.RewardName`
@@ -591,7 +615,7 @@ Stateful baseline contract compatible with the evaluator.
 Metrics and replayable step records for one evaluated policy.
 
 ```text
-(*, schema_version: Literal['1.0'] = '1.0', algorithm: str, partition: str, episodes: int, total_steps: int, metrics: dict[str, float], trades: list[crossmarket_agentgym.evaluation.results.TradeRecord], weights: list[crossmarket_agentgym.evaluation.results.WeightRecord])
+(*, schema_version: Literal['1.0'] = '1.0', algorithm: str, partition: str, episodes: int, evaluation_episodes: int, return_sample_count: int, reward_sample_count: int, statistical_warnings: tuple[str, ...] = (), total_steps: int, metrics: dict[str, float], trades: list[crossmarket_agentgym.evaluation.results.TradeRecord], weights: list[crossmarket_agentgym.evaluation.results.WeightRecord])
 ```
 
 ## `crossmarket_agentgym.evaluation.TradeRecord`
@@ -759,7 +783,7 @@ Non-overlapping outcome intervals with shared boundary observations.
 Complete local training workflow configuration.
 
 ```text
-(*, dataset_root: pathlib.Path, output_dir: pathlib.Path = 'runs', run_name: str = 'ppo_cpu_quickstart', environment: crossmarket_agentgym.environments.config.EnvironmentConfig = <factory>, split: crossmarket_agentgym.rl.config.TemporalSplitConfig, trainer: crossmarket_agentgym.rl.config.TrainerConfig = <factory>, callbacks: crossmarket_agentgym.rl.config.CallbackConfig = <factory>)
+(*, dataset_root: pathlib.Path, output_dir: pathlib.Path = 'runs', run_name: str = 'ppo_cpu_quickstart', observation: crossmarket_agentgym.environments.observations.ObservationConfig = <factory>, environment: crossmarket_agentgym.environments.config.EnvironmentConfig = <factory>, split: crossmarket_agentgym.rl.config.TemporalSplitConfig, trainer: crossmarket_agentgym.rl.config.TrainerConfig = <factory>, callbacks: crossmarket_agentgym.rl.config.CallbackConfig = <factory>)
 ```
 
 ## `crossmarket_agentgym.rl.TrainerConfig`
@@ -791,7 +815,7 @@ Credential-free checkpoint provenance.
 Serializable CLI result for a completed training run.
 
 ```text
-(*, schema_version: Literal['1.0'] = '1.0', run_id: str, run_dir: str, algorithm: str, checkpoint: str, requested_timesteps: int, trained_timesteps: int, validation_metrics: dict[str, float])
+(*, schema_version: Literal['1.0'] = '1.0', run_id: str, run_dir: str, algorithm: str, checkpoint: str, requested_timesteps: int, trained_timesteps: int, validation_metrics: dict[str, float], started_at: datetime.datetime, finished_at: datetime.datetime, runtime_seconds: float, training_runtime_seconds: float, evaluation_runtime_seconds: float, device: str, torch_version: str, python_version: str, cpu_model: str, gpu_model: str | None)
 ```
 
 ## `crossmarket_agentgym.rl.build_partitioned_environments`

@@ -37,6 +37,18 @@ proposal with `AdministratorRiskPolicy`:
 - permission to open positions uses logical AND;
 - rebalance frequency may become slower, never faster than the administrator minimum.
 
+The effective cash reserve is derived explicitly:
+
+```text
+agent_cash_floor = max(administrator_cash_floor, risk_agent_cash_floor)
+risk_budget_implied_value = 1 - effective_risk_budget
+effective_cash_floor = max(agent_cash_floor, risk_budget_implied_value)
+```
+
+The directive journal stores all three values, the `max` operator, and the reason
+`Invested capital cannot exceed risk budget.` Thus an Agent proposal of `cash_floor=0.3` with
+`risk_budget=0.6` produces an effective floor of `0.4`.
+
 Missing or invalid output selects a static directive with zero risk and turnover, full cash, zero
 position limits, and no new positions. A risk committee must use `most_conservative`.
 
@@ -62,6 +74,11 @@ An LLM limit can only tighten this set. Unknown markets and Phase 7 short-sellin
 rejected conservatively. Risk and hierarchy run on configured daily, weekly, or monthly cadence;
 when a layer is not due, its validated previous directive is reused or a static fallback is used.
 
+Projection audit records a single `dominant_projection_reason` plus the stable diagnostic set
+`max_asset_weight`, `cash_floor`, `max_turnover`, and `market_weight_limits` as
+`secondary_projection_reasons`. When all capital is cash and new positions are disabled, the
+dominant reason is `no_new_positions_from_all_cash_state`.
+
 ## Presets and Replay
 
 The strict presets are `no_llm`, `research_only`, `risk_only`, `hierarchical_only`,
@@ -71,4 +88,3 @@ The strict presets are `no_llm`, `research_only`, `risk_only`, `hierarchical_onl
 Every accepted proposal, effective merge, fusion, and projection is stored in a redacted,
 sequence-numbered, SHA-256-protected directive journal. A Replay bundle recomputes merge and
 projection from validated directives and verifies exact equality with the original result.
-

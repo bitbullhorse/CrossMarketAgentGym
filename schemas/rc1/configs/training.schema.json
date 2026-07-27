@@ -245,6 +245,23 @@
       "title": "EnvironmentConfig",
       "type": "object"
     },
+    "ObservationConfig": {
+      "additionalProperties": false,
+      "description": "Presentation layout for the raw ``[N,L,F]`` financial tensor.",
+      "properties": {
+        "market_window_layout": {
+          "default": "tensor",
+          "enum": [
+            "flat",
+            "tensor"
+          ],
+          "title": "Market Window Layout",
+          "type": "string"
+        }
+      },
+      "title": "ObservationConfig",
+      "type": "object"
+    },
     "TemporalSplitConfig": {
       "additionalProperties": false,
       "description": "Non-overlapping outcome intervals with shared boundary observations.",
@@ -474,6 +491,9 @@
     },
     "environment": {
       "$ref": "#/$defs/EnvironmentConfig"
+    },
+    "observation": {
+      "$ref": "#/$defs/ObservationConfig"
     },
     "output_dir": {
       "default": "runs",

@@ -56,14 +56,22 @@ The service is optional and read-only. Its default host is loopback.
 ## Reproduction
 
 ```bash
-cmag reproduce --run-id phase3_ppo_cpu
-cmag reproduce --run-id phase7-full-stack-offline
+cmag reproduce --run-id repro-ppo-quickstart --verify-only
+cmag reproduce \
+  --run-id repro-ppo-quickstart \
+  --execute \
+  --compare \
+  --tolerance-config configs/reproduction/phase11_cpu.yaml
 ```
 
-Reproduction is read-only. It verifies the whitelisted source fingerprint, recorded configuration
-and data identities, train/validation selection boundaries, checkpoint archive integrity, Agent
-Replay journals, or exact Phase 7 directive projection as applicable. It does not retrain, call a
-Provider, read test results into tuning, or mutate account state.
+The default and `--verify-only` modes are read-only artifact-integrity verification. They return
+`verification_mode=artifact_integrity` and never claim computational replay. Agent Replay
+journals and exact Phase 7 directive projection remain supported in this bounded mode.
+
+Training replay requires the explicit pair `--execute --compare`; either flag alone is rejected.
+The command retrains and re-evaluates in a new directory, compares the five required validation
+metrics and six exact invariants, writes `reproduction_comparison.json`, and never builds the test
+partition. `--replay-run-id` may name a new directory but cannot select an existing one.
 
 ## Release preparation
 

@@ -1,0 +1,135 @@
+name: Phase 11 Docker
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/phase11-docker.yml"
+      - "configs/**"
+      - "data/sample/**"
+      - "release/**"
+      - "schemas/**"
+      - "scripts/**"
+      - "src/**"
+      - "Dockerfile"
+      - ".dockerignore"
+      - "pyproject.toml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase11-docker-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tasks-b-i:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PIP_INDEX_URL: https://pypi.tuna.tsinghua.edu.cn/simple
+      CMAG_IMAGE: crossmarket-agent-gym:phase11-${{ github.sha }}
+    steps:
+      - name: Checkout tested commit
+        uses: actions/checkout@v7
+
+      - name: Prepare evidence directories
+        run: |
+          mkdir -p evidence/docker container-runs
+          chmod 0777 evidence/docker container-runs
+          printf '%s\n' "$GITHUB_SHA" > evidence/docker/source-commit.txt
+
+      - name: Build fresh CPU image
+        id: image_build
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          docker build \
+            --pull \
+            --no-cache \
+            --build-arg "PIP_INDEX_URL=$PIP_INDEX_URL" \
+            --build-arg "CMAG_EXTRAS=rl,hpo,llm" \
+            --tag "$CMAG_IMAGE" \
+            . 2>&1 | tee evidence/docker/docker-build.log
+
+      - name: Record image identity
+        if: steps.image_build.outcome == 'success'
+        run: |
+          docker image inspect --format '{{.Id}}' "$CMAG_IMAGE" \
+            | tee evidence/docker/image-id.txt
+          docker image inspect "$CMAG_IMAGE" \
+            > evidence/docker/image-inspect.json
+          sha256sum Dockerfile > evidence/docker/Dockerfile.sha256
+
+      - name: Execute CPU-only, offline Phase 11.3 Tasks B-I
+        id: protocol
+        if: steps.image_build.outcome == 'success'
+        continue-on-error: true
+        run: |
+          docker run --rm \
+            --network none \
+            --cpus 2 \
+            --memory 7g \
+            --memory-swap 7g \
+            --pids-limit 512 \
+            --env CUDA_VISIBLE_DEVICES="" \
+            --env NVIDIA_VISIBLE_DEVICES=void \
+            --env CMAG_EVIDENCE_EXECUTOR=docker \
+            --env CMAG_EVIDENCE_COMMIT="$GITHUB_SHA" \
+            --env GITHUB_RUN_ID="$GITHUB_RUN_ID" \
+            --env GITHUB_RUN_ATTEMPT="$GITHUB_RUN_ATTEMPT" \
+            --volume "$GITHUB_WORKSPACE/scripts/run_phase11_tasks.py:/tools/run_phase11_tasks.py:ro" \
+            --volume "$GITHUB_WORKSPACE/evidence/docker:/evidence" \
+            --volume "$GITHUB_WORKSPACE/container-runs:/workspace/runs" \
+            --entrypoint /bin/sh \
+            "$CMAG_IMAGE" \
+            -c '
+              set -eu
+              python -c "import json, torch; payload={\"torch_version\":torch.__version__,\"cuda_available\":bool(torch.cuda.is_available()),\"cuda_device_count\":int(torch.cuda.device_count())}; print(json.dumps(payload,sort_keys=True)); raise SystemExit(1 if payload[\"cuda_available\"] else 0)" \
+                > /evidence/cuda-check.json
+              cat /evidence/cuda-check.json
+              python /tools/run_phase11_tasks.py \
+                --workspace-root /workspace \
+                --evidence-dir /evidence \
+                --cmag /usr/local/bin/cmag
+            '
+
+      - name: Stage immutable container evidence
+        if: always()
+        run: |
+          mkdir -p phase11-artifact
+          cp -R evidence/docker/. phase11-artifact/
+          if [ -d container-runs ]; then cp -R container-runs phase11-artifact/runs; fi
+          cp Dockerfile phase11-artifact/Dockerfile
+          (
+            cd phase11-artifact
+            find . -type f ! -name SHA256SUMS -print0 \
+              | sort -z \
+              | xargs -0 sha256sum > SHA256SUMS
+          )
+
+      - name: Upload container execution evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: phase11-docker-${{ github.sha }}
+          path: phase11-artifact/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce image and Task B-I results
+        if: always()
+        run: |
+          test "${{ steps.image_build.outcome }}" = "success"
+          test "${{ steps.protocol.outcome }}" = "success"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          summary = json.loads(
+              Path("evidence/docker/11_3_task_summary.json").read_text()
+          )
+          if summary["all_passed"] is not True:
+              raise SystemExit("Phase 11.3 Docker summary did not pass")
+          PY

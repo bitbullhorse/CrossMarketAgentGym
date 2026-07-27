@@ -1,10 +1,13 @@
 # CrossMarketAgentGym
 
+[![Phase 11 Linux CPU](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/workflows/phase11-linux-cpu.yml/badge.svg)](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/workflows/phase11-linux-cpu.yml)
+[![Phase 11 Docker](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/workflows/phase11-docker.yml/badge.svg)](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/workflows/phase11-docker.yml)
+
 CrossMarketAgentGym is an auditable research platform for cross-market portfolio reinforcement
 learning, configurable LLM Agent teams, and hyperparameter optimization over daily CN, HK, JP,
 and US OHLCV data.
 
-The current candidate is `v1.0.0-rc1`. It freezes the interface for independent reproduction; it
+The current candidate is `v1.0.0-rc2`. It closes the Phase 11 independent-reproduction gate; it
 is not the final v1.0.0 release and contains no formal paper benchmark.
 
 ## Installation and CPU quickstart
@@ -64,11 +67,13 @@ cmag agent run --config configs/agents/research_single_mock.yaml
 cmag agent run --config configs/agents/risk_committee_mock.yaml
 cmag tune --config configs/tune/ppo_pso_quickstart.yaml
 cmag report --run-id repro-ppo-quickstart
-cmag reproduce --run-id repro-ppo-quickstart
+cmag reproduce --run-id repro-ppo-quickstart --verify-only
+cmag reproduce --run-id repro-ppo-quickstart --execute --compare
 ```
 
 These examples are development/reproduction checks only. They must not be reused as Phase 12
-formal results.
+formal results. `--verify-only` checks artifact integrity; only the explicit
+`--execute --compare` pair retrains and compares a new isolated replay.
 
 ## Online DeepSeek provider
 
@@ -95,9 +100,10 @@ configs use model `deepseek-v4-pro`.
   [deprecation](docs/deprecation_policy.md)
 - [Security](docs/security.md), [troubleshooting](docs/troubleshooting.md), and [FAQ](docs/faq.md)
 
-Ordered Phase 0–9 and Phase 10–17 requirements are in
-[the detailed execution report](CrossMarketAgentGym_详细执行报告.md) and
-[the later-phase report](CrossMarketAgentGym_Phase10-17_执行报告.md).
+Ordered implementation and acceptance evidence is maintained in
+[Phase 0–9 reports](docs/phases/) and the
+[Phase 11 independent-reproduction report](docs/phases/phase-11.md). Local planning reports are
+intentionally excluded from the public repository.
 
 ## Release preparation
 
@@ -111,15 +117,15 @@ bash scripts/verify_release.sh
 ```
 
 PyPI, GitHub Release, and Zenodo changes require an explicitly authorized tag or workflow
-dispatch. Phase 10 may create only the rc1 candidate after all exit gates, including Docker and
-clean-wheel tests, pass.
+dispatch. The rc2 tag is permitted only after the independent audit, Linux CPU Task B–I, Docker
+Task B–I, wheel provenance, and permanent Release evidence gates pass.
 
 ## Citation
 
 Please cite the software through [CITATION.cff](CITATION.cff). No placeholder DOI is claimed.
 
 ```text
-CrossMarketAgentGym contributors (2026). CrossMarketAgentGym 1.0.0-rc1. Apache-2.0.
+CrossMarketAgentGym contributors (2026). CrossMarketAgentGym 1.0.0-rc2. Apache-2.0.
 ```
 
 Phase status, tests, acceptance evidence, and unresolved blockers are recorded under

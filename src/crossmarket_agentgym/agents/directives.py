@@ -411,6 +411,19 @@ class EffectiveConstraintSet(StrictDirectiveModel):
     allow_new_positions: bool
 
 
+class CashFloorDerivation(StrictDirectiveModel):
+    """Auditable link from risk budget to the effective cash reserve."""
+
+    field: Literal["cash_floor"] = "cash_floor"
+    agent_value: float = Field(ge=0.0, le=1.0)
+    risk_budget_implied_value: float = Field(ge=0.0, le=1.0)
+    effective_value: float = Field(ge=0.0, le=1.0)
+    operator: Literal["max"] = "max"
+    reason: Literal["Invested capital cannot exceed risk budget."] = (
+        "Invested capital cannot exceed risk budget."
+    )
+
+
 class ConstraintFusionResult(StrictDirectiveModel):
     """Proof that Agent budgets only tightened administrator constraints."""
 
@@ -419,6 +432,7 @@ class ConstraintFusionResult(StrictDirectiveModel):
     constraints: EffectiveConstraintSet
     risk: RiskMergeResult
     hierarchical: HierarchicalDirective | None
+    cash_floor_derivation: CashFloorDerivation
     tightened_fields: tuple[str, ...]
 
 
@@ -438,11 +452,12 @@ def fuse_constraint_directives(
         hierarchical.global_risk_budget if hierarchical is not None else 1.0
     )
     risk_budget = min(effective_risk.risk_budget, hierarchical_budget)
-    cash_floor = max(
+    agent_cash_floor = max(
         environment.cash_floor,
         effective_risk.cash_floor,
-        1.0 - risk_budget,
     )
+    risk_budget_implied_cash_floor = 1.0 - risk_budget
+    cash_floor = max(agent_cash_floor, risk_budget_implied_cash_floor)
     max_asset = max(
         1e-12,
         min(environment.max_asset_weight, effective_risk.max_asset_weight),
@@ -514,6 +529,11 @@ def fuse_constraint_directives(
         ),
         risk=risk,
         hierarchical=hierarchical,
+        cash_floor_derivation=CashFloorDerivation(
+            agent_value=agent_cash_floor,
+            risk_budget_implied_value=risk_budget_implied_cash_floor,
+            effective_value=cash_floor,
+        ),
         tightened_fields=tuple(dict.fromkeys(tightened)),
     )
 
@@ -526,6 +546,8 @@ class DirectiveProjection(StrictDirectiveModel):
     projected_weights: tuple[float, ...]
     clipping_reasons: tuple[str, ...]
     unresolved_constraints: tuple[str, ...]
+    dominant_projection_reason: str
+    secondary_projection_reasons: tuple[str, ...]
     fusion: ConstraintFusionResult
 
 
@@ -552,6 +574,17 @@ def project_with_directives(
     )
     reasons = list(projection.clipping_reasons)
     reasons.extend(f"agent:{item}" for item in fusion.tightened_fields)
+    all_cash = bool(np.all(current[1:] <= 1e-12))
+    if not fusion.constraints.allow_new_positions and all_cash:
+        dominant_reason = "no_new_positions_from_all_cash_state"
+    elif not fusion.constraints.allow_new_positions:
+        dominant_reason = "no_new_positions_existing_positions_only"
+    elif projection.clipping_reasons:
+        dominant_reason = projection.clipping_reasons[0]
+    elif fusion.tightened_fields:
+        dominant_reason = f"agent:{fusion.tightened_fields[0]}"
+    else:
+        dominant_reason = "no_projection_change"
     return DirectiveProjection(
         raw_action=tuple(float(item) for item in projection.raw_action),
         normalized_weights=tuple(
@@ -562,6 +595,13 @@ def project_with_directives(
         ),
         clipping_reasons=tuple(dict.fromkeys(reasons)),
         unresolved_constraints=projection.unresolved_constraints,
+        dominant_projection_reason=dominant_reason,
+        secondary_projection_reasons=(
+            "max_asset_weight",
+            "cash_floor",
+            "max_turnover",
+            "market_weight_limits",
+        ),
         fusion=fusion,
     )
 

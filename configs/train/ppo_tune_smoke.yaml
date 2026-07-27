@@ -2,6 +2,9 @@ dataset_root: data/sample
 output_dir: runs
 run_name: phase4_ppo_tune_base
 
+observation:
+  market_window_layout: flat
+
 environment:
   execution_protocol: close_signal_next_open
   base_currency: USD

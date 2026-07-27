@@ -85,7 +85,7 @@ def test_indexer_classifies_whitelisted_artifacts_without_raw_secrets(
     assert "must-not-be-indexed" not in serialized
     training = next(item for item in index.runs if item.kind == "training")
     assert training.metrics["validation"]["mean_return"] == 0.03
-    assert training.attributes["runtime_seconds"] == 1.25
+    assert training.attributes["runtime_seconds"] == 0.5
     assert len(index.fingerprint) == 64
 
 
@@ -112,4 +112,3 @@ def test_index_rejects_duplicate_run_identity(tmp_path: Path) -> None:
     (run_dir / "tuning_summary.json").write_text(json.dumps(summary), encoding="utf-8")
     with pytest.raises(ValueError, match="duplicate"):
         build_run_index(tmp_path, "runs")
-

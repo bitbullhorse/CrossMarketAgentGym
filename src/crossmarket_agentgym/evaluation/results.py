@@ -69,6 +69,10 @@ class EvaluationResult(BaseModel):
     algorithm: str
     partition: str
     episodes: int = Field(ge=1)
+    evaluation_episodes: int = Field(ge=1)
+    return_sample_count: int = Field(ge=1)
+    reward_sample_count: int = Field(ge=1)
+    statistical_warnings: tuple[str, ...] = ()
     total_steps: int = Field(ge=1)
     metrics: dict[str, float]
     trades: list[TradeRecord]
@@ -159,10 +163,23 @@ def evaluate_policy(
             done = bool(terminated or truncated)
         episode_returns.append(final_value / initial_value - 1.0)
         episode_rewards.append(reward_sum)
+    statistical_warnings: list[str] = []
+    if len(episode_returns) < 2:
+        statistical_warnings.append(
+            "Insufficient samples for reliable return dispersion estimates."
+        )
+    if len(episode_rewards) < 2:
+        statistical_warnings.append(
+            "Insufficient samples for reliable reward dispersion estimates."
+        )
     return EvaluationResult(
         algorithm=algorithm,
         partition=capability.partition,
         episodes=episodes,
+        evaluation_episodes=episodes,
+        return_sample_count=len(episode_returns),
+        reward_sample_count=len(episode_rewards),
+        statistical_warnings=tuple(statistical_warnings),
         total_steps=total_steps,
         metrics={
             "mean_return": float(np.mean(episode_returns)),

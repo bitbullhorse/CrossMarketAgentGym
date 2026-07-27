@@ -172,6 +172,14 @@ def test_hierarchical_and_risk_constraints_use_existing_projector() -> None:
     )
     assert fusion.constraints.risk_budget == 0.6
     assert fusion.constraints.cash_floor == 0.4
+    assert fusion.cash_floor_derivation.model_dump(mode="json") == {
+        "field": "cash_floor",
+        "agent_value": 0.2,
+        "risk_budget_implied_value": 0.4,
+        "effective_value": 0.4,
+        "operator": "max",
+        "reason": "Invested capital cannot exceed risk budget.",
+    }
     assert fusion.constraints.max_asset_weight == 0.15
     assert fusion.constraints.max_market_weights == {"CN": 0.3, "US": 0.25}
     projection = project_with_directives(
@@ -186,6 +194,12 @@ def test_hierarchical_and_risk_constraints_use_existing_projector() -> None:
     assert projection.projected_weights[1] <= 0.15 + 1e-9
     assert projection.projected_weights[2] <= 0.15 + 1e-9
     assert any(reason.startswith("agent:") for reason in projection.clipping_reasons)
+    assert projection.secondary_projection_reasons == (
+        "max_asset_weight",
+        "cash_floor",
+        "max_turnover",
+        "market_weight_limits",
+    )
 
 
 def test_failed_risk_agent_cannot_open_positions() -> None:

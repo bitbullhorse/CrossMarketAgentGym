@@ -28,11 +28,12 @@ checkpoints must be absent.
 `src/crossmarket_agentgym/_version.py` is the only version source. Hatch reads it for PyPI
 metadata. `CITATION.cff` and `.zenodo.json` must carry the same stable version.
 
-Create a signed or protected tag only after CI succeeds:
+Create the protected rc2 tag only after the Phase 11 Linux CPU and Docker workflows succeed on
+the exact commit and the evidence summaries are downloaded:
 
 ```bash
-git tag -s v0.1.0 -m "CrossMarketAgentGym 0.1.0"
-git push origin v0.1.0
+git tag -a v1.0.0-rc2 -m "CrossMarketAgentGym v1.0.0-rc2"
+git push origin v1.0.0-rc2
 ```
 
 Pushing the tag is an external publication authorization. Do not run these commands merely to test
@@ -50,6 +51,9 @@ publication action.
 ## GitHub Release and Zenodo
 
 A version tag creates a GitHub Release containing the wheel, source archive, and release manifest.
+For rc2, also download the two commit-matched Phase 11 workflow artifacts, build the deterministic
+evidence ZIP with `scripts/build_phase11_release_evidence.py`, and attach the ZIP plus checksum to
+the Release. GitHub Actions artifacts are temporary; the Release asset is the permanent evidence.
 Enable the repository in Zenodo's GitHub integration before tagging; Zenodo then archives the
 GitHub Release using `.zenodo.json`.
 
@@ -67,16 +71,16 @@ No DOI is invented before Zenodo returns it.
 The default image contains core functionality and the read-only service:
 
 ```bash
-docker build -t crossmarket-agent-gym:0.1.0 .
-docker run --rm crossmarket-agent-gym:0.1.0 --version
-docker run --rm crossmarket-agent-gym:0.1.0 quickstart --smoke-steps 16
+docker build -t crossmarket-agent-gym:1.0.0-rc2 .
+docker run --rm crossmarket-agent-gym:1.0.0-rc2 --version
+docker run --rm crossmarket-agent-gym:1.0.0-rc2 quickstart --smoke-steps 16
 ```
 
 To include Stable-Baselines3 and CPU PyTorch:
 
 ```bash
 docker build --build-arg CMAG_EXTRAS=rl,service \
-  -t crossmarket-agent-gym:0.1.0-rl .
+  -t crossmarket-agent-gym:1.0.0-rc2-rl .
 ```
 
 The runtime uses an unprivileged `cmag` user. `.dockerignore` excludes credentials, raw market

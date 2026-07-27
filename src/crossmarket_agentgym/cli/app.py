@@ -289,13 +289,46 @@ def reproduce(
     run_id: Annotated[str | None, typer.Option("--run-id")] = None,
     workspace_root: Annotated[Path, typer.Option("--workspace-root")] = Path("."),
     runs_root: Annotated[Path, typer.Option("--runs-root")] = Path("runs"),
+    verify_only: Annotated[bool, typer.Option("--verify-only")] = False,
+    execute: Annotated[bool, typer.Option("--execute")] = False,
+    compare: Annotated[bool, typer.Option("--compare")] = False,
+    tolerance_config: Annotated[
+        Path | None,
+        typer.Option("--tolerance-config", exists=True, dir_okay=False),
+    ] = None,
+    replay_run_id: Annotated[
+        str | None,
+        typer.Option("--replay-run-id"),
+    ] = None,
 ) -> None:
-    """Verify and replay a recorded run without network or account mutation."""
+    """Verify artifacts or explicitly execute an isolated computational replay."""
     if run_id is None:
         raise typer.BadParameter("--run-id is required")
-    from crossmarket_agentgym.release import reproduce_run
+    if verify_only and (execute or compare):
+        raise typer.BadParameter("--verify-only cannot be combined with replay flags")
+    if execute != compare:
+        raise typer.BadParameter("--execute and --compare must be supplied together")
+    if not execute and (tolerance_config is not None or replay_run_id is not None):
+        raise typer.BadParameter(
+            "--tolerance-config and --replay-run-id require --execute --compare"
+        )
+    from crossmarket_agentgym.release.reproduction import (
+        execute_training_replay,
+        load_reproduction_tolerance_config,
+        verify_run_artifacts,
+    )
 
-    result = reproduce_run(workspace_root, runs_root, run_id)
+    result = (
+        execute_training_replay(
+            workspace_root,
+            runs_root,
+            run_id,
+            tolerance=load_reproduction_tolerance_config(tolerance_config),
+            replay_run_id=replay_run_id,
+        )
+        if execute
+        else verify_run_artifacts(workspace_root, runs_root, run_id)
+    )
     typer.echo(result.model_dump_json(indent=2))
     if not result.is_valid:
         raise typer.Exit(code=1)

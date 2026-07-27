@@ -39,7 +39,7 @@ before use. Never report that profile as verified solely because dependency reso
 For a built wheel, install into a new environment and run:
 
 ```bash
-python -m pip install dist/crossmarket_agent_gym-1.0.0rc1-py3-none-any.whl
+python -m pip install dist/crossmarket_agent_gym-1.0.0rc2-py3-none-any.whl
 cmag --help
 cmag quickstart --smoke-steps 16
 ```

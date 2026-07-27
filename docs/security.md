@@ -71,8 +71,10 @@ The API credential supplied out of band is intentionally absent from every repos
 
 - The installed-wheel quickstart uses packaged synthetic data and performs no download, Provider
   request, training, tuning, or direct account mutation.
-- Run reproduction is read-only: it verifies bounded, whitelisted artifacts and never retrains or
-  feeds test metrics back into selection.
+- Artifact verification is read-only. Explicit computational replay writes only to a newly
+  allocated reproduction directory, constructs train/validation environments only, performs no
+  Provider/network call, cannot overwrite source evidence, and never feeds test metrics back into
+  selection.
 - Distribution inspection reads ZIP/TAR member names and bytes without extracting untrusted
   paths; local data, runs, reports, environments, credentials, and checkpoints are forbidden.
 - Online Provider, Stable-Baselines3/PyTorch, Ray, and service imports remain lazy optional

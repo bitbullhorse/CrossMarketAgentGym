@@ -12,7 +12,10 @@ cmag env check --config configs/env/sample_cross_market.yaml
 ```
 
 The command checks Gymnasium compatibility, Stable-Baselines3 when installed, finite observations
-and rewards, accounting identities, and seeded random actions. See
+and rewards, accounting identities, and seeded random actions. The packaged SB3 quickstart uses
+`observation.market_window_layout: flat`, so OHLCV values remain `float32` financial data while
+the `[N,L,F]` window is exposed as a one-dimensional Box. The `tensor` layout remains available
+for Transformer, IR-MoE, and other custom feature extractors. See
 [environment contract](environment-contract.md) for the exact observation/action spaces,
 execution protocol, audit fields, and tolerances.
 

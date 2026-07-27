@@ -34,6 +34,10 @@ dist-*/
 /stock_data/
 /data/processed/
 
+# Local execution reports supplied as implementation references are not release inputs.
+/CrossMarketAgentGym_详细执行报告.md
+/CrossMarketAgentGym_Phase10-17_执行报告.md
+
 # Editors and operating systems
 .idea/
 .vscode/

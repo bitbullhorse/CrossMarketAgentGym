@@ -32,3 +32,8 @@ All notable changes will be documented in this file.
   reproduction, release readiness and distribution manifests, non-root Docker image, PyPI trusted
   publishing, GitHub/Zenodo archival metadata, API/CLI documentation, and SoftwareX paper
   materials.
+- Phase 10 rc1 API/CLI/Schema freeze, dependency compatibility matrix, distribution verification,
+  release blockers, package/container quickstarts, and publication guardrails.
+- Phase 11 isolated computational retraining with ordered reproduction levels and reviewed
+  tolerances; flat/tensor financial observations; complete runtime/sample evidence; and explicit
+  Risk cash-floor, committee-confidence, conflict, and projection audit semantics.

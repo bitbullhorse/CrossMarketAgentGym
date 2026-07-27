@@ -48,7 +48,7 @@ def test_version_option() -> None:
     result = runner.invoke(app, ["--version"])
 
     assert result.exit_code == 0
-    assert result.stdout.strip() == "1.0.0rc1"
+    assert result.stdout.strip() == "1.0.0rc2"
 
 
 def test_reproduce_requires_run_id() -> None:
@@ -202,3 +202,26 @@ def test_env_check_runs_phase2_smoke() -> None:
     assert result.exit_code == 0
     assert '"is_valid": true' in result.stdout
     assert '"smoke_steps": 1000' in result.stdout
+    assert '"market_window_layout": "flat"' in result.stdout
+    assert '"warnings": []' in result.stdout
+
+
+def test_env_check_explains_tensor_image_heuristic(tmp_path: Path) -> None:
+    """Tensor financial data produces an accepted structured SB3 explanation."""
+    raw = yaml.safe_load(
+        Path("configs/env/sample_cross_market.yaml").read_text(encoding="utf-8")
+    )
+    raw["smoke_steps"] = 1
+    raw["observation"] = {"market_window_layout": "tensor"}
+    config_path = tmp_path / "tensor_env.yaml"
+    config_path.write_text(yaml.safe_dump(raw, sort_keys=False), encoding="utf-8")
+
+    result = runner.invoke(
+        app,
+        ["env", "check", "--config", str(config_path)],
+    )
+
+    assert result.exit_code == 0
+    assert '"warning_code": "SB3_BOX_IMAGE_HEURISTIC"' in result.stdout
+    assert '"accepted": true' in result.stdout
+    assert '"required_policy": "custom_features_extractor"' in result.stdout

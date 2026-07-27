@@ -1,0 +1,23 @@
+schema_version: "1.0"
+
+absolute_tolerance:
+  mean_return: 1.0e-6
+  mean_reward: 1.0e-6
+  max_drawdown: 1.0e-6
+  mean_turnover: 1.0e-5
+  total_cost: 1.0e-3
+
+relative_tolerance:
+  default: 1.0e-3
+
+require_same:
+  - trained_timesteps
+  - algorithm
+  - dataset_manifest_hash
+  - trainer_config_hash
+  - execution_protocol
+  - checkpoint_loadability
+
+statistical:
+  minimum_replays: 3
+  standard_error_multiplier: 2.0

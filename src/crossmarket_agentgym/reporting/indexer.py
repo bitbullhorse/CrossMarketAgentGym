@@ -78,7 +78,14 @@ def _training_record(
     if artifact_path.exists():
         sources.append(artifact_path)
     resources = path / "resources.jsonl"
-    runtime: float | None = None
+    summary_runtime = summary.get("runtime_seconds")
+    runtime = (
+        float(summary_runtime)
+        if isinstance(summary_runtime, int | float)
+        and not isinstance(summary_runtime, bool)
+        and math.isfinite(float(summary_runtime))
+        else None
+    )
     if resources.exists():
         if resources.stat().st_size > max_json_bytes:
             raise ValueError("resource journal exceeds report size limit")
@@ -88,7 +95,8 @@ def _training_record(
             item = json.loads(line)
             candidate = item.get("wall_seconds") if isinstance(item, dict) else None
             if isinstance(candidate, int | float) and not isinstance(candidate, bool):
-                runtime = float(candidate)
+                if runtime is None:
+                    runtime = float(candidate)
         sources.append(resources)
     attributes = {
         "requested_timesteps": _scalar(summary.get("requested_timesteps")),

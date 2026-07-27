@@ -10,6 +10,7 @@ from crossmarket_agentgym.environments import (
     CrossMarketPortfolioEnv,
     EnvironmentConfig,
     MarketDataPanel,
+    ObservationConfig,
 )
 from crossmarket_agentgym.rl.policies import extractor_kwargs
 from tests.helpers import make_us_ohlcv
@@ -66,3 +67,27 @@ def test_transformer_rejects_incompatible_attention_width() -> None:
             env.observation_space,
             **specification["features_extractor_kwargs"],
         )
+
+
+def test_flat_layout_uses_flat_dictionary_extractor() -> None:
+    env = CrossMarketPortfolioEnv(
+        MarketDataPanel.from_frame(make_us_ohlcv(days=4)),
+        EnvironmentConfig(lookback=2),
+        observation=ObservationConfig(market_window_layout="flat"),
+    )
+    observation, _ = env.reset()
+    specification = extractor_kwargs("mlp", features_dim=16)
+    extractor = specification["features_extractor_class"](
+        env.observation_space,
+        **specification["features_extractor_kwargs"],
+    )
+    batch = {
+        key: torch.as_tensor(np.expand_dims(value, axis=0))
+        for key, value in observation.items()
+    }
+
+    output = extractor(batch)
+
+    assert observation["market_window"].ndim == 1
+    assert output.shape == (1, 16)
+    assert torch.isfinite(output).all()

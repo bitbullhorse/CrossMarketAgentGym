@@ -1,0 +1,144 @@
+name: Phase 11 Linux CPU
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/phase11-linux-cpu.yml"
+      - "configs/**"
+      - "data/sample/**"
+      - "release/**"
+      - "schemas/**"
+      - "scripts/**"
+      - "src/**"
+      - "Dockerfile"
+      - "pyproject.toml"
+      - "constraints-cpu.txt"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase11-linux-cpu-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tasks-b-i:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    env:
+      PIP_INDEX_URL: https://pypi.tuna.tsinghua.edu.cn/simple
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      CUDA_VISIBLE_DEVICES: ""
+      NVIDIA_VISIBLE_DEVICES: void
+      CMAG_EVIDENCE_EXECUTOR: linux_cpu
+      CMAG_EVIDENCE_COMMIT: ${{ github.sha }}
+    steps:
+      - name: Checkout tested commit
+        uses: actions/checkout@v7
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Build wheel from current commit
+        run: |
+          python -m pip install "build>=1.2,<2"
+          rm -rf build dist
+          python -m build --wheel
+          WHEEL_PATH="$(readlink -f "$(find dist -maxdepth 1 -name '*.whl' -print -quit)")"
+          test -n "$WHEEL_PATH"
+          echo "WHEEL_PATH=$WHEEL_PATH" >> "$GITHUB_ENV"
+          mkdir -p evidence/linux-cpu
+          sha256sum "$WHEEL_PATH" | tee evidence/linux-cpu/wheel.sha256
+          printf '%s\n' "$GITHUB_SHA" > evidence/linux-cpu/source-commit.txt
+
+      - name: Verify packaged configs, sample data, Mock, and Replay
+        run: |
+          python scripts/verify_phase11_distribution.py \
+            --wheel "$WHEEL_PATH" \
+            --output evidence/linux-cpu/wheel-contents.json
+
+      - name: Attest wheel provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: ${{ env.WHEEL_PATH }}
+
+      - name: Install wheel in a new virtual environment
+        run: |
+          python -m venv .phase11-venv
+          .phase11-venv/bin/python -m pip install --upgrade pip
+          .phase11-venv/bin/python -m pip install \
+            -c constraints-cpu.txt \
+            "${WHEEL_PATH}[rl,hpo,llm]"
+          .phase11-venv/bin/python -m pip freeze \
+            > evidence/linux-cpu/pip-freeze.txt
+
+      - name: Verify CPU-only runtime
+        run: |
+          .phase11-venv/bin/python - <<'PY' | tee evidence/linux-cpu/cuda-check.json
+          import json
+          import torch
+          payload = {
+              "torch_version": torch.__version__,
+              "cuda_available": bool(torch.cuda.is_available()),
+              "cuda_device_count": int(torch.cuda.device_count()),
+          }
+          print(json.dumps(payload, sort_keys=True))
+          if payload["cuda_available"]:
+              raise SystemExit("CUDA must be unavailable in the Linux CPU workflow")
+          PY
+
+      - name: Execute Phase 11.3 Tasks B-I
+        id: protocol
+        continue-on-error: true
+        run: |
+          .phase11-venv/bin/python scripts/run_phase11_tasks.py \
+            --workspace-root "$GITHUB_WORKSPACE" \
+            --evidence-dir "$GITHUB_WORKSPACE/evidence/linux-cpu" \
+            --cmag "$GITHUB_WORKSPACE/.phase11-venv/bin/cmag"
+
+      - name: Stage immutable workflow evidence
+        if: always()
+        run: |
+          mkdir -p phase11-artifact/wheel
+          cp -R evidence/linux-cpu/. phase11-artifact/
+          if [ -d runs ]; then cp -R runs phase11-artifact/runs; fi
+          cp "$WHEEL_PATH" phase11-artifact/wheel/
+          (
+            cd phase11-artifact
+            find . -type f ! -name SHA256SUMS -print0 \
+              | sort -z \
+              | xargs -0 sha256sum > SHA256SUMS
+          )
+
+      - name: Upload Linux CPU logs, runs, wheel, and SHA-256
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: phase11-linux-cpu-${{ github.sha }}
+          path: phase11-artifact/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce Task B-I result
+        if: always()
+        run: |
+          test "${{ steps.protocol.outcome }}" = "success"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          summary = json.loads(
+              Path("evidence/linux-cpu/11_3_task_summary.json").read_text()
+          )
+          if summary["all_passed"] is not True:
+              raise SystemExit("Phase 11.3 Linux CPU summary did not pass")
+          PY
