@@ -164,6 +164,7 @@ def execute_formal_training_run(
         encoding="utf-8",
     )
     finished_at = datetime.now(UTC)
+    device = str(artifact.model.device)
     summary = TrainingRunSummary(
         run_id=config.run_name,
         run_dir=str(run_dir),
@@ -177,13 +178,13 @@ def execute_formal_training_run(
         runtime_seconds=time.perf_counter() - overall_start,
         training_runtime_seconds=training_runtime,
         evaluation_runtime_seconds=evaluation_runtime,
-        device=str(artifact.model.device),
+        device=device,
         torch_version=torch.__version__,
         python_version=platform.python_version(),
         cpu_model=platform.processor().strip() or platform.machine() or "unknown",
         gpu_model=(
-            torch.cuda.get_device_name(torch.cuda.current_device())
-            if torch.cuda.is_available()
+            torch.cuda.get_device_name(artifact.model.device)
+            if device.startswith("cuda") and torch.cuda.is_available()
             else None
         ),
     )

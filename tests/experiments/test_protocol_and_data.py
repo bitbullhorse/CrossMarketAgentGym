@@ -331,7 +331,16 @@ def test_ecb_transform_and_matrix_audit(
     )
     assert len(matrix.tasks) == 215
     assert matrix.protocol_id == protocol.protocol_id
-    assert matrix.matrix_id == "phase12-run-matrix-v4"
+    assert matrix.matrix_id == "phase12-run-matrix-v5"
+    assert all(task.run_id.startswith("p12v4m5-") for task in matrix.tasks)
+    superseded = build_run_matrix(
+        protocol,
+        protocol_sha256="a" * 64,
+        code_commit="b" * 40,
+        matrix_revision=4,
+    )
+    assert superseded.matrix_id == "phase12-run-matrix-v4"
+    assert all(task.run_id.startswith("p12v4-") for task in superseded.tasks)
     assert {task.group for task in matrix.tasks} == {"A", "B", "C", "D", "E", "F"}
     assert all(not task.development_input_run_ids for task in matrix.tasks)
     matrix_path = tmp_path / "matrix.json"

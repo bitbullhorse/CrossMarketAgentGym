@@ -21,6 +21,7 @@ dist-*/
 /runs/
 /reports/
 /logs/
+/results/
 *.log
 
 # Credentials and local configuration

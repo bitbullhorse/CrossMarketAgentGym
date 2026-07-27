@@ -151,9 +151,10 @@ def execute_training_run(config: TrainRunConfig) -> TrainingRunSummary:
     finished_at = datetime.now(UTC)
     runtime_seconds = time.perf_counter() - overall_start
     cpu_model = platform.processor().strip() or platform.machine() or "unknown"
+    device = str(artifact.model.device)
     gpu_model = (
-        torch.cuda.get_device_name(torch.cuda.current_device())
-        if torch.cuda.is_available()
+        torch.cuda.get_device_name(artifact.model.device)
+        if device.startswith("cuda") and torch.cuda.is_available()
         else None
     )
     summary = TrainingRunSummary(
@@ -169,7 +170,7 @@ def execute_training_run(config: TrainRunConfig) -> TrainingRunSummary:
         runtime_seconds=runtime_seconds,
         training_runtime_seconds=training_runtime,
         evaluation_runtime_seconds=evaluation_runtime,
-        device=str(artifact.model.device),
+        device=device,
         torch_version=torch.__version__,
         python_version=platform.python_version(),
         cpu_model=cpu_model,

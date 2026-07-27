@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "superseded_matrix_id": "phase12-run-matrix-v4",
+  "superseded_matrix_sha256": "dda84a891092e0a7c45aff88d68a78e31ebaceca5177c720ee024bb9fd70d8eb",
+  "superseded_code_commit": "16490650fd984ab83b69c336d26e1c340b16048b",
+  "protocol_id": "protocol-v4",
+  "protocol_sha256": "90e40d212b5faaff644e0041eeef92c0b0056ce9a834095a047948a1d5e42529",
+  "detected_at": "2026-07-27",
+  "detected_by": "matrix-bound Linux GPU test gate",
+  "blocking_test": "tests/integration/test_training_workflow.py::test_training_never_reads_test_and_locked_evaluation_is_separate",
+  "reason": "A CPU-selected model reported the host's visible GPU as the active gpu_model, making runtime hardware metadata misleading on GPU hosts.",
+  "completed_records_retained": 60,
+  "completed_records_by_group": {
+    "A": 10,
+    "B": 25,
+    "D": 20,
+    "E": 5
+  },
+  "formal_result_eligibility": false,
+  "benchmark_eligibility": false,
+  "replacement_matrix_id": "phase12-run-matrix-v5",
+  "protocol_changed": false,
+  "original_artifacts_preserved": true
+}

@@ -86,7 +86,15 @@ quickcheck confirms the first training execution is exactly `2021-02-02`, maximu
 error is `4.656612873077393e-10`, all ten hand-computable cases have zero error, and no test
 metric is accessed. It remains development-only and is not eligible as a formal result.
 
-The formal run matrix, all formal runs, aggregate statistics, and independent review remain
+Run-matrix-v4 was frozen against commit
+`16490650fd984ab83b69c336d26e1c340b16048b`, then failed its first matrix-bound Linux GPU
+gate: a CPU-selected model recorded the host's visible 4090 D as its active `gpu_model`. The
+matrix, checksum, 60 completed records, and structured supersession notice are preserved, but
+none is eligible for formal aggregation or a Benchmark. Protocol-v4 itself is unchanged because
+the defect concerns runtime metadata, not data, partitions, methods, seeds, or statistical
+rules. Corrected code must pass all gates and freeze run-matrix-v5 before experiments restart.
+
+Run-matrix-v5, all eligible formal runs, aggregate statistics, and independent review remain
 pending.
 
 Phase 12 is not complete. Phase 13 is not ready.

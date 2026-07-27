@@ -35,6 +35,9 @@ until its run audit, leakage gate, five-seed coverage, and independent-review ga
 - [x] Freeze global ordering/duplicate failures to the formation window only.
 - [x] Write `experiments/protocol_v4.sha256` once and reject overwrite.
 - [x] Verify protocol, source inventory, ECB snapshot, and processed-manifest hashes.
+- [x] Preserve and supersede run-matrix-v4 after the matrix-bound Linux GPU gate detected
+  misleading CPU/GPU runtime metadata; declare all 60 completed v4 records ineligible.
+- [ ] Freeze run-matrix-v5 against the corrected code commit without changing protocol-v4.
 
 ## Isolation and safety gates
 
@@ -92,7 +95,8 @@ until its run audit, leakage gate, five-seed coverage, and independent-review ga
 - [ ] Wilcoxon paired tests, Holm correction, and paired rank-biserial effect sizes are generated.
 - [ ] Tables and figures are generated only from auditable formal run IDs.
 - [ ] Re-run unit, integration, leakage, reproduction, Ruff, and strict mypy gates on the
-  matrix-bound code commit (current pre-freeze result: 381 tests pass, 85.75% coverage, Ruff and
-  mypy pass, rc2 frozen contracts match).
+  matrix-v5-bound code commit (matrix-v4 Linux gate: 379 passed, one skipped, one blocking
+  metadata assertion failed; protocol, frozen contracts, Ruff, mypy, and 48 targeted tests
+  passed).
 - [ ] Independent review is recorded without inventing participant evidence.
 - [ ] All Phase 12 exit criteria pass before Phase 13 begins.

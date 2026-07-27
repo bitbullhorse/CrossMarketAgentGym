@@ -637,3 +637,14 @@
 - Reason: the experiment protocol needs an exact `2021-02-02` first training execution, but an
   experiment implementation must not mutate the already frozen release API or Schema. The
   frozen-contract gate now proves both requirements simultaneously.
+
+## DL-0091 — A failed matrix-bound platform gate supersedes the matrix
+
+- Decision: preserve run-matrix-v4, its checksum, and all 60 completed records, but mark every
+  record ineligible after Linux GPU testing proved that a CPU-selected model reported an
+  available GPU as the active `gpu_model`. Fix metadata to describe the device actually used,
+  bind the corrected commit in run-matrix-v5, and use new `p12v4m5-*` run IDs and a new result
+  root. Do not change protocol-v4.
+- Reason: hardware identity is required reproduction evidence. Editing code behind a frozen
+  matrix or reusing run IDs would destroy commit-to-result traceability; changing the protocol
+  would incorrectly imply that the scientific design changed.

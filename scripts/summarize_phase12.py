@@ -15,22 +15,22 @@ def main() -> int:
     parser.add_argument(
         "--matrix",
         type=Path,
-        default=Path("experiments/run_matrix_v4.json"),
+        default=Path("experiments/run_matrix_v5.json"),
     )
     parser.add_argument(
         "--matrix-checksum",
         type=Path,
-        default=Path("experiments/run_matrix_v4.sha256"),
+        default=Path("experiments/run_matrix_v5.sha256"),
     )
     parser.add_argument(
         "--results-root",
         type=Path,
-        default=Path("results/formal/protocol-v4"),
+        default=Path("results/formal/protocol-v4-matrix-v5"),
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("results/formal/protocol-v4/summary"),
+        default=Path("results/formal/protocol-v4-matrix-v5/summary"),
     )
     parser.add_argument(
         "--independent-review",
