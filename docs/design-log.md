@@ -648,3 +648,14 @@
 - Reason: hardware identity is required reproduction evidence. Editing code behind a frozen
   matrix or reusing run IDs would destroy commit-to-result traceability; changing the protocol
   would incorrectly imply that the scientific design changed.
+
+## DL-0092 — Formal HPO uses assigned GPUs while the scheduler stays independent
+
+- Decision: supersede zero-result run-matrix-v5 after pre-execution inspection found that its
+  formal HPO subclass inherited the CPU-only quickstart device override. Run-matrix-v6 uses
+  `device=auto` inside each externally GPU-assigned task, retains equal search budgets, and keeps
+  ASHA as a separate resource scheduler. The remote test subset explicitly disables the global
+  coverage threshold; the full test suite remains a separate mandatory gate.
+- Reason: CPU quickstart safety must not silently disable the four-GPU formal execution plan.
+  Device assignment is a resource decision, not a search algorithm, and selected-test coverage
+  cannot validly satisfy a whole-repository coverage threshold.

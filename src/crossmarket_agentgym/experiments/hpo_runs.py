@@ -62,6 +62,14 @@ class _FormalPPOValidationObjective(PPOValidationObjective):
         )
         self._protocol = protocol
 
+    def _trainer_config(
+        self,
+        parameters: dict[str, Any],
+        seed: int,
+    ) -> TrainerConfig:
+        config = super()._trainer_config(parameters, seed)
+        return config.model_copy(update={"device": "auto"})
+
     def _build_environments(
         self,
         trial_config: Any,

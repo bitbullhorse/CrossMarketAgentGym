@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "superseded_matrix_id": "phase12-run-matrix-v5",
+  "superseded_matrix_sha256": "b17bfb72f9f600f64034c46c96057194796fb241383fb7d2f4288e6d8100e2f1",
+  "superseded_code_commit": "a4b8d088b8614a3ad673f1b2f6311b895f09d087",
+  "protocol_id": "protocol-v4",
+  "protocol_sha256": "90e40d212b5faaff644e0041eeef92c0b0056ce9a834095a047948a1d5e42529",
+  "detected_at": "2026-07-27",
+  "detected_by": "pre-execution remote resource audit",
+  "blocking_findings": [
+    "The formal HPO subclass inherited a CPU-only trainer override, so four declared GPUs would not execute HPO trials.",
+    "The remote convenience script ran a test subset without disabling the repository-wide coverage threshold."
+  ],
+  "completed_records_retained": 0,
+  "formal_result_eligibility": false,
+  "benchmark_eligibility": false,
+  "replacement_matrix_id": "phase12-run-matrix-v6",
+  "protocol_changed": false,
+  "original_artifacts_preserved": true
+}

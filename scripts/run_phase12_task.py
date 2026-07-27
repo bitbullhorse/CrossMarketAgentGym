@@ -22,17 +22,17 @@ def main() -> int:
     parser.add_argument(
         "--matrix",
         type=Path,
-        default=Path("experiments/run_matrix_v5.json"),
+        default=Path("experiments/run_matrix_v6.json"),
     )
     parser.add_argument(
         "--matrix-checksum",
         type=Path,
-        default=Path("experiments/run_matrix_v5.sha256"),
+        default=Path("experiments/run_matrix_v6.sha256"),
     )
     parser.add_argument(
         "--output-root",
         type=Path,
-        default=Path("results/formal/protocol-v4-matrix-v5"),
+        default=Path("results/formal/protocol-v4-matrix-v6"),
     )
     args = parser.parse_args()
     root = args.workspace_root.resolve()

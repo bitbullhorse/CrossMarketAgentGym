@@ -10,7 +10,7 @@ method="${2:-}"
 cd "$project_root"
 
 "$python_bin" scripts/freeze_phase12_protocol.py >/tmp/cmag-phase12-protocol-check.json
-"$python_bin" -m pytest -q tests/leakage tests/experiments
+"$python_bin" -m pytest -q --no-cov tests/leakage tests/experiments
 
 list_args=(scripts/run_phase12_group.py --group "$group" --list-only)
 if [[ -n "$method" ]]; then

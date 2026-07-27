@@ -22,7 +22,7 @@ class FormalTask(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
     run_id: str = Field(
-        pattern=r"^p12(?:v[234]|v4m5)?-[A-F]-[a-z0-9_]+-s[0-9]+$"
+        pattern=r"^p12(?:v[234]|v4m[56])?-[A-F]-[a-z0-9_]+-s[0-9]+$"
     )
     group: RunGroup
     method: str = Field(min_length=1)
@@ -69,6 +69,7 @@ class FormalRunMatrix(BaseModel):
         "phase12-run-matrix-v3",
         "phase12-run-matrix-v4",
         "phase12-run-matrix-v5",
+        "phase12-run-matrix-v6",
     ]
     protocol_id: Literal[
         "protocol-v1",
@@ -127,7 +128,7 @@ def build_run_matrix(
     *,
     protocol_sha256: str,
     code_commit: str,
-    matrix_revision: Literal[4, 5] = 5,
+    matrix_revision: Literal[4, 5, 6] = 6,
 ) -> FormalRunMatrix:
     """Expand the frozen groups into deterministic run/seed declarations."""
     tasks: list[FormalTask] = []
@@ -135,7 +136,11 @@ def build_run_matrix(
         "protocol-v1": "p12",
         "protocol-v2": "p12v2",
         "protocol-v3": "p12v3",
-        "protocol-v4": "p12v4m5" if matrix_revision == 5 else "p12v4",
+        "protocol-v4": (
+            "p12v4"
+            if matrix_revision == 4
+            else f"p12v4m{matrix_revision}"
+        ),
     }[protocol.protocol_id]
     folds = tuple(fold.fold_id for fold in protocol.partitions.walk_forward)
     for group in protocol.groups:
@@ -173,6 +178,7 @@ def build_run_matrix(
         "phase12-run-matrix-v3",
         "phase12-run-matrix-v4",
         "phase12-run-matrix-v5",
+        "phase12-run-matrix-v6",
     ]
     if protocol.protocol_id == "protocol-v1":
         matrix_id = "phase12-run-matrix-v1"
@@ -181,11 +187,12 @@ def build_run_matrix(
     elif protocol.protocol_id == "protocol-v3":
         matrix_id = "phase12-run-matrix-v3"
     else:
-        matrix_id = (
-            "phase12-run-matrix-v5"
-            if matrix_revision == 5
-            else "phase12-run-matrix-v4"
-        )
+        if matrix_revision == 4:
+            matrix_id = "phase12-run-matrix-v4"
+        elif matrix_revision == 5:
+            matrix_id = "phase12-run-matrix-v5"
+        else:
+            matrix_id = "phase12-run-matrix-v6"
     return FormalRunMatrix(
         matrix_id=matrix_id,
         protocol_id=protocol.protocol_id,
@@ -203,7 +210,7 @@ def freeze_run_matrix(
     protocol_checksum_path: Path,
     output_path: Path,
     checksum_path: Path,
-    matrix_revision: Literal[4, 5] = 5,
+    matrix_revision: Literal[4, 5, 6] = 6,
 ) -> FormalRunMatrix:
     """Write the complete matrix once; subsequent work must use a new version."""
     if output_path.exists() or checksum_path.exists():

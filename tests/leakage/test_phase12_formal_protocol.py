@@ -41,7 +41,7 @@ def test_hpo_matrix_never_grants_test_for_selection() -> None:
     )
     assert all("test" not in task.allowed_selection_partitions for task in hpo)
     assert all(task.test_access == "locked_final_once" for task in hpo)
-    assert all(task.run_id.startswith("p12v4m5-") for task in hpo)
+    assert all(task.run_id.startswith("p12v4m6-") for task in hpo)
 
 
 def test_hpo_search_and_locked_test_are_separate_code_paths() -> None:

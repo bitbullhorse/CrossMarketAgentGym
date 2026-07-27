@@ -212,6 +212,7 @@ def test_hpo_helpers_and_test_lock(
     )
     assert objective.fold_splits is not None
     assert base.trainer.total_timesteps == protocol.hpo.timesteps_per_trial
+    assert objective._trainer_config({}, 1024).device == "auto"
 
     default_state, schedulers = _run_search(
         protocol=protocol,

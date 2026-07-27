@@ -21,12 +21,12 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("experiments/run_matrix_v5.json"),
+        default=Path("experiments/run_matrix_v6.json"),
     )
     parser.add_argument(
         "--checksum",
         type=Path,
-        default=Path("experiments/run_matrix_v5.sha256"),
+        default=Path("experiments/run_matrix_v6.sha256"),
     )
     args = parser.parse_args()
     root = args.workspace_root.resolve()
@@ -40,7 +40,7 @@ def main() -> int:
         protocol_checksum_path=resolved(args.protocol_checksum),
         output_path=resolved(args.output),
         checksum_path=resolved(args.checksum),
-        matrix_revision=5,
+        matrix_revision=6,
     )
     counts = {
         group: sum(task.group == group for task in matrix.tasks)

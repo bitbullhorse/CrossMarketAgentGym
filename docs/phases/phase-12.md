@@ -92,9 +92,16 @@ gate: a CPU-selected model recorded the host's visible 4090 D as its active `gpu
 matrix, checksum, 60 completed records, and structured supersession notice are preserved, but
 none is eligible for formal aggregation or a Benchmark. Protocol-v4 itself is unchanged because
 the defect concerns runtime metadata, not data, partitions, methods, seeds, or statistical
-rules. Corrected code must pass all gates and freeze run-matrix-v5 before experiments restart.
+rules.
 
-Run-matrix-v5, all eligible formal runs, aggregate statistics, and independent review remain
+Run-matrix-v5 then passed the corrected Linux GPU test gate but failed its pre-execution
+resource audit before any formal task ran: the formal HPO subclass still inherited a CPU-only
+trainer override, and the remote convenience script did not disable the whole-repository
+coverage threshold when selecting only experiment/leakage tests. Its zero-result matrix and
+supersession notice are preserved. The DeepSeek endpoint separately returned HTTP 200 for the
+exact frozen `deepseek-v4-pro` identifier without persisting the credential or response body.
+
+Run-matrix-v6, all eligible formal runs, aggregate statistics, and independent review remain
 pending.
 
 Phase 12 is not complete. Phase 13 is not ready.

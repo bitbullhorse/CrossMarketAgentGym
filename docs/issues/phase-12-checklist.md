@@ -37,7 +37,10 @@ until its run audit, leakage gate, five-seed coverage, and independent-review ga
 - [x] Verify protocol, source inventory, ECB snapshot, and processed-manifest hashes.
 - [x] Preserve and supersede run-matrix-v4 after the matrix-bound Linux GPU gate detected
   misleading CPU/GPU runtime metadata; declare all 60 completed v4 records ineligible.
-- [ ] Freeze run-matrix-v5 against the corrected code commit without changing protocol-v4.
+- [x] Freeze and preserve run-matrix-v5 against the corrected metadata commit.
+- [x] Supersede run-matrix-v5 before formal execution after its resource audit found CPU-only
+  formal HPO trials and a coverage-flag defect in the remote convenience script.
+- [ ] Freeze run-matrix-v6 against the GPU-enabled corrected code without changing protocol-v4.
 
 ## Isolation and safety gates
 
@@ -95,7 +98,7 @@ until its run audit, leakage gate, five-seed coverage, and independent-review ga
 - [ ] Wilcoxon paired tests, Holm correction, and paired rank-biserial effect sizes are generated.
 - [ ] Tables and figures are generated only from auditable formal run IDs.
 - [ ] Re-run unit, integration, leakage, reproduction, Ruff, and strict mypy gates on the
-  matrix-v5-bound code commit (matrix-v4 Linux gate: 379 passed, one skipped, one blocking
+  matrix-v6-bound code commit (matrix-v4 Linux gate: 379 passed, one skipped, one blocking
   metadata assertion failed; protocol, frozen contracts, Ruff, mypy, and 48 targeted tests
   passed).
 - [ ] Independent review is recorded without inventing participant evidence.
