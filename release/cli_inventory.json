@@ -111,7 +111,7 @@
           "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
         },
         {
-          "default": "results\\phase12-review-v1",
+          "default": "results/phase12-review-v1",
           "kind": "option",
           "name": "source_root",
           "nargs": 1,
@@ -123,7 +123,7 @@
           "type": "typer.models.TyperPath(exists=True, file_okay=False, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
         },
         {
-          "default": "benchmarks\\v1",
+          "default": "benchmarks/v1",
           "kind": "option",
           "name": "output",
           "nargs": 1,
@@ -168,7 +168,7 @@
       "hidden": false,
       "parameters": [
         {
-          "default": "benchmarks\\v1",
+          "default": "benchmarks/v1",
           "kind": "option",
           "name": "benchmark",
           "nargs": 1,
@@ -274,7 +274,7 @@
       "hidden": false,
       "parameters": [
         {
-          "default": "benchmarks\\v1",
+          "default": "benchmarks/v1",
           "kind": "option",
           "name": "benchmark",
           "nargs": 1,
@@ -305,7 +305,7 @@
       "hidden": false,
       "parameters": [
         {
-          "default": "benchmarks\\v1",
+          "default": "benchmarks/v1",
           "kind": "option",
           "name": "benchmark",
           "nargs": 1,

@@ -154,8 +154,12 @@ def test_format_registry_versions_every_persisted_contract() -> None:
 
 
 def test_cli_inventory_covers_phase11_protocol() -> None:
-    inventory = json.loads(
-        (PROJECT_ROOT / "release/cli_inventory.json").read_text(encoding="utf-8")
+    inventory_text = (
+        PROJECT_ROOT / "release/cli_inventory.json"
+    ).read_text(encoding="utf-8")
+    inventory = json.loads(inventory_text)
+    assert "\\\\" not in inventory_text, (
+        "CLI path defaults must use platform-independent POSIX separators"
     )
     commands = {item["command"]: item for item in inventory["commands"]}
     assert inventory["schema_version"] == "1.0"

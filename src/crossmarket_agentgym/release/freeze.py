@@ -262,8 +262,17 @@ def _api_csv(workspace: Path) -> str:
 
 
 def _json_default(value: Any) -> Any:
+    if isinstance(value, Path):
+        return value.as_posix()
     if value is None or isinstance(value, str | int | float | bool):
         return value
+    if isinstance(value, list | tuple):
+        return [_json_default(item) for item in value]
+    if isinstance(value, dict):
+        return {
+            str(key): _json_default(item)
+            for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))
+        }
     return str(value)
 
 
