@@ -750,3 +750,13 @@
 - Reason: local artifact integrity cannot prove public installability or long-term archival
   availability. A tag, package upload and DOI are external state changes whose evidence must be
   observed after the exact release commit passes all gates.
+
+## DL-0103 — Verify distributed Benchmark immutability by content identity
+
+- Decision: retain filesystem sealing for the original Benchmark build output, but verify fresh
+  Git checkouts through the complete SHA-256 manifest, deterministic verification, overwrite
+  rejection and tamper-failure contracts. Do not require ordinary files in a VCS checkout to
+  retain a read-only permission bit.
+- Reason: Git does not version ordinary-file write permissions, so that bit is not portable
+  evidence on Linux runners. Content identity and fail-closed write-once behavior preserve the
+  scientific invariant across platforms without modifying frozen Benchmark v1 bytes.

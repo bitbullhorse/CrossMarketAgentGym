@@ -93,7 +93,7 @@ archives.
 
 Verified locally on Python 3.12.13:
 
-- 406 tests passed with 85.20% branch-aware coverage;
+- 407 tests passed with 85.15% branch-aware coverage;
 - Ruff passed;
 - strict mypy passed for 159 source files;
 - the documentation contract passed for 31 required files;
@@ -111,14 +111,30 @@ Verified locally on Python 3.12.13:
 
 `docs/experiments/phase14-machine-acceptance.json` records every local mapping and artifact
 check as passing. It deliberately reports Phase 14 incomplete because no stable tag or public
-service evidence exists yet. The local workstation has no Docker executable, so Docker is left
-for the Linux hosted or authorized remote gate rather than being inferred from the Dockerfile.
+service evidence exists yet.
+
+Hosted pre-publication evidence was generated from commit
+`17b942d1f9f85927c83ef7b4fcfb1c71c8d17e3e`:
+
+- [CI run 30453263905](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/runs/30453263905)
+  passed Python 3.11, Python 3.12, package and Docker jobs;
+- [Stable release dry-run 30453283437](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/runs/30453283437)
+  passed all five jobs without publication;
+- the dry-run built and attested the wheel, source/evidence archives and Benchmark archive,
+  installed the wheel in a fresh CPU-only environment, and completed the 64-step quickstart;
+- the non-root Docker image passed with `--network none`, 2 CPUs, 7 GB memory and CUDA
+  disabled;
+- evidence artifacts `stable-release-17b942d...` and `stable-container-17b942d...` are retained
+  until 2026-10-27. The final tag workflow must attach equivalent evidence to the GitHub Release
+  so Phase 14 does not rely on expiring Actions artifacts;
+- GitHub Pages is configured with Actions as its build source, but the stable aliases have not
+  been deployed.
 
 ## Exit conditions and remaining blockers
 
-Local implementation is not equivalent to a public release. Phase 14 cannot close until:
+Local and hosted dry-run implementation is not equivalent to a public release. Phase 14 cannot
+close until:
 
-- final wheel/sdist and CPU/Docker fresh-install gates pass;
 - PyPI, GHCR and all three docs aliases are publicly verified;
 - a DOI is minted and its archive is checked for restricted data;
 - the exact clean release commit is tagged `v1.0.0`;

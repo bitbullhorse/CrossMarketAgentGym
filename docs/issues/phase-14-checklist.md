@@ -35,14 +35,18 @@ Status: **in progress; Phase 15 not ready**.
 - [x] Double-build wheel and sdist reproducibly.
 - [x] Install the wheel in a fresh CPU environment.
 - [x] Run the 64-step CPU quickstart from the installed wheel.
-- [ ] Build and verify the non-root Docker image.
+- [x] Build and verify the non-root Docker image with no network, 2 CPUs,
+  7 GB memory and CUDA disabled in the hosted dry-run.
+- [x] Complete the non-publishing Stable release workflow dry-run and create
+  attested wheel, source, Benchmark, documentation and container evidence.
 - [x] Generate the local Phase 14 acceptance record.
 
 ## Public verification
 
 - [ ] Configure/verify PyPI Trusted Publishing.
 - [ ] Configure/verify GHCR package publication.
-- [ ] Configure/verify GitHub Pages.
+- [x] Configure GitHub Pages to use Actions as its build source.
+- [ ] Deploy and publicly verify the versioned GitHub Pages site.
 - [ ] Enable the archival integration and reserve/mint a DOI.
 - [ ] Commit the exact release source and confirm a clean tree.
 - [ ] Create annotated tag `v1.0.0` on that exact commit.
