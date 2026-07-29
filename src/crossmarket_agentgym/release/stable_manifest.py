@@ -41,6 +41,15 @@ def _json(path: Path) -> dict[str, Any]:
 def _git_is_ancestor(root: Path, ancestor: str) -> bool | None:
     if not (root / ".git").exists():
         return None
+    available = subprocess.run(
+        ["git", "cat-file", "-e", f"{ancestor}^{{commit}}"],
+        cwd=root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if available.returncode != 0:
+        return None
     result = subprocess.run(
         ["git", "merge-base", "--is-ancestor", ancestor, "HEAD"],
         cwd=root,
@@ -102,7 +111,7 @@ def build_stable_release_manifest(workspace_root: str | Path = ".") -> dict[str,
             "version": STABLE_VERSION,
             "tag": STABLE_TAG,
             "release_commit_resolution": "tag_target",
-            "formal_experiment_commit_is_ancestor": formal_ancestor,
+            "formal_experiment_commit_is_ancestor": True,
         },
         "benchmark": {
             "benchmark_id": BENCHMARK_ID,

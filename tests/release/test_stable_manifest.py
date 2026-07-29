@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import json
 import shutil
+import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -82,3 +84,21 @@ def test_manifest_builder_rejects_mutated_benchmark_identity(
     )
     with pytest.raises(ValueError, match="benchmark identity mismatch"):
         build_stable_release_manifest(workspace)
+
+
+def test_shallow_clone_does_not_change_manifest_identity(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from crossmarket_agentgym.release import stable_manifest
+
+    (tmp_path / ".git").mkdir()
+    calls: list[list[str]] = []
+
+    def fake_run(command: list[str], **_kwargs: object) -> SimpleNamespace:
+        calls.append(command)
+        return SimpleNamespace(returncode=1, stdout="", stderr="missing shallow history")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    assert stable_manifest._git_is_ancestor(tmp_path, "a" * 40) is None
+    assert calls == [["git", "cat-file", "-e", f"{'a' * 40}^{{commit}}"]]
