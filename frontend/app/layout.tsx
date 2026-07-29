@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://crossmarketagentgym.example"),
+  metadataBase: new URL(
+    "https://crossmarket-agent-gym.chenzhenjiang05.chatgpt.site",
+  ),
   title: {
     default: "CrossMarketAgentGym · Research Control Center",
     template: "%s · CrossMarketAgentGym",
