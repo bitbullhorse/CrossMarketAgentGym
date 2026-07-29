@@ -1,0 +1,1431 @@
+{
+  "adjustment_rule": "raw_ohlc_with_adjusted_close_metadata_no_future_backfill",
+  "created_at": "2026-07-27T15:00:00Z",
+  "dataset_name": "CrossMarketAgentGym formal_v3",
+  "date_end": "2025-09-30",
+  "date_start": "2021-01-04",
+  "files": [
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2020-12-01",
+      "format": "csv",
+      "markets": [],
+      "path": "fx_rates.csv",
+      "role": "fx",
+      "row_count": 4956,
+      "sha256": "3632811a6314843a8af587389f230f1ec177b27724c9b6b573939c0bbabe4762",
+      "size_bytes": 411846,
+      "symbols": []
+    },
+    {
+      "date_end": null,
+      "date_start": null,
+      "format": "csv",
+      "markets": [],
+      "path": "instruments.csv",
+      "role": "instruments",
+      "row_count": 80,
+      "sha256": "9b60259fa91323b0c33a37e46cdb3f3c443e587c464cf337265817a65f976aee",
+      "size_bytes": 2286,
+      "symbols": []
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000027.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "076398ce861f36831d83f53296d197a7d8dc4d03f83dec5f4041710a37956f0f",
+      "size_bytes": 52306,
+      "symbols": [
+        "000027"
+      ]
+    },
+    {
+      "date_end": "2021-02-01",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000035.parquet",
+      "role": "ohlcv",
+      "row_count": 21,
+      "sha256": "35a7974a561781ce1ecf4203c3dff5eb265a156fccd6098db504c30c51114372",
+      "size_bytes": 11396,
+      "symbols": [
+        "000035"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000099.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "a5b763e56c3264174e3252819ed70e5e74bd38b1c154bf117f803fdc137ad00b",
+      "size_bytes": 59009,
+      "symbols": [
+        "000099"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000417.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "90ae567f1c4b5f73134b2a4fe1197d43a91310e144b1a3a3ddbeeb795fefcc12",
+      "size_bytes": 48216,
+      "symbols": [
+        "000417"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000425.parquet",
+      "role": "ohlcv",
+      "row_count": 1129,
+      "sha256": "cf12935108f7140c67d62b8b6f44ca285db9e854c3b1c70a34633c2358c6f755",
+      "size_bytes": 53153,
+      "symbols": [
+        "000425"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000426.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "a3c3afafdbbc0273dbe6f699ea70795e1ba42202498c47dea18e8be5ce99f29b",
+      "size_bytes": 57874,
+      "symbols": [
+        "000426"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000498.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "8cc873a8a6264793c5ca99cbb2e9dca8f7a950c72f21a281c57817128c6218bf",
+      "size_bytes": 52958,
+      "symbols": [
+        "000498"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000543.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "95c1550fef39039ac645f94be9ee1461f2a1d8284f1cad65ebb456fea58bffe3",
+      "size_bytes": 52681,
+      "symbols": [
+        "000543"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000628.parquet",
+      "role": "ohlcv",
+      "row_count": 1142,
+      "sha256": "5c90316db38bbadd6a20c6bf4eeb3cad3b09b80fa4ab70505382b6b865571d97",
+      "size_bytes": 64042,
+      "symbols": [
+        "000628"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000758.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "cf96221c967b8df27b11e19c7b62e6220899158089677175d5f68ef433785726",
+      "size_bytes": 46698,
+      "symbols": [
+        "000758"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=000826.parquet",
+      "role": "ohlcv",
+      "row_count": 1142,
+      "sha256": "d485ac1f9f745b816a92ee6db61e8344ab520d3e923a3ca050b6b3277b5d4732",
+      "size_bytes": 49570,
+      "symbols": [
+        "000826"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=002195.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "045388e9d0a47d568f893232ef1fcf04e411e845e1904bdeee3969d944ca8ca5",
+      "size_bytes": 50891,
+      "symbols": [
+        "002195"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=002607.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "e473a542ebf54301cc273f6f684d20cf6cd86a5582fbdea1e37bf781d1a3f1d5",
+      "size_bytes": 55946,
+      "symbols": [
+        "002607"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=002878.parquet",
+      "role": "ohlcv",
+      "row_count": 1148,
+      "sha256": "f4930d317df023575d258866aa55ebad2477891b9bafc6eee39fc1f950a9e029",
+      "size_bytes": 60125,
+      "symbols": [
+        "002878"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=300027.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "b49c5b23def99ee025774670f378574a6ceaf4ede04126cacfad2e1f466a783a",
+      "size_bytes": 46359,
+      "symbols": [
+        "300027"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=300070.parquet",
+      "role": "ohlcv",
+      "row_count": 1147,
+      "sha256": "8e51151ff6f3434441586e9bfb14093c936362ff9d53f04686311b6d0be8e62c",
+      "size_bytes": 50677,
+      "symbols": [
+        "300070"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=600030.parquet",
+      "role": "ohlcv",
+      "row_count": 1146,
+      "sha256": "65b8a9b28ffe80eda7de882238339ca837332713a2abec8f26200e2b05563198",
+      "size_bytes": 61163,
+      "symbols": [
+        "600030"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=600150.parquet",
+      "role": "ohlcv",
+      "row_count": 1138,
+      "sha256": "df46f5ac72fa52198a97059e109b3ae455bae94baebb5ee0102dbea15e786579",
+      "size_bytes": 64984,
+      "symbols": [
+        "600150"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=601328.parquet",
+      "role": "ohlcv",
+      "row_count": 1152,
+      "sha256": "06655d6549aeb55c1aac0a35a1ee32d098f367279c2f1149e7c325b2585ecc3d",
+      "size_bytes": 49111,
+      "symbols": [
+        "601328"
+      ]
+    },
+    {
+      "date_end": "2021-02-01",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "CN"
+      ],
+      "path": "ohlcv/market=CN/symbol=601818.parquet",
+      "role": "ohlcv",
+      "row_count": 21,
+      "sha256": "9b43baa4551a3066a1168b047a90e9d7753e313f3926185cca9990f05841a873",
+      "size_bytes": 11436,
+      "symbols": [
+        "601818"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0011.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 1167,
+      "sha256": "ca650a2bd3db3b53d9c2ff30db30d2bac40d349dd0e093bac765b20d2732e2f4",
+      "size_bytes": 50432,
+      "symbols": [
+        "0011.HK"
+      ]
+    },
+    {
+      "date_end": "2021-02-26",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0018.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 38,
+      "sha256": "c22b93c1605b858921d0d1abdc3d11711e9d2b48aa2685f84a788a9c01ba49a0",
+      "size_bytes": 11276,
+      "symbols": [
+        "0018.HK"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0027.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 1167,
+      "sha256": "920d43c87d6f604c8249de77a804bc9147840459a04fd5c9edfee116bd31b37c",
+      "size_bytes": 49704,
+      "symbols": [
+        "0027.HK"
+      ]
+    },
+    {
+      "date_end": "2021-04-13",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0028.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 67,
+      "sha256": "0f7e3bfae350713768d16a99410085b1a739976ebd88e2dd96ba6ad69fe64e63",
+      "size_bytes": 12246,
+      "symbols": [
+        "0028.HK"
+      ]
+    },
+    {
+      "date_end": "2024-02-23",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0031.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 773,
+      "sha256": "6b04901ff977debb85f4dd57c14fa1665b0bd9033d41446a3e04e4b86c9ef0cf",
+      "size_bytes": 25057,
+      "symbols": [
+        "0031.HK"
+      ]
+    },
+    {
+      "date_end": "2022-05-13",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0050.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 334,
+      "sha256": "45390ffeeb2616d8d6ac4b6772d6c6734969dc9adba55c0554dff948760b9792",
+      "size_bytes": 19195,
+      "symbols": [
+        "0050.HK"
+      ]
+    },
+    {
+      "date_end": "2021-02-08",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0061.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 26,
+      "sha256": "c05150f5f33932ab97a0019f93f3ff39755620ecf178bf6456f07760812e2fa1",
+      "size_bytes": 11198,
+      "symbols": [
+        "0061.HK"
+      ]
+    },
+    {
+      "date_end": "2021-05-20",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0069.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 93,
+      "sha256": "19923246b93b955197bf8817c2e98723b98057a9173a027570e5049730ebc61c",
+      "size_bytes": 13992,
+      "symbols": [
+        "0069.HK"
+      ]
+    },
+    {
+      "date_end": "2021-02-23",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0072.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 35,
+      "sha256": "a0549f8c9dbea11349199ff58e046a2cd9867afdafed26595a0a5341f96dff58",
+      "size_bytes": 11312,
+      "symbols": [
+        "0072.HK"
+      ]
+    },
+    {
+      "date_end": "2021-06-25",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0103.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 118,
+      "sha256": "fdfcdea5fe4e48e6814aabaa1a2cfdd184c21b46b869a498e410739fe761eaf9",
+      "size_bytes": 13159,
+      "symbols": [
+        "0103.HK"
+      ]
+    },
+    {
+      "date_end": "2021-08-03",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0144.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 144,
+      "sha256": "f90eb01ed5d0b03379f05c6a75d97bcd50d2eab8843a0cc3d61546618590b643",
+      "size_bytes": 15246,
+      "symbols": [
+        "0144.HK"
+      ]
+    },
+    {
+      "date_end": "2021-02-23",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0180.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 35,
+      "sha256": "df30995a47fc78024ca7589f719e81c677745e62c11648bd62c5bb2876d1d4d4",
+      "size_bytes": 11011,
+      "symbols": [
+        "0180.HK"
+      ]
+    },
+    {
+      "date_end": "2021-03-01",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0183.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 39,
+      "sha256": "4209c1fe0bfc6d63b1ea51bf70b92f9d1225033c03167f3f573e1547d6ea6567",
+      "size_bytes": 11106,
+      "symbols": [
+        "0183.HK"
+      ]
+    },
+    {
+      "date_end": "2022-09-15",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0185.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 420,
+      "sha256": "6abcf0ca4f14e9dc03afdf4147038efd91a5ed9a9d590ee6d314332ba154aa04",
+      "size_bytes": 23362,
+      "symbols": [
+        "0185.HK"
+      ]
+    },
+    {
+      "date_end": "2021-06-23",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0214.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 116,
+      "sha256": "8417916bdbab61c98a9fe9098b4243f0a5cb21894d0d641bb34fc2cdeed0571f",
+      "size_bytes": 13450,
+      "symbols": [
+        "0214.HK"
+      ]
+    },
+    {
+      "date_end": "2021-12-09",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0242.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 232,
+      "sha256": "ce789e54c3dcabd21e784ce6a6191c5980960a36efba1ac448d5603099a727c4",
+      "size_bytes": 15588,
+      "symbols": [
+        "0242.HK"
+      ]
+    },
+    {
+      "date_end": "2021-04-29",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=0274.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 79,
+      "sha256": "6c4e949cb6c0ad54487e352f37724dbebe85b4723d36877062cadeecd2095bef",
+      "size_bytes": 11897,
+      "symbols": [
+        "0274.HK"
+      ]
+    },
+    {
+      "date_end": "2021-05-11",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=1033.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 87,
+      "sha256": "57d3a3e786d446d14aab7d928aaad481925e02d8b923865a0c12a3cc3ebd14e1",
+      "size_bytes": 12454,
+      "symbols": [
+        "1033.HK"
+      ]
+    },
+    {
+      "date_end": "2025-02-27",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=1044.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 1020,
+      "sha256": "e77ee69f92109f59986569d36e4014d241be2d67e78a3b6b1202fdaad436cb3d",
+      "size_bytes": 41808,
+      "symbols": [
+        "1044.HK"
+      ]
+    },
+    {
+      "date_end": "2022-03-01",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "HK"
+      ],
+      "path": "ohlcv/market=HK/symbol=1071.HK.parquet",
+      "role": "ohlcv",
+      "row_count": 286,
+      "sha256": "431c339a2e55513df02b183b52a10935f31adf0ec781782903350cdbcfe127d8",
+      "size_bytes": 18837,
+      "symbols": [
+        "1071.HK"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=2501.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "5e18fc1a2ad0dd589762d228a4058b6d4e2b8f1213462042cdf1c8e8b63f9286",
+      "size_bytes": 55878,
+      "symbols": [
+        "2501.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=2702.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "70f51909e81af8ecf02424ceb522054ca26ff04cb6baee6219b934659800d6ec",
+      "size_bytes": 35322,
+      "symbols": [
+        "2702.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=2801.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "fbd7fcb4a567a105b4eafbbad16f0d89ca04b61e7b23a1577cbd0fe99a676a75",
+      "size_bytes": 48693,
+      "symbols": [
+        "2801.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=2871.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "49f2c8063a654b72c5b12e3df605974299dfdc046b191d54920eabe1700f79bb",
+      "size_bytes": 50299,
+      "symbols": [
+        "2871.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=3405.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "eaba139ecd9cabc7e434ef7528111bba049bacca3c3d6ff956c0edcb607dd243",
+      "size_bytes": 48212,
+      "symbols": [
+        "3405.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=4189.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "1226e5d24466e94033d7eaeb95d12ab940f7014d903b1d2569c1d3f6f4bd22bf",
+      "size_bytes": 46005,
+      "symbols": [
+        "4189.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=5803.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "c0d054bd5de6ed10ebe892177e2475be2c1900b7c26dc06334175f8a158394cb",
+      "size_bytes": 51416,
+      "symbols": [
+        "5803.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=6301.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "780cc12c3602e434805b6293dbfd490a37c57f1810f10e2e9a04fbf30b75fa46",
+      "size_bytes": 52923,
+      "symbols": [
+        "6301.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=6501.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "87b905dabff3ea1411900a3e180ad28fcc1e7574a2d3a8c92651c2872973f454",
+      "size_bytes": 58823,
+      "symbols": [
+        "6501.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=6701.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "c76d5fc793f32180d911397756058c4871302ac94cc8f87f260656a3277e0f0a",
+      "size_bytes": 49745,
+      "symbols": [
+        "6701.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=6740.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "386e5be008c7b063d03e3b8a7d8badb31f792b4d27e2b16d4fd69ee2c5e0e87b",
+      "size_bytes": 30239,
+      "symbols": [
+        "6740.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=7735.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "ce831b97a7bdd249cb71f12a6972e126031c5bbac90dfe8d24f3ac140e14a7c1",
+      "size_bytes": 51711,
+      "symbols": [
+        "7735.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=7762.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "77ee2062eed1633612c8ab7937a61c11e7d857704750d9204dffc9ceb92dc6d2",
+      "size_bytes": 43323,
+      "symbols": [
+        "7762.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=8001.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "c3600ab517e86ca03fb2dfa71755fd00a72943077a5bf8f9f638339cf492aa2e",
+      "size_bytes": 59988,
+      "symbols": [
+        "8001.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=8253.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "4734bd6b7382ab5ae46890f61adc3c030fe0001164e835c6494a134487989e7b",
+      "size_bytes": 51060,
+      "symbols": [
+        "8253.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=8425.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "fca42f2a11f121a3a8695c62a0554e775af83895262ad37a8151df973adf637b",
+      "size_bytes": 41470,
+      "symbols": [
+        "8425.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=9022.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "05bad0556bba07dbd656a875e31b238e10e58a4903c7ce0084d488abdc9e8709",
+      "size_bytes": 48478,
+      "symbols": [
+        "9022.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=9201.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "050993eea680b3973cc32fec63a9d3095632ffee5a158ea28e364c0b78dbff92",
+      "size_bytes": 49812,
+      "symbols": [
+        "9201.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=9202.T.parquet",
+      "role": "ohlcv",
+      "row_count": 1161,
+      "sha256": "48958f8fede4c809a06d6842f1286d57073df92332a6a2de95d506b38e1ec677",
+      "size_bytes": 50181,
+      "symbols": [
+        "9202.T"
+      ]
+    },
+    {
+      "date_end": "2022-05-16",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "JP"
+      ],
+      "path": "ohlcv/market=JP/symbol=9505.T.parquet",
+      "role": "ohlcv",
+      "row_count": 332,
+      "sha256": "8ad6aac6b0e3aaefabb21617e17a4279c4a13735aaeb10206580eccdda92c530",
+      "size_bytes": 19696,
+      "symbols": [
+        "9505.T"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=ABBV.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "bcf6ab2712206a648b1960fb4da7d009357faefe87805409ea119c072f2e2a9f",
+      "size_bytes": 65036,
+      "symbols": [
+        "ABBV"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=ADBE.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "ff0edbc930035cb94f33666af8196c6bde03ab2203f7c4eff1cdef4c95638b8e",
+      "size_bytes": 66286,
+      "symbols": [
+        "ADBE"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=ANET.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "8595819bdd0822a85cfbdacd48e90cc83cbd6af5142498617360732b0e4667a7",
+      "size_bytes": 66627,
+      "symbols": [
+        "ANET"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=BKR.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "e6a60af2036fc652ffc6d90376540257e85c967aa91eef470809ddbd925582b6",
+      "size_bytes": 60623,
+      "symbols": [
+        "BKR"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=CHD.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "b0847a4b63e062e7128dbd7897ee1e2f994cbfda8cef1dc8ca0af526f69f83ac",
+      "size_bytes": 61704,
+      "symbols": [
+        "CHD"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=CHTR.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "3d4980b98a3326d8e8c4973ce87201fcfce801605dff0f96fdec30d63a00fd2e",
+      "size_bytes": 66040,
+      "symbols": [
+        "CHTR"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=CMCSA.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "5b4f35f51bbcf67d01756d6dee6a9aaf0a62dfc4c126d80e7a4a16fdd4816bbf",
+      "size_bytes": 61512,
+      "symbols": [
+        "CMCSA"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=CTVA.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "82870dd9ba66de6fdb01d40d5b99f5a23f2d42fe219714f88283172f46ee2536",
+      "size_bytes": 61968,
+      "symbols": [
+        "CTVA"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=DG.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "6e3d91c8cfdce4ceab5a353b713b81211208b39bccd54ab929f1f2e19f0bb43a",
+      "size_bytes": 66083,
+      "symbols": [
+        "DG"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=EW.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "5f25ce6b98074d6001276e7769460c61b4ac18ef748e3bd9da013c2c3036e157",
+      "size_bytes": 62980,
+      "symbols": [
+        "EW"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=HUM.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "b2e77f6097edcbb318844c3399e5287a732063ea66f384f5b601c14721196b8e",
+      "size_bytes": 65823,
+      "symbols": [
+        "HUM"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=ILMN.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "e2e0db9f1f5cabf5d4626c1e4af14e03a60a46219218ff32e851df11258c678c",
+      "size_bytes": 66872,
+      "symbols": [
+        "ILMN"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=LKQ.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "4a2b83117d4406a6f2ca279f4bd1975f11fcd1dd8581f701112b6d4f2e1ddf1e",
+      "size_bytes": 60229,
+      "symbols": [
+        "LKQ"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=LRCX.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "62f1adb4f371d74b36f624b2aa131db5ff5414b9135d97eea6cd219b255b329a",
+      "size_bytes": 67219,
+      "symbols": [
+        "LRCX"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=MDT.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "704d5612d0f320981a2434cb01f4c3df5b04bd379fe7fbf794a44203d27d57cd",
+      "size_bytes": 62203,
+      "symbols": [
+        "MDT"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=MHK.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "02a72e178f4a226ecaaa54c073af48e1f95e55060ad4e67375a072dc23f48348",
+      "size_bytes": 64602,
+      "symbols": [
+        "MHK"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=MSFT.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "3c72e57756b264962f3d11a3afac44a0ae5135ab62637b732c71b10ef1424d5b",
+      "size_bytes": 66917,
+      "symbols": [
+        "MSFT"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=VMC.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "17064b65c9ef4cc281b6ac89dd5ec83607f0d996e82e6426564ff5467ec8eca3",
+      "size_bytes": 64990,
+      "symbols": [
+        "VMC"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=WELL.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "9c71db35f78ea34294e2a02890b859f801abee2116d81e727433c3e398f9b98d",
+      "size_bytes": 64507,
+      "symbols": [
+        "WELL"
+      ]
+    },
+    {
+      "date_end": "2025-09-30",
+      "date_start": "2021-01-04",
+      "format": "parquet",
+      "markets": [
+        "US"
+      ],
+      "path": "ohlcv/market=US/symbol=WMB.parquet",
+      "role": "ohlcv",
+      "row_count": 1191,
+      "sha256": "54005695da37721138a82e560734acb503f59206dc09f4b7b1b967b2d995ec27",
+      "size_bytes": 60740,
+      "symbols": [
+        "WMB"
+      ]
+    }
+  ],
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "quality": {
+    "error_count": 0,
+    "is_valid": true,
+    "warning_count": 0
+  },
+  "row_count": 73193,
+  "schema_columns": [
+    "trade_date",
+    "symbol",
+    "market",
+    "exchange",
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "currency",
+    "timezone",
+    "adjusted",
+    "source",
+    "adjusted_close",
+    "turnover",
+    "suspension_flag",
+    "limit_up",
+    "limit_down",
+    "tradable"
+  ],
+  "schema_version": "1.0.0",
+  "software_version": "1.0.0rc2",
+  "source": "source_inventory_sha256=4102bbd96b71001dd44c397c2f406f2e4109d864b1a59cc25e67395bcd56f58d;ecb_snapshot_sha256=a84793dceb4a5d61f30cf97033c5c51805ee87b41c60df8bb74fa0576294ace1",
+  "symbols": [
+    "000027",
+    "000035",
+    "000099",
+    "000417",
+    "000425",
+    "000426",
+    "000498",
+    "000543",
+    "000628",
+    "000758",
+    "000826",
+    "0011.HK",
+    "0018.HK",
+    "002195",
+    "002607",
+    "0027.HK",
+    "0028.HK",
+    "002878",
+    "0031.HK",
+    "0050.HK",
+    "0061.HK",
+    "0069.HK",
+    "0072.HK",
+    "0103.HK",
+    "0144.HK",
+    "0180.HK",
+    "0183.HK",
+    "0185.HK",
+    "0214.HK",
+    "0242.HK",
+    "0274.HK",
+    "1033.HK",
+    "1044.HK",
+    "1071.HK",
+    "2501.T",
+    "2702.T",
+    "2801.T",
+    "2871.T",
+    "300027",
+    "300070",
+    "3405.T",
+    "4189.T",
+    "5803.T",
+    "600030",
+    "600150",
+    "601328",
+    "601818",
+    "6301.T",
+    "6501.T",
+    "6701.T",
+    "6740.T",
+    "7735.T",
+    "7762.T",
+    "8001.T",
+    "8253.T",
+    "8425.T",
+    "9022.T",
+    "9201.T",
+    "9202.T",
+    "9505.T",
+    "ABBV",
+    "ADBE",
+    "ANET",
+    "BKR",
+    "CHD",
+    "CHTR",
+    "CMCSA",
+    "CTVA",
+    "DG",
+    "EW",
+    "HUM",
+    "ILMN",
+    "LKQ",
+    "LRCX",
+    "MDT",
+    "MHK",
+    "MSFT",
+    "VMC",
+    "WELL",
+    "WMB"
+  ]
+}

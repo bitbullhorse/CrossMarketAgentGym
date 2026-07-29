@@ -190,19 +190,20 @@ def test_cli_inventory_covers_phase11_protocol() -> None:
     } <= reproduce_options
 
 
-def test_release_tag_cannot_implicitly_publish_to_pypi() -> None:
+def test_stable_release_publish_requires_exact_tag_or_explicit_dispatch() -> None:
     workflow = (PROJECT_ROOT / ".github/workflows/release.yml").read_text(
         encoding="utf-8"
     )
     assert (
-        'python -m pip install -c constraints-cpu.txt -e ".[release,rl,llm]"'
+        'python -m pip install -c constraints-cpu.txt -e ".[release,docs,rl,llm]"'
         in workflow
     )
-    assert (
-        "if: github.event_name == 'workflow_dispatch' && inputs.publish" in workflow
-    )
-    assert "if: startsWith(github.ref, 'refs/tags/v') || inputs.publish" not in workflow
-    assert workflow.count('--repo "$GITHUB_REPOSITORY"') == 2
+    assert "github.ref == 'refs/tags/v1.0.0'" in workflow
+    assert "inputs.publish_pypi" in workflow
+    assert "inputs.publish_container" in workflow
+    assert 'tags:\n      - "v1.0.0"' in workflow
+    assert 'tags:\n      - "v*"' not in workflow
+    assert workflow.count('--repo "$GITHUB_REPOSITORY"') == 1
 
 
 def test_github_actions_use_node24_generations() -> None:

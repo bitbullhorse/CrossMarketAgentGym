@@ -31,12 +31,22 @@ report_app = typer.Typer(
 )
 service_app = typer.Typer(help="Run the optional read-only report service.", no_args_is_help=True)
 release_app = typer.Typer(help="Validate local release artifacts.", no_args_is_help=True)
+benchmark_app = typer.Typer(
+    help="Build and verify immutable formal benchmarks.",
+    no_args_is_help=True,
+)
+paper_app = typer.Typer(
+    help="Export verified benchmark artifacts for manuscripts.",
+    no_args_is_help=True,
+)
 app.add_typer(data_app, name="data")
 app.add_typer(env_app, name="env")
 app.add_typer(agent_app, name="agent")
 app.add_typer(report_app, name="report")
 app.add_typer(service_app, name="service")
 app.add_typer(release_app, name="release")
+app.add_typer(benchmark_app, name="benchmark")
+app.add_typer(paper_app, name="paper")
 
 
 def _version_callback(value: bool) -> None:
@@ -361,11 +371,15 @@ def release_manifest(
 @release_app.command("verify")
 def release_verify(
     dist_dir: Annotated[Path, typer.Option("--dist-dir")] = Path("dist"),
+    version: Annotated[
+        str | None,
+        typer.Option("--version", help="Require this exact package version."),
+    ] = None,
 ) -> None:
     """Inspect built archive metadata, resources, and exclusions."""
     from crossmarket_agentgym.release import verify_distributions
 
-    result = verify_distributions(dist_dir)
+    result = verify_distributions(dist_dir, expected_version=version)
     typer.echo(result.model_dump_json(indent=2))
     if not result.is_valid:
         raise typer.Exit(code=1)
@@ -396,6 +410,111 @@ def release_freeze(
     typer.echo(result.model_dump_json(indent=2))
     if not result.is_valid:
         raise typer.Exit(code=1)
+
+
+@benchmark_app.command("build")
+def benchmark_build(
+    protocol: Annotated[
+        Path | None,
+        typer.Option("--protocol", exists=True, dir_okay=False),
+    ] = None,
+    source_root: Annotated[
+        Path,
+        typer.Option(
+            "--source-root",
+            exists=True,
+            file_okay=False,
+            help="Checksummed Phase 12 review package.",
+        ),
+    ] = Path("results/phase12-review-v1"),
+    output: Annotated[Path, typer.Option("--output")] = Path("benchmarks/v1"),
+    visual_payload_root: Annotated[
+        Path | None,
+        typer.Option(
+            "--visual-payload-root",
+            exists=True,
+            file_okay=False,
+            help="Optional hash-verified representative formal payloads for series figures.",
+        ),
+    ] = None,
+    seal: Annotated[
+        bool,
+        typer.Option(
+            "--seal/--no-seal",
+            help="Remove filesystem write bits after the checksum snapshot is complete.",
+        ),
+    ] = True,
+) -> None:
+    """Build benchmark-v1 once; an existing destination is never overwritten."""
+    if protocol is None:
+        raise typer.BadParameter("--protocol is required")
+    from crossmarket_agentgym.benchmarking.core import build_benchmark
+
+    result = build_benchmark(
+        protocol,
+        source_root=source_root,
+        output=output,
+        visual_payload_root=visual_payload_root,
+        seal=seal,
+    )
+    typer.echo(result.model_dump_json(indent=2))
+    if not result.is_valid:
+        raise typer.Exit(code=1)
+
+
+@benchmark_app.command("verify")
+def benchmark_verify(
+    benchmark: Annotated[
+        Path,
+        typer.Option("--benchmark", exists=True, file_okay=False),
+    ] = Path("benchmarks/v1"),
+) -> None:
+    """Verify benchmark hashes, provenance, run bindings, HPO isolation and Replay."""
+    from crossmarket_agentgym.benchmarking.core import verify_benchmark
+
+    result = verify_benchmark(benchmark)
+    typer.echo(result.model_dump_json(indent=2))
+    if not result.is_valid:
+        raise typer.Exit(code=1)
+
+
+def _paper_export(
+    benchmark: Path,
+    output: Path | None,
+    artifact_kind: str,
+) -> None:
+    from crossmarket_agentgym.benchmarking.core import export_paper_artifacts
+
+    result = export_paper_artifacts(
+        benchmark,
+        artifact_kind,
+        output=output,
+    )
+    typer.echo(result.model_dump_json(indent=2))
+
+
+@paper_app.command("export-tables")
+def paper_export_tables(
+    benchmark: Annotated[
+        Path,
+        typer.Option("--benchmark", exists=True, file_okay=False),
+    ] = Path("benchmarks/v1"),
+    output: Annotated[Path | None, typer.Option("--output")] = None,
+) -> None:
+    """Export generated tables from a verified benchmark to a new directory."""
+    _paper_export(benchmark, output, "tables")
+
+
+@paper_app.command("export-figures")
+def paper_export_figures(
+    benchmark: Annotated[
+        Path,
+        typer.Option("--benchmark", exists=True, file_okay=False),
+    ] = Path("benchmarks/v1"),
+    output: Annotated[Path | None, typer.Option("--output")] = None,
+) -> None:
+    """Export generated figures from a verified benchmark to a new directory."""
+    _paper_export(benchmark, output, "figures")
 
 
 def main() -> None:

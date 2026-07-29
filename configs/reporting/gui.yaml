@@ -1,0 +1,18 @@
+workspace_root: .
+runs_root: runs
+reports_root: reports
+host: 127.0.0.1
+port: 8000
+allow_remote: false
+docs_enabled: false
+max_runs: 500
+max_json_bytes: 5000000
+
+# Mutation endpoints are registered only when this explicit local flag is true.
+execution_enabled: true
+cors_origins:
+  - http://localhost:3000
+  - http://127.0.0.1:3000
+  - https://crossmarket-agent-gym.chenzhenjiang05.chatgpt.site
+max_concurrent_jobs: 2
+max_job_log_bytes: 200000

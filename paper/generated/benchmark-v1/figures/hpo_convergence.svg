@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="932" viewBox="0 0 1000 932">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="28" y="38" font-family="sans-serif" font-size="22" font-weight="600">HPO convergence across frozen trials</text>
+<line x1="180" y1="58" x2="180" y2="902" stroke="#64748b" stroke-width="1"/>
+<text x="12" y="84" font-family="sans-serif" font-size="11">cma_es:0</text>
+<rect x="180.000" y="72" width="720.000" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="905.000" y="83" font-family="monospace" font-size="10">2.03153</text>
+<text x="12" y="112" font-family="sans-serif" font-size="11">cma_es:1</text>
+<rect x="180.000" y="100" width="703.943" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="888.943" y="111" font-family="monospace" font-size="10">1.98623</text>
+<text x="12" y="140" font-family="sans-serif" font-size="11">cma_es:2</text>
+<rect x="180.000" y="128" width="205.463" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="390.463" y="139" font-family="monospace" font-size="10">0.579728</text>
+<text x="12" y="168" font-family="sans-serif" font-size="11">cma_es:3</text>
+<rect x="180.000" y="156" width="280.235" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="465.235" y="167" font-family="monospace" font-size="10">0.790705</text>
+<text x="12" y="196" font-family="sans-serif" font-size="11">cma_es:4</text>
+<rect x="180.000" y="184" width="344.404" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="529.404" y="195" font-family="monospace" font-size="10">0.971763</text>
+<text x="12" y="224" font-family="sans-serif" font-size="11">cma_es:5</text>
+<rect x="180.000" y="212" width="641.698" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="826.698" y="223" font-family="monospace" font-size="10">1.8106</text>
+<text x="12" y="252" font-family="sans-serif" font-size="11">cma_es:6</text>
+<rect x="180.000" y="240" width="647.539" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="832.539" y="251" font-family="monospace" font-size="10">1.82708</text>
+<text x="12" y="280" font-family="sans-serif" font-size="11">cma_es:7</text>
+<rect x="180.000" y="268" width="661.222" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="846.222" y="279" font-family="monospace" font-size="10">1.86569</text>
+<text x="12" y="308" font-family="sans-serif" font-size="11">cma_es:8</text>
+<rect x="180.000" y="296" width="438.659" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="623.659" y="307" font-family="monospace" font-size="10">1.23771</text>
+<text x="12" y="336" font-family="sans-serif" font-size="11">cma_es:9</text>
+<rect x="180.000" y="324" width="269.573" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="454.573" y="335" font-family="monospace" font-size="10">0.760622</text>
+<text x="12" y="364" font-family="sans-serif" font-size="11">cma_es:10</text>
+<rect x="180.000" y="352" width="468.019" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="653.019" y="363" font-family="monospace" font-size="10">1.32055</text>
+<text x="12" y="392" font-family="sans-serif" font-size="11">cma_es:11</text>
+<rect x="180.000" y="380" width="319.873" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="504.873" y="391" font-family="monospace" font-size="10">0.902547</text>
+<text x="12" y="420" font-family="sans-serif" font-size="11">cma_es:12</text>
+<rect x="180.000" y="408" width="440.519" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="625.519" y="419" font-family="monospace" font-size="10">1.24296</text>
+<text x="12" y="448" font-family="sans-serif" font-size="11">cma_es:13</text>
+<rect x="180.000" y="436" width="427.659" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="612.659" y="447" font-family="monospace" font-size="10">1.20667</text>
+<text x="12" y="476" font-family="sans-serif" font-size="11">cma_es:14</text>
+<rect x="180.000" y="464" width="433.462" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="618.462" y="475" font-family="monospace" font-size="10">1.22305</text>
+<text x="12" y="504" font-family="sans-serif" font-size="11">cma_es:15</text>
+<rect x="180.000" y="492" width="601.588" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="786.588" y="503" font-family="monospace" font-size="10">1.69743</text>
+<text x="12" y="532" font-family="sans-serif" font-size="11">cma_es:16</text>
+<rect x="180.000" y="520" width="560.684" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="745.684" y="531" font-family="monospace" font-size="10">1.58201</text>
+<text x="12" y="560" font-family="sans-serif" font-size="11">cma_es:17</text>
+<rect x="180.000" y="548" width="590.748" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="775.748" y="559" font-family="monospace" font-size="10">1.66684</text>
+<text x="12" y="588" font-family="sans-serif" font-size="11">cma_es:18</text>
+<rect x="180.000" y="576" width="551.322" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="736.322" y="587" font-family="monospace" font-size="10">1.5556</text>
+<text x="12" y="616" font-family="sans-serif" font-size="11">cma_es:19</text>
+<rect x="180.000" y="604" width="594.896" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="779.896" y="615" font-family="monospace" font-size="10">1.67854</text>
+<text x="12" y="644" font-family="sans-serif" font-size="11">cma_es:20</text>
+<rect x="180.000" y="632" width="702.378" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="887.378" y="643" font-family="monospace" font-size="10">1.98181</text>
+<text x="12" y="672" font-family="sans-serif" font-size="11">cma_es:21</text>
+<rect x="180.000" y="660" width="535.742" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="720.742" y="671" font-family="monospace" font-size="10">1.51164</text>
+<text x="12" y="700" font-family="sans-serif" font-size="11">cma_es:22</text>
+<rect x="180.000" y="688" width="603.644" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="788.644" y="699" font-family="monospace" font-size="10">1.70323</text>
+<text x="12" y="728" font-family="sans-serif" font-size="11">cma_es:23</text>
+<rect x="180.000" y="716" width="434.090" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="619.090" y="727" font-family="monospace" font-size="10">1.22482</text>
+<text x="12" y="756" font-family="sans-serif" font-size="11">cma_es:0</text>
+<rect x="180.000" y="744" width="111.153" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="296.153" y="755" font-family="monospace" font-size="10">0.313627</text>
+<text x="12" y="784" font-family="sans-serif" font-size="11">cma_es:1</text>
+<rect x="180.000" y="772" width="349.107" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="534.107" y="783" font-family="monospace" font-size="10">0.985032</text>
+<text x="12" y="812" font-family="sans-serif" font-size="11">cma_es:2</text>
+<rect x="180.000" y="800" width="202.561" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="387.561" y="811" font-family="monospace" font-size="10">0.571542</text>
+<text x="12" y="840" font-family="sans-serif" font-size="11">cma_es:3</text>
+<rect x="180.000" y="828" width="496.938" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="681.938" y="839" font-family="monospace" font-size="10">1.40215</text>
+<text x="12" y="868" font-family="sans-serif" font-size="11">cma_es:4</text>
+<rect x="180.000" y="856" width="119.471" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="304.471" y="867" font-family="monospace" font-size="10">0.337098</text>
+<text x="12" y="896" font-family="sans-serif" font-size="11">cma_es:5</text>
+<rect x="180.000" y="884" width="330.487" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="515.487" y="895" font-family="monospace" font-size="10">0.932494</text>
+</svg>

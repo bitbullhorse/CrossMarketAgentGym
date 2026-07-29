@@ -1,0 +1,53 @@
+{
+  "random_time_shuffle": false,
+  "test": {
+    "end": "2025-09-30",
+    "start": "2025-01-02"
+  },
+  "test_usage": "single_locked_configuration_final_evaluation",
+  "train": {
+    "end": "2023-12-29",
+    "start": "2021-02-02"
+  },
+  "train_usage": "fit_model_and_train_only_preprocessing",
+  "validation": {
+    "end": "2024-12-31",
+    "start": "2024-01-02"
+  },
+  "validation_usage": "early_stopping_hpo_and_model_selection",
+  "walk_forward": [
+    {
+      "fold_id": "fold_01",
+      "train": {
+        "end": "2022-12-30",
+        "start": "2021-02-02"
+      },
+      "validation": {
+        "end": "2023-06-30",
+        "start": "2023-01-03"
+      }
+    },
+    {
+      "fold_id": "fold_02",
+      "train": {
+        "end": "2023-06-30",
+        "start": "2021-02-02"
+      },
+      "validation": {
+        "end": "2023-12-29",
+        "start": "2023-07-03"
+      }
+    },
+    {
+      "fold_id": "fold_03",
+      "train": {
+        "end": "2023-12-29",
+        "start": "2021-02-02"
+      },
+      "validation": {
+        "end": "2024-12-31",
+        "start": "2024-01-02"
+      }
+    }
+  ]
+}

@@ -20,6 +20,7 @@ from crossmarket_agentgym.release.versioning import release_label, release_tag
 _SECRET_PATTERN = re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b")
 _REQUIRED_FILES = (
     "README.md",
+    "DATA_LICENSE.md",
     "LICENSE",
     "CITATION.cff",
     ".zenodo.json",
@@ -45,6 +46,9 @@ _REQUIRED_FILES = (
     "release/compatibility_matrix.md",
     "release/release_notes_v1.0.0-rc1.md",
     "release/release_notes_v1.0.0-rc2.md",
+    "release/release_notes_v1.0.0.md",
+    "release/release_manifest_v1.0.0.json",
+    "release/release_manifest_v1.0.0.sha256",
     "release/release_blockers.md",
     "schemas/rc1/checksums.json",
     "scripts/build_release.sh",
@@ -54,6 +58,15 @@ _REQUIRED_FILES = (
     "scripts/run_phase11_tasks.py",
     "scripts/verify_phase11_distribution.py",
     "scripts/build_phase11_release_evidence.py",
+    "scripts/create_archive.sh",
+    "scripts/create_release_archive.py",
+    "scripts/create_stable_release_manifest.py",
+    "scripts/publish_docker.sh",
+    "scripts/publish_pypi.sh",
+    "scripts/verify_public_release.sh",
+    "scripts/verify_public_release.py",
+    "scripts/build_versioned_docs.py",
+    "mkdocs.yml",
     "docs/api-reference.md",
     "docs/api_stability.md",
     "docs/cli-reference.md",
@@ -65,7 +78,9 @@ _REQUIRED_FILES = (
     "docs/stable-api.md",
     "docs/versioning_policy.md",
     "docs/issues/phase-11-checklist.md",
+    "docs/issues/phase-14-checklist.md",
     "docs/phases/phase-11.md",
+    "docs/phases/phase-14.md",
     "reproducibility_tests/protocol.md",
     "reproducibility_tests/independent_audit_attestation.md",
     "paper/README.md",
@@ -177,6 +192,31 @@ def check_release_readiness(
             f"{release_label(__version__)}"
         )
     checks.append(_check("citation_version", citation_valid, citation_detail))
+
+    try:
+        from crossmarket_agentgym.release.stable_manifest import (
+            verify_stable_release_manifest,
+        )
+
+        stable_manifest_valid, stable_manifest_problems = (
+            verify_stable_release_manifest(root)
+        )
+    except (OSError, TypeError, ValueError) as error:
+        stable_manifest_valid = False
+        stable_manifest_detail = str(error)
+    else:
+        stable_manifest_detail = (
+            "stable release, benchmark-v1, protocol-v4, and dataset-manifest-v3 agree"
+            if stable_manifest_valid
+            else "; ".join(stable_manifest_problems)
+        )
+    checks.append(
+        _check(
+            "stable_release_manifest",
+            stable_manifest_valid,
+            stable_manifest_detail,
+        )
+    )
 
     docker_path = root / "Dockerfile"
     docker_text = (

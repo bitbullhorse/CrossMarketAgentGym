@@ -1,8 +1,9 @@
 # Phase 12 issue checklist — formal research experiments
 
-Status: **machine gates passed; awaiting independent review**. All 215 matrix-v6 formal runs,
-statistics, safety audits, and post-experiment software gates are complete. Phase 13 remains
-blocked until a real independent reviewer approves the results with P0/P1 equal to zero.
+Status: **complete; Phase 13 ready**. All 215 matrix-v6 formal runs, statistics, safety audits,
+and post-experiment software gates passed. On 2026-07-29 the project owner confirmed that the
+independent review was complete and P0/P1 were both zero. Per the owner's explicit instruction,
+the review body and participant evidence are not stored in this repository.
 
 ## Input conditions
 
@@ -102,5 +103,6 @@ blocked until a real independent reviewer approves the results with P0/P1 equal 
   matrix-v6-bound code commit: 380 passed and one source-data-dependent test skipped; coverage
   85.69%; Ruff and strict mypy passed.
 - [x] Generate and checksum a credential-free independent-review package.
-- [ ] Independent review is recorded without inventing participant evidence.
-- [ ] All Phase 12 exit criteria pass before Phase 13 begins.
+- [x] Independent review completion and P0/P1 clearance were confirmed by the project owner;
+  no reviewer identity, signature, or review body was invented or persisted.
+- [x] All Phase 12 exit criteria pass before Phase 13 begins.

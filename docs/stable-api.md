@@ -735,7 +735,7 @@ Validate the four-market sample and run seeded environment checks.
 Verify metadata, packaged quickstart assets, and archive exclusions.
 
 ```text
-(dist_dir: 'str | Path') -> 'DistributionVerificationResult'
+(dist_dir: 'str | Path', *, expected_version: 'str | None' = None) -> 'DistributionVerificationResult'
 ```
 
 ## `crossmarket_agentgym.rl.AlgorithmName`

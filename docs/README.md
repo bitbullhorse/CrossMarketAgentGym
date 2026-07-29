@@ -24,6 +24,8 @@
   supported Python and command-line integration surfaces.
 - [`release.md`](release.md) defines PyPI Trusted Publishing, Docker, GitHub Release, Zenodo,
   distribution manifests, and rollback.
+- [`benchmark-v1.md`](benchmark-v1.md) documents the immutable Phase 13 Benchmark, provenance
+  indexes, verification and non-mutating paper exports.
 - [`scaling.md`](scaling.md) defines optional Ray Trial execution, GPU placement, and its strict
   separation from search algorithms and resource schedulers.
 - [`release/phase9-acceptance.json`](release/phase9-acceptance.json) records machine-readable

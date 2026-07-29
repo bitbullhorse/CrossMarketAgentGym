@@ -12,6 +12,7 @@ htmlcov/
 
 # Environments and build artifacts
 .venv/
+.phase*-venv/
 build/
 dist/
 dist-*/

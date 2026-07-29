@@ -1,0 +1,186 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": {
+    "confidence": 0.8,
+    "global_risk_budget": 0.3,
+    "market_budgets": {
+      "CN": 0.25,
+      "HK": 0.25,
+      "JP": 0.25,
+      "US": 0.25
+    },
+    "market_regime": "neutral",
+    "objective_weights": {
+      "research": 0.4,
+      "risk": 0.6
+    },
+    "rebalance_interval": 20,
+    "sector_budgets": null
+  },
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.95,
+    "estimated_compute_units": 0.0,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol. Never access test metrics.",
+    "rationale": "The dataset 'CrossMarketAgentGym formal_v3' has been inspected (SHA256: 0ed9091f...) and found valid with 73,193 rows, 80 symbols across markets CN, HK, JP, US. The plan below validates integrity, explores market coverage, creates a validation split, checks experiment configuration, estimates compute, and generates a report—all within validation-only boundaries and without accessing test metrics.",
+    "safe_to_execute": false,
+    "steps": [
+      {
+        "action": "inspect_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [],
+        "expected_artifacts": [],
+        "id": "step_inspect"
+      },
+      {
+        "action": "validate_dataset",
+        "arguments": {},
+        "depends_on": [
+          "step_inspect"
+        ],
+        "expected_artifacts": [],
+        "id": "step_validate"
+      },
+      {
+        "action": "list_markets",
+        "arguments": {},
+        "depends_on": [
+          "step_validate"
+        ],
+        "expected_artifacts": [],
+        "id": "step_list_markets"
+      },
+      {
+        "action": "list_symbols",
+        "arguments": {},
+        "depends_on": [
+          "step_list_markets"
+        ],
+        "expected_artifacts": [],
+        "id": "step_list_symbols"
+      },
+      {
+        "action": "create_split",
+        "arguments": {
+          "ratio": 0.2,
+          "split_type": "validation"
+        },
+        "depends_on": [
+          "step_list_symbols"
+        ],
+        "expected_artifacts": [
+          "validation_split_indices"
+        ],
+        "id": "step_create_split"
+      },
+      {
+        "action": "validate_experiment_config",
+        "arguments": {
+          "config_name": "phase12_protocol"
+        },
+        "depends_on": [
+          "step_create_split"
+        ],
+        "expected_artifacts": [],
+        "id": "step_validate_config"
+      },
+      {
+        "action": "estimate_compute_budget",
+        "arguments": {
+          "experiment_id": "phase12"
+        },
+        "depends_on": [
+          "step_validate_config"
+        ],
+        "expected_artifacts": [],
+        "id": "step_estimate_compute"
+      },
+      {
+        "action": "generate_report",
+        "arguments": {
+          "title": "Phase 12 Protocol Validation Report"
+        },
+        "depends_on": [
+          "step_estimate_compute"
+        ],
+        "expected_artifacts": [
+          "report_phase12"
+        ],
+        "id": "step_generate_report"
+      }
+    ],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": {
+    "allow_new_positions": false,
+    "cash_floor": 0.3,
+    "confidence": 0.8,
+    "max_asset_weight": 0.05,
+    "max_market_weights": {
+      "CN": 0.1,
+      "HK": 0.1,
+      "JP": 0.1,
+      "US": 0.1
+    },
+    "max_turnover": 0.2,
+    "rationale": "Conservative limits set due to current 8% drawdown, 20% rolling volatility, and 4% CVaR. No new positions allowed to prevent additional risk. Cash floor ensures liquidity buffer. Max asset weight prevents over-concentration. Rebalancing monthly to minimize costs.",
+    "rebalance_frequency": "monthly",
+    "risk_budget": 0.02
+  },
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

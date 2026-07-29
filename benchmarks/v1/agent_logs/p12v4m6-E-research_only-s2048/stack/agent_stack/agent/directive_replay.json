@@ -1,0 +1,248 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": null,
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.9,
+    "estimated_compute_units": 12.5,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol. Never access test metrics.",
+    "rationale": "The dataset manifest is valid and contains 4 markets (CN, HK, JP, US) with 80 symbols and 73,193 rows. A sequential research plan is designed to first inspect and validate the data, enumerate markets and symbols, create a validation-only split, validate experiment configuration, estimate compute requirements, then proceed to training, tuning, evaluation, comparison, and final reporting. All steps are validation-locked; test metrics will not be accessed. This plan provides a bounded, risk-aware pathway to generate directives without executing heavy computation.",
+    "safe_to_execute": false,
+    "steps": [
+      {
+        "action": "inspect_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [],
+        "expected_artifacts": [
+          "dataset_summary"
+        ],
+        "id": "step_1"
+      },
+      {
+        "action": "validate_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "step_1"
+        ],
+        "expected_artifacts": [
+          "validation_report"
+        ],
+        "id": "step_2"
+      },
+      {
+        "action": "list_markets",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "step_2"
+        ],
+        "expected_artifacts": [
+          "market_list"
+        ],
+        "id": "step_3"
+      },
+      {
+        "action": "list_symbols",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "step_3"
+        ],
+        "expected_artifacts": [
+          "symbol_list"
+        ],
+        "id": "step_4"
+      },
+      {
+        "action": "create_split",
+        "arguments": {
+          "method": "time_series",
+          "seed": 42,
+          "test_ratio": 0.0,
+          "validation_ratio": 0.2
+        },
+        "depends_on": [
+          "step_4"
+        ],
+        "expected_artifacts": [
+          "split_indices"
+        ],
+        "id": "step_5"
+      },
+      {
+        "action": "validate_experiment_config",
+        "arguments": {
+          "config_path": "configs/phase_12.yaml",
+          "protocol": "phase_12"
+        },
+        "depends_on": [
+          "step_5"
+        ],
+        "expected_artifacts": [
+          "config_validation"
+        ],
+        "id": "step_6"
+      },
+      {
+        "action": "estimate_compute_budget",
+        "arguments": {
+          "config_path": "configs/phase_12.yaml",
+          "dataset_manifest": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "step_6"
+        ],
+        "expected_artifacts": [
+          "compute_estimate"
+        ],
+        "id": "step_7"
+      },
+      {
+        "action": "train_rl",
+        "arguments": {
+          "config_path": "configs/phase_12.yaml",
+          "split_indices": "split_indices",
+          "validation_only": true
+        },
+        "depends_on": [
+          "step_7"
+        ],
+        "expected_artifacts": [
+          "checkpoint"
+        ],
+        "id": "step_8"
+      },
+      {
+        "action": "tune_rl",
+        "arguments": {
+          "base_config": "configs/phase_12.yaml",
+          "hyperparameter_space": "configs/hparam_space.json",
+          "validation_only": true
+        },
+        "depends_on": [
+          "step_8"
+        ],
+        "expected_artifacts": [
+          "tuned_checkpoint"
+        ],
+        "id": "step_9"
+      },
+      {
+        "action": "evaluate_checkpoint",
+        "arguments": {
+          "checkpoint_path": "tuned_checkpoint",
+          "metrics": [
+            "sharpe",
+            "max_drawdown",
+            "win_rate"
+          ],
+          "split": "validation"
+        },
+        "depends_on": [
+          "step_9"
+        ],
+        "expected_artifacts": [
+          "evaluation_metrics"
+        ],
+        "id": "step_10"
+      },
+      {
+        "action": "compare_runs",
+        "arguments": {
+          "metric": "sharpe",
+          "run_ids": [
+            "baseline",
+            "tuned"
+          ]
+        },
+        "depends_on": [
+          "step_10"
+        ],
+        "expected_artifacts": [
+          "comparison_report"
+        ],
+        "id": "step_11"
+      },
+      {
+        "action": "generate_report",
+        "arguments": {
+          "bounded_directives": true,
+          "input_artifacts": [
+            "evaluation_metrics",
+            "comparison_report"
+          ],
+          "risk_analysis": true
+        },
+        "depends_on": [
+          "step_11"
+        ],
+        "expected_artifacts": [
+          "final_report"
+        ],
+        "id": "step_12"
+      }
+    ],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": null,
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

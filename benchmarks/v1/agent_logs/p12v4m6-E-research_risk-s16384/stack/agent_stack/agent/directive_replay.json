@@ -1,0 +1,84 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": null,
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.0,
+    "estimated_compute_units": 0.0,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol. Never access test metrics.",
+    "rationale": "Static research fallback schedules no tools or experiments.",
+    "safe_to_execute": false,
+    "steps": [],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": {
+    "allow_new_positions": true,
+    "cash_floor": 0.2,
+    "confidence": 0.9,
+    "max_asset_weight": 0.05,
+    "max_market_weights": {
+      "CN": 0.1,
+      "HK": 0.1,
+      "JP": 0.1,
+      "US": 0.1
+    },
+    "max_turnover": 0.15,
+    "rationale": "Given current drawdown of 8% and heightened volatility (z-score 1.0), we impose conservative limits to preserve capital. Risk budget is set to 10% annualized volatility, max asset weight caps single asset exposure at 5%, cash floor ensures 20% liquidity buffer, max turnover limits rebalancing costs to 15% per period, and monthly rebalancing reduces trading frequency. Allow new positions with strict adherence to these limits.",
+    "rebalance_frequency": "monthly",
+    "risk_budget": 0.1
+  },
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

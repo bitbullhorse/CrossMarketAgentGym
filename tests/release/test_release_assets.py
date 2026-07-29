@@ -26,7 +26,7 @@ runner = CliRunner()
 def test_release_readiness_and_metadata_are_consistent() -> None:
     result = check_release_readiness(PROJECT_ROOT)
     assert result.is_ready is True
-    assert result.version == "1.0.0rc2"
+    assert result.version == "1.0.0"
     assert result.external_publish_performed is False
     assert all(item.passed for item in result.checks)
 
@@ -37,7 +37,7 @@ def test_release_readiness_and_metadata_are_consistent() -> None:
         (PROJECT_ROOT / ".zenodo.json").read_text(encoding="utf-8")
     )
     assert citation["version"] == zenodo["version"] == release_label(result.version)
-    assert release_tag(result.version) == "v1.0.0-rc2"
+    assert release_tag(result.version) == "v1.0.0"
 
 
 def test_release_check_fails_closed_when_assets_are_missing(tmp_path: Path) -> None:
@@ -52,9 +52,9 @@ def test_release_check_fails_closed_when_assets_are_missing(tmp_path: Path) -> N
 def test_distribution_manifest_is_deterministic_and_bounded(tmp_path: Path) -> None:
     dist = tmp_path / "dist"
     dist.mkdir()
-    (dist / "crossmarket_agent_gym-1.0.0rc2.tar.gz").write_bytes(b"source")
+    (dist / "crossmarket_agent_gym-1.0.0.tar.gz").write_bytes(b"source")
     with zipfile.ZipFile(
-        dist / "crossmarket_agent_gym-1.0.0rc2-py3-none-any.whl", "w"
+        dist / "crossmarket_agent_gym-1.0.0-py3-none-any.whl", "w"
     ) as wheel:
         wheel.writestr("METADATA", "Name: crossmarket-agent-gym")
     first = build_release_manifest(dist)
@@ -63,8 +63,8 @@ def test_distribution_manifest_is_deterministic_and_bounded(tmp_path: Path) -> N
     assert first == second
     assert (dist / "release-manifest.json").read_text(encoding="utf-8") == first_text
     assert [item.filename for item in first.artifacts] == [
-        "crossmarket_agent_gym-1.0.0rc2-py3-none-any.whl",
-        "crossmarket_agent_gym-1.0.0rc2.tar.gz",
+        "crossmarket_agent_gym-1.0.0-py3-none-any.whl",
+        "crossmarket_agent_gym-1.0.0.tar.gz",
     ]
     with pytest.raises(ValueError, match="no wheel"):
         build_release_manifest(tmp_path)
@@ -75,9 +75,9 @@ def test_distribution_verifier_requires_metadata_resources_and_exclusions(
 ) -> None:
     dist = tmp_path / "dist"
     dist.mkdir()
-    wheel_path = dist / "crossmarket_agent_gym-1.0.0rc2-py3-none-any.whl"
+    wheel_path = dist / "crossmarket_agent_gym-1.0.0-py3-none-any.whl"
     with zipfile.ZipFile(wheel_path, "w") as wheel:
-        wheel.writestr("crossmarket_agentgym/_version.py", '__version__ = "1.0.0rc2"')
+        wheel.writestr("crossmarket_agentgym/_version.py", '__version__ = "1.0.0"')
         wheel.writestr("crossmarket_agentgym/py.typed", "")
         wheel.writestr(
             "crossmarket_agentgym/resources/configs/env/cross_market.yaml",
@@ -92,8 +92,25 @@ def test_distribution_verifier_requires_metadata_resources_and_exclusions(
             "{}",
         )
         wheel.writestr(
+            "crossmarket_agentgym/resources/data/sample/checkpoints/equal_weight_policy.json",
+            "{}",
+        )
+        wheel.writestr(
+            "crossmarket_agentgym/resources/data/sample/checkpoints/"
+            "equal_weight_policy.json.sha256",
+            "fixture",
+        )
+        wheel.writestr(
             "crossmarket_agentgym/resources/release/api_inventory.csv",
             "qualified_name\n",
+        )
+        wheel.writestr(
+            "crossmarket_agentgym/resources/release/release_manifest_v1.0.0.json",
+            "{}",
+        )
+        wheel.writestr(
+            "crossmarket_agentgym/resources/release/release_manifest_v1.0.0.sha256",
+            "fixture",
         )
         wheel.writestr(
             "crossmarket_agentgym/resources/schemas/rc1/checksums.json",
@@ -104,33 +121,43 @@ def test_distribution_verifier_requires_metadata_resources_and_exclusions(
             '"""Packaged HPO report module."""',
         )
         wheel.writestr(
-            "crossmarket_agent_gym-1.0.0rc2.dist-info/METADATA",
+            "crossmarket_agent_gym-1.0.0.dist-info/METADATA",
             "Name: crossmarket-agent-gym\n"
-            "Version: 1.0.0rc2\n"
+            "Version: 1.0.0\n"
             "Requires-Python: <3.13,>=3.11\n",
         )
-    sdist_path = dist / "crossmarket_agent_gym-1.0.0rc2.tar.gz"
+    sdist_path = dist / "crossmarket_agent_gym-1.0.0.tar.gz"
     with tarfile.open(sdist_path, "w:gz") as sdist:
         for name in (
             "README.md",
             "CITATION.cff",
+            "DATA_LICENSE.md",
             "LICENSE",
             "constraints-cpu.txt",
             "environment-cpu.yml",
             "pyproject.toml",
             "paper/softwarex-paper-outline.md",
             "release/api_inventory.csv",
+            "release/release_manifest_v1.0.0.json",
+            "release/release_manifest_v1.0.0.sha256",
+            "release/release_notes_v1.0.0.md",
             "schemas/rc1/checksums.json",
+            "scripts/create_archive.sh",
+            "scripts/publish_docker.sh",
+            "scripts/publish_pypi.sh",
+            "scripts/verify_public_release.sh",
             "scripts/verify_release.sh",
             "src/crossmarket_agentgym/tuning/reports/__init__.py",
             "uv.lock",
         ):
             payload = b"fixture"
-            info = tarfile.TarInfo(f"crossmarket_agent_gym-1.0.0rc2/{name}")
+            info = tarfile.TarInfo(f"crossmarket_agent_gym-1.0.0/{name}")
             info.size = len(payload)
             sdist.addfile(info, io.BytesIO(payload))
     verified = verify_distributions(dist)
     assert verified.is_valid is True
+    wrong_version = verify_distributions(dist, expected_version="1.0.1")
+    assert wrong_version.is_valid is False
 
     with zipfile.ZipFile(wheel_path, "a") as wheel:
         wheel.writestr("runs/private.json", "{}")

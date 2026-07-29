@@ -2,13 +2,16 @@
 
 [![Phase 11 Linux CPU](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/workflows/phase11-linux-cpu.yml/badge.svg)](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/workflows/phase11-linux-cpu.yml)
 [![Phase 11 Docker](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/workflows/phase11-docker.yml/badge.svg)](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/workflows/phase11-docker.yml)
+[![Stable release](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/workflows/release.yml/badge.svg)](https://github.com/bitbullhorse/CrossMarketAgentGym/actions/workflows/release.yml)
 
 CrossMarketAgentGym is an auditable research platform for cross-market portfolio reinforcement
 learning, configurable LLM Agent teams, and hyperparameter optimization over daily CN, HK, JP,
 and US OHLCV data.
 
-The current candidate is `v1.0.0-rc2`. It closes the Phase 11 independent-reproduction gate; it
-is not the final v1.0.0 release and contains no formal paper benchmark.
+The stable release line is `v1.0.0`. Phase 12 formal experiments and the independently reviewed
+Phase 13 `benchmark-v1` are frozen. Public PyPI, container, documentation and DOI availability
+remain subject to the Phase 14 publication gates; source-tree readiness is not itself proof that
+an external service has published an artifact.
 
 ## Installation and CPU quickstart
 
@@ -54,6 +57,24 @@ request, model training, tuning, test evaluation, or account mutation. See
 - Search algorithms, resource schedulers, and execution backends are separate abstractions.
 - Accounting, information-leakage, security, or deterministic-replay defects block release.
 
+## Local GUI
+
+The guarded GUI can validate and edit YAML, launch training, validation backtests, locked test
+evaluation, Agent teams, HPO, reproduction, reports, and frozen experiment tasks, then follow
+their status and logs. Start the local-only execution service and frontend:
+
+```bash
+cmag service run --config configs/reporting/gui.yaml
+cd frontend
+pnpm install --registry=https://registry.npmmirror.com
+pnpm dev
+```
+
+The execution API is opt-in and loopback-only. The browser cannot submit arbitrary commands,
+HPO has no test-partition input, validation backtests use an isolated output directory, and
+credentials remain in the backend process environment. See the
+[中文 GUI 操作指南](docs/gui.zh-CN.md).
+
 ## Reproduction commands
 
 The Phase 11 clean-user path is:
@@ -75,6 +96,24 @@ These examples are development/reproduction checks only. They must not be reused
 formal results. `--verify-only` checks artifact integrity; only the explicit
 `--execute --compare` pair retrains and compares a new isolated replay.
 
+## Frozen formal benchmark
+
+Verify the write-once Phase 13 result snapshot before using any formal number:
+
+```bash
+cmag benchmark verify --benchmark benchmarks/v1
+cmag paper export-tables \
+  --benchmark benchmarks/v1 \
+  --output <new-table-directory>
+cmag paper export-figures \
+  --benchmark benchmarks/v1 \
+  --output <new-figure-directory>
+```
+
+The exporters refuse to overwrite an existing destination and never modify Benchmark v1.
+See the [Benchmark v1 operator guide](docs/benchmark-v1.md) and
+[Phase 13 report](docs/phases/phase-13.md).
+
 ## Online DeepSeek provider
 
 Install the `llm` extra and set credentials only in the process environment:
@@ -91,12 +130,16 @@ configs use model `deepseek-v4-pro`.
 ## Documentation
 
 - [中文详细操作手册](docs/operations-guide.zh-CN.md)
+- [中文 GUI 操作指南](docs/gui.zh-CN.md)
 - [Data schema](docs/data_schema.md), [environment](docs/environment.md), and
   [market rules](docs/market_rules.md)
 - [RL training](docs/rl_training.md) and [tuning](docs/tuning.md)
 - [LLM Agents](docs/llm_agents.md) and [multi-Agent runtime](docs/multi_agent.md)
 - [Reproducibility](docs/reproducibility.md), [API reference](docs/api-reference.md), and
   [stable API catalog](docs/stable-api.md), and [CLI reference](docs/cli-reference.md)
+- [Benchmark v1](docs/benchmark-v1.md) and [Phase 13 acceptance](docs/phases/phase-13.md)
+- [Stable release and archival guide](docs/release.md), [known limitations](docs/known-limitations.md),
+  and [Phase 14 status](docs/phases/phase-14.md)
 - [API stability](docs/api_stability.md), [versioning](docs/versioning_policy.md), and
   [deprecation](docs/deprecation_policy.md)
 - [Security](docs/security.md), [troubleshooting](docs/troubleshooting.md), and [FAQ](docs/faq.md)
@@ -114,19 +157,21 @@ Local preparation does not publish:
 python scripts/verify_docs.py
 cmag release freeze --workspace-root .
 cmag release check --workspace-root .
-bash scripts/verify_release.sh
+python -m build
+cmag release verify --version 1.0.0
+scripts/verify_public_release.sh --offline
 ```
 
-PyPI, GitHub Release, and Zenodo changes require an explicitly authorized tag or workflow
-dispatch. The rc2 tag is permitted only after the independent audit, Linux CPU Task B–I, Docker
-Task B–I, wheel provenance, and permanent Release evidence gates pass.
+PyPI, GHCR, GitHub Pages, GitHub Release, and Zenodo changes require the exact verified stable
+commit plus an explicitly authorized `v1.0.0` tag or workflow dispatch. A dry-run never claims
+that these external surfaces exist.
 
 ## Citation
 
 Please cite the software through [CITATION.cff](CITATION.cff). No placeholder DOI is claimed.
 
 ```text
-CrossMarketAgentGym contributors (2026). CrossMarketAgentGym 1.0.0-rc2. Apache-2.0.
+CrossMarketAgentGym contributors (2026). CrossMarketAgentGym 1.0.0. Apache-2.0.
 ```
 
 Phase status, tests, acceptance evidence, and unresolved blockers are recorded under

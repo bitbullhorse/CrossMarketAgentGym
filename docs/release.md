@@ -1,93 +1,130 @@
-# Release and archival guide
+# Stable release and archival guide
 
-Phase 9 prepares release artifacts but does not publish them from a developer workstation.
+Stable `v1.0.0` is published only from the protected release workflow after its local and hosted
+gates pass. A developer workstation may build and verify the same artifacts, but a local dry-run
+does not constitute a public release.
+
+## Version mapping
+
+The release manifest binds these immutable identities:
+
+| Surface | Identity |
+|---|---|
+| Software | `v1.0.0` |
+| Benchmark | `benchmark-v1` |
+| Formal dataset manifest | `dataset-manifest-v3` |
+| Formal experiment protocol | `protocol-v4` |
+| Formal experiment commit | `6f03d3da3ed6ecbe918c5a7f9aa35cb9abfb2b83` |
+
+The original Phase 14 report used v1 placeholders for the dataset and protocol. The accepted
+formal experiment uses v3/v4 because earlier revisions were superseded by stricter leakage and
+data-semantic corrections. Release metadata must not rename or downgrade those frozen inputs.
 
 ## Local gate
 
-Use Python 3.11 or 3.12 and the Tsinghua package mirror:
+Use Python 3.11 or 3.12. A mainland China mirror can be selected for dependency resolution:
 
 ```bash
 export PIP_INDEX_URL="https://pypi.tuna.tsinghua.edu.cn/simple"
-python -m pip install -e ".[dev,rl,service,release]"
+python -m pip install -e ".[dev,release,docs,rl,llm]"
+cmag release freeze --workspace-root .
+cmag benchmark verify --benchmark benchmarks/v1
+python scripts/create_stable_release_manifest.py --verify
+python scripts/verify_docs.py
 pytest
 ruff check .
 mypy src
-cmag release check --workspace-root .
 python -m build
 python -m twine check dist/*.whl dist/*.tar.gz
-cmag release verify --dist-dir dist
-cmag release manifest --dist-dir dist
+cmag release verify --version 1.0.0
 ```
 
-The build must contain one wheel, one source archive, and `release-manifest.json`. Inspect the
-source archive before tagging; local market data, credentials, runs, reports, environments, and
-checkpoints must be absent.
-
-## Version and tag
-
-`src/crossmarket_agentgym/_version.py` is the only version source. Hatch reads it for PyPI
-metadata. `CITATION.cff` and `.zenodo.json` must carry the same stable version.
-
-Create the protected rc2 tag only after the Phase 11 Linux CPU and Docker workflows succeed on
-the exact commit and the evidence summaries are downloaded:
+Use the provided dry-runs before any external state change:
 
 ```bash
-git tag -a v1.0.0-rc2 -m "CrossMarketAgentGym v1.0.0-rc2"
-git push origin v1.0.0-rc2
+scripts/create_archive.sh --dry-run
+scripts/publish_pypi.sh --dry-run
+scripts/publish_docker.sh --dry-run
+scripts/verify_public_release.sh --offline
 ```
 
-Pushing the tag is an external publication authorization. Do not run these commands merely to test
-the release workflow.
+## Tag and hosted release
 
-## PyPI trusted publishing
+`src/crossmarket_agentgym/_version.py` is the package version source. `CITATION.cff`,
+`.zenodo.json`, and `release/release_manifest_v1.0.0.json` must agree with it.
 
-`.github/workflows/release.yml` builds once, checks the tag/version match, validates distributions,
-and uses PyPI Trusted Publishing through GitHub OIDC. Configure the PyPI project and GitHub
-`pypi` environment before the first tag. No long-lived PyPI token belongs in repository secrets.
+Create `v1.0.0` only after:
 
-A manual workflow dispatch defaults to `publish: false`. Changing it to true is an explicit
-publication action.
+- every local release gate passes on the exact commit;
+- PyPI Trusted Publishing is configured for the GitHub `pypi` environment;
+- GitHub Pages and GHCR publication are enabled;
+- the archival integration is enabled and a DOI can be minted without restricted data.
 
-## GitHub Release and Zenodo
+The tag launches `.github/workflows/release.yml`. It builds and attests the wheel, sdist, source
+evidence archive, Benchmark archive, public sample checkpoint, and checksums. Publication jobs
+use GitHub OIDC or the scoped repository token; no long-lived PyPI or registry credential belongs
+in the repository.
 
-A version tag creates a GitHub Release containing the wheel, source archive, and release manifest.
-For rc2, also download the two commit-matched Phase 11 workflow artifacts, build the deterministic
-evidence ZIP with `scripts/build_phase11_release_evidence.py`, and attach the ZIP plus checksum to
-the Release. GitHub Actions artifacts are temporary; the Release asset is the permanent evidence.
-Enable the repository in Zenodo's GitHub integration before tagging; Zenodo then archives the
-GitHub Release using `.zenodo.json`.
+Pushing a stable tag is an irreversible publication action. Do not create or push it merely to
+test the workflow; use a manual dispatch with every publication input left `false`.
 
-After Zenodo mints the DOI:
+## PyPI verification
 
-1. add the version DOI to the release notes;
-2. add the concept DOI and preferred citation to `CITATION.cff`;
-3. update the README citation section;
-4. prepare a metadata-only patch release if those changes must be archived.
-
-No DOI is invented before Zenodo returns it.
-
-## Docker
-
-The default image contains core functionality and the read-only service:
+After publication, use a new CPU environment and the canonical package name:
 
 ```bash
-docker build -t crossmarket-agent-gym:1.0.0-rc2 .
-docker run --rm crossmarket-agent-gym:1.0.0-rc2 --version
-docker run --rm crossmarket-agent-gym:1.0.0-rc2 quickstart --smoke-steps 16
+python -m venv verify-v1
+verify-v1/bin/python -m pip install "crossmarket-agent-gym==1.0.0"
+verify-v1/bin/cmag --version
+verify-v1/bin/cmag quickstart --smoke-steps 64
 ```
 
-To include Stable-Baselines3 and CPU PyTorch:
+PyPI normalizes project names, but documentation consistently uses
+`crossmarket-agent-gym`.
+
+## Container verification
+
+The public image uses `cmag` as its entrypoint and runs as the unprivileged `cmag` user:
 
 ```bash
-docker build --build-arg CMAG_EXTRAS=rl,service \
-  -t crossmarket-agent-gym:1.0.0-rc2-rl .
+docker pull ghcr.io/bitbullhorse/crossmarket-agent-gym:1.0.0
+docker run --rm \
+  --network none \
+  --cpus 2 \
+  --memory 7g \
+  --env CUDA_VISIBLE_DEVICES="" \
+  ghcr.io/bitbullhorse/crossmarket-agent-gym:1.0.0 \
+  quickstart --smoke-steps 64
 ```
 
-The runtime uses an unprivileged `cmag` user. `.dockerignore` excludes credentials, raw market
-data, runs, reports, environments, build products, tests, and paper drafts from the build context.
+The final argument is `quickstart`, not `cmag quickstart`, because the image entrypoint already is
+`cmag`.
+
+## Documentation and DOI
+
+The docs job builds byte-equivalent `v1.0.0`, `stable`, and `latest` trees. The archival package
+contains source, documentation, synthetic samples, manifests, Benchmark metadata, release notes,
+citation metadata, and licenses.
+
+It must not contain restricted raw financial records. For those data, only acquisition
+instructions, Schema, symbol universe, date ranges, hashes, and the redistributable synthetic
+sample may be archived. `DATA_LICENSE.md` is the controlling redistribution statement.
+
+No DOI is invented before the archive service returns it. After minting, add the version DOI and
+preferred citation to `CITATION.cff`, the release manifest, and the README through a metadata-only
+patch if the stable tag has already been published.
+
+## Final public verification
+
+```bash
+scripts/verify_public_release.sh --online
+```
+
+This checks PyPI, the CPU container, all three documentation aliases, the DOI, and the local
+release-to-Benchmark mapping. Phase 14 remains open until every online check passes.
 
 ## Rollback
 
-PyPI and Zenodo releases are immutable archival records. Never overwrite a released version.
-Yank a defective PyPI version with a reason, mark the GitHub Release accordingly, and publish a
-new patch version. Do not delete evidence required to explain the defect.
+Published PyPI, container, Release, and archival records are immutable evidence. Never overwrite
+a released version. Yank a defective package with a reason, mark the Release, and publish a patch
+version. Retain the original evidence explaining the defect.

@@ -1,11 +1,6 @@
+import Link from "next/link";
 import { AppShell, StatusPill } from "../components/AppShell";
-import {
-  agentRows,
-  baselineRows,
-  hpoRows,
-  phase12Status,
-  transferRows,
-} from "../lib/data";
+import { agentRows, baselineRows, hpoRows, transferRows } from "../lib/data";
 
 function BarTable({
   rows,
@@ -42,46 +37,54 @@ function BarTable({
 export default function ExperimentsPage() {
   return (
     <AppShell
-      eyebrow="Frozen protocol · provisional results"
-      title="Phase 12 正式实验"
-      description="展示 protocol-v4 / matrix-v6 的机器执行结果。所有比较均为描述性结果；独立复核签字前不得作为最终论文结论。"
-      action={<StatusPill tone="warn">review required</StatusPill>}
+      eyebrow="Strategy guide"
+      title="选择策略方法的参考"
+      description="下面是内置历史样本上的示例表现，用于帮助理解不同算法的特点。它不是收益承诺，也不能替代你在自己数据上的回测。"
+      action={
+        <Link className="button primary" href="/workflows">
+          创建我的策略
+        </Link>
+      }
     >
-      <section className="experiment-banner">
+      <section className="alert alert-warn consumer-alert">
+        <div className="alert-mark">i</div>
         <div>
-          <span className="tiny-label">Machine gate</span>
-          <strong>215 / 215</strong>
-          <small>runs completed</small>
-        </div>
-        <div>
-          <span className="tiny-label">Statistical gate</span>
-          <strong>0 / 200</strong>
-          <small>Holm-significant comparisons</small>
-        </div>
-        <div>
-          <span className="tiny-label">Independent review</span>
-          <strong>缺失</strong>
-          <small>{phase12Status.blocker}</small>
-        </div>
-      </section>
-
-      <section className="alert alert-warn">
-        <div className="alert-mark">!</div>
-        <div>
-          <strong>阅读口径</strong>
+          <strong>先理解差异，再自己验证</strong>
           <p>
-            200 个配对检验经 Holm 校正后均不显著，最小调整后 p 值为 1.0。
-            B、E、F 有配对检验；C、D 仅作描述。下列“较高”不代表统计胜出。
+            这些方法在当前样本中的差异没有达到统计显著水平。
+            历史表现不代表未来收益，请结合回撤、成本和换手率一起判断。
           </p>
         </div>
+        <StatusPill tone="warn">仅供参考</StatusPill>
+      </section>
+
+      <section className="method-intro-grid">
+        <article className="panel method-intro">
+          <span>PPO</span>
+          <h2>稳定、容易开始</h2>
+          <p>适合首次训练和多数跨市场配置，是默认推荐选择。</p>
+          <Link href="/workflows?mode=train">使用 PPO 创建 →</Link>
+        </article>
+        <article className="panel method-intro">
+          <span>SAC</span>
+          <h2>探索更充分</h2>
+          <p>适合连续仓位决策，通常需要更多训练时间。</p>
+          <Link href="/workflows?mode=train">尝试 SAC →</Link>
+        </article>
+        <article className="panel method-intro">
+          <span>TD3</span>
+          <h2>适合高级特征</h2>
+          <p>支持张量观察和自定义特征提取，适合有经验的用户。</p>
+          <Link href="/workflows?mode=train">尝试 TD3 →</Link>
+        </article>
       </section>
 
       <div className="experiment-grid">
         <article className="panel experiment-card span-2">
           <div className="panel-head">
             <div>
-              <div className="tiny-label">Task B · Baselines</div>
-              <h2>锁定测试区间回报</h2>
+              <div className="tiny-label">历史样本表现</div>
+              <h2>常见策略的区间回报</h2>
             </div>
             <span className="period">2025-01-02 — 2025-09-30</span>
           </div>
@@ -92,49 +95,36 @@ export default function ExperimentsPage() {
             max={15}
           />
           <p className="chart-note">
-            Equal weight 描述性回报 14.97%；SAC 描述性 Sharpe 1.802。
-            结果未年化，且不存在 Holm 校正后的显著优胜者。
+            等权策略在这个样本中的回报较高，SAC 的风险调整后表现较好。
+            单个样本不能说明某种方法长期更优。
           </p>
         </article>
 
         <article className="panel experiment-card">
-          <div className="tiny-label">Task A · Accounting</div>
-          <h2>无泄漏与会计一致性</h2>
-          <div className="big-check">10 / 10</div>
-          <p className="chart-note">测试用例通过；最大绝对会计误差 0.0。</p>
-          <div className="mini-stats">
-            <span>
-              <strong>0</strong> leakage
-            </span>
-            <span>
-              <strong>0</strong> mutation
-            </span>
-          </div>
-        </article>
-
-        <article className="panel experiment-card">
-          <div className="tiny-label">Task C · Transfer</div>
-          <h2>跨市场迁移</h2>
+          <div className="tiny-label">跨市场适应</div>
+          <h2>迁移到不同市场</h2>
           <BarTable
             rows={transferRows}
             valueKey="return"
             suffix="%"
             max={12}
           />
-          <p className="chart-note">仅作描述性对比；未执行配对显著性检验。</p>
+          <p className="chart-note">
+            联合训练在当前样本中更稳定；迁移到单一市场时表现差异较大。
+          </p>
         </article>
 
         <article className="panel experiment-card">
-          <div className="tiny-label">Task D · Market mechanics</div>
-          <h2>机制消融 · Δ return</h2>
+          <div className="tiny-label">真实摩擦</div>
+          <h2>成本和市场机制的影响</h2>
           <div className="delta-list">
             {[
-              ["No transaction cost", "+2.61 pp", "up"],
-              ["No slippage", "+1.29 pp", "up"],
-              ["Minimum risk layer", "+1.14 pp", "warn"],
-              ["No turnover cap", "−0.50 pp", "down"],
-              ["No FX", "−3.06 pp", "down"],
-              ["Synchronous calendar", "−5.79 pp", "down"],
+              ["忽略交易费用", "+2.61 个百分点", "up"],
+              ["忽略滑点", "+1.29 个百分点", "up"],
+              ["降低风险限制", "+1.14 个百分点", "warn"],
+              ["取消换手限制", "−0.50 个百分点", "down"],
+              ["忽略汇率变化", "−3.06 个百分点", "down"],
+              ["强制同步交易日", "−5.79 个百分点", "down"],
             ].map(([name, value, tone]) => (
               <div key={name}>
                 <span>{name}</span>
@@ -143,13 +133,13 @@ export default function ExperimentsPage() {
             ))}
           </div>
           <p className="chart-note">
-            “Minimum risk layer”同时提高换手、成本与回撤，不能只看回报。
+            忽略成本可能让回测看起来更好，但会降低结果的现实参考价值。
           </p>
         </article>
 
         <article className="panel experiment-card">
-          <div className="tiny-label">Task E · Agent ablation</div>
-          <h2>三层 Agent 消融</h2>
+          <div className="tiny-label">AI 顾问组合</div>
+          <h2>不同顾问配置</h2>
           <BarTable
             rows={agentRows}
             valueKey="return"
@@ -157,45 +147,24 @@ export default function ExperimentsPage() {
             max={6}
           />
           <p className="chart-note">
-            完整委员会被确定性风险层投影为全现金；这说明安全约束生效，不表示
-            LLM 组件无效。委员会平均 11,316 tokens / 87.3 秒。
+            风险委员会可能主动降低仓位。回报降低并不一定代表建议失效，
+            还需要同时观察回撤和风险暴露。
           </p>
         </article>
 
-        <article className="panel experiment-card span-2">
+        <article className="panel experiment-card">
           <div className="panel-head">
             <div>
-              <div className="tiny-label">Task F · HPO</div>
-              <h2>等预算优化器评分</h2>
+              <div className="tiny-label">参数优化</div>
+              <h2>相同预算下的优化评分</h2>
             </div>
-            <StatusPill tone="neutral">24 trials · 3 folds · 1 test</StatusPill>
           </div>
           <BarTable rows={hpoRows} valueKey="score" max={1.9} />
           <p className="chart-note">
-            Random 的描述性 locked-test score 为 1.879。ASHA 仅作为资源调度器；
-            Grid 与 Simulated Annealing 已实现但不在冻结的 Phase 12 协议中。
+            没有一种搜索方法在所有策略上都最好。首次使用可从粒子群或随机搜索开始。
           </p>
         </article>
       </div>
-
-      <section className="provenance panel">
-        <div>
-          <div className="tiny-label">Provenance contract</div>
-          <h2>所有数字必须回到运行源</h2>
-        </div>
-        <div className="provenance-flow">
-          <span>run ID</span>
-          <i>→</i>
-          <span>source file</span>
-          <i>→</i>
-          <span>benchmark revision</span>
-          <i>→</i>
-          <span>paper version</span>
-        </div>
-        <p>
-          独立复核完成前，本页仅作为审阅界面；不得以截图替代冻结结果文件或审计签名。
-        </p>
-      </section>
     </AppShell>
   );
 }

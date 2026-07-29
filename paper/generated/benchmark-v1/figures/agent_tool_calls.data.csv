@@ -1,0 +1,8 @@
+method,log_count
+custom_multi_agent_committee,30
+full_stack_single_agent,20
+hierarchical_only,10
+no_llm,5
+research_only,10
+research_risk,15
+risk_only,10

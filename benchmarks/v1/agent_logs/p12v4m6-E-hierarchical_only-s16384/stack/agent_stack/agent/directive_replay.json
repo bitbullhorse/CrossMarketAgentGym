@@ -1,0 +1,76 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": {
+    "confidence": 0.6,
+    "global_risk_budget": 0.5,
+    "market_budgets": {
+      "CN": 0.25,
+      "HK": 0.25,
+      "JP": 0.25,
+      "US": 0.25
+    },
+    "market_regime": "neutral",
+    "objective_weights": {
+      "momentum": 0.3,
+      "risk_parity": 0.5,
+      "value": 0.2
+    },
+    "rebalance_interval": 21,
+    "sector_budgets": null
+  },
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": null,
+  "risk_mode": "enforced",
+  "risk_proposed": null,
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

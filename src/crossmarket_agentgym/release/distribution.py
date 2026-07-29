@@ -19,19 +19,31 @@ _WHEEL_REQUIRED = (
     "crossmarket_agentgym/resources/configs/env/cross_market.yaml",
     "crossmarket_agentgym/resources/configs/env/sample_cross_market.yaml",
     "crossmarket_agentgym/resources/data/sample/dataset_manifest.json",
+    "crossmarket_agentgym/resources/data/sample/checkpoints/equal_weight_policy.json",
+    "crossmarket_agentgym/resources/data/sample/checkpoints/equal_weight_policy.json.sha256",
     "crossmarket_agentgym/resources/release/api_inventory.csv",
+    "crossmarket_agentgym/resources/release/release_manifest_v1.0.0.json",
+    "crossmarket_agentgym/resources/release/release_manifest_v1.0.0.sha256",
     "crossmarket_agentgym/resources/schemas/rc1/checksums.json",
 )
 _SDIST_REQUIRED = (
     "README.md",
     "CITATION.cff",
+    "DATA_LICENSE.md",
     "LICENSE",
     "constraints-cpu.txt",
     "environment-cpu.yml",
     "pyproject.toml",
     "paper/softwarex-paper-outline.md",
     "release/api_inventory.csv",
+    "release/release_manifest_v1.0.0.json",
+    "release/release_manifest_v1.0.0.sha256",
+    "release/release_notes_v1.0.0.md",
     "schemas/rc1/checksums.json",
+    "scripts/create_archive.sh",
+    "scripts/publish_docker.sh",
+    "scripts/publish_pypi.sh",
+    "scripts/verify_public_release.sh",
     "scripts/verify_release.sh",
     "uv.lock",
 )
@@ -76,8 +88,11 @@ def _specifier_parts(value: str | None) -> frozenset[str]:
 
 def verify_distributions(
     dist_dir: str | Path,
+    *,
+    expected_version: str | None = None,
 ) -> DistributionVerificationResult:
     """Verify metadata, packaged quickstart assets, and archive exclusions."""
+    required_version = expected_version or __version__
     root = Path(dist_dir).resolve()
     wheels = sorted(root.glob("*.whl"))
     sdists = sorted(root.glob("*.tar.gz"))
@@ -108,7 +123,8 @@ def verify_distributions(
     metadata = Parser().parsestr(metadata_text)
     metadata_valid = (
         metadata.get("Name") == "crossmarket-agent-gym"
-        and metadata.get("Version") == __version__
+        and metadata.get("Version") == required_version
+        and required_version == __version__
         and _specifier_parts(metadata.get("Requires-Python"))
         == frozenset({">=3.11", "<3.13"})
     )
@@ -116,7 +132,7 @@ def verify_distributions(
         _check(
             "wheel_metadata",
             metadata_valid,
-            "wheel name, version, and Python requirement agree",
+            f"wheel name, version {required_version}, and Python requirement agree",
         )
     )
     missing_wheel = [item for item in _WHEEL_REQUIRED if item not in wheel_names]

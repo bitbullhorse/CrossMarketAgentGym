@@ -1,0 +1,14 @@
+{
+  "benchmark_id": "benchmark-v1",
+  "code_commit": "6f03d3da3ed6ecbe918c5a7f9aa35cb9abfb2b83",
+  "dataset_manifest_sha256": "0ed9091f1ab96d24ef5fbd41d0d080668623e954e4f15e4a277f1c217e825eb9",
+  "filesystem_sealed": true,
+  "formal_results_only": true,
+  "immutability": "write_once_checksums_and_filesystem_read_only",
+  "overwrite_allowed": false,
+  "protocol_sha256": "90e40d212b5faaff644e0041eeef92c0b0056ce9a834095a047948a1d5e42529",
+  "run_count": 215,
+  "schema_version": "1.0",
+  "source_matrix": "phase12-run-matrix-v6",
+  "source_review_storage": "external_audit_not_embedded"
+}

@@ -21,12 +21,12 @@ No. Training and validation are available to HPO. Test is reserved for a locked 
 
 No. They are resource schedulers independent from the nine search algorithms.
 
-## Is rc2 the final v1.0.0 release?
+## What is the relationship between rc2 and v1.0.0?
 
-No. rc2 closes the Phase 11 independent-reproduction gate. The formal experiment, Benchmark
-freeze, paper, and stable-release gates must still occur in order.
+rc2 closed the Phase 11 independent-reproduction gate. Stable v1.0.0 additionally binds the
+accepted formal experiment inputs and immutable Benchmark v1 through its release manifest.
 
 ## Where are compatibility and known limitations recorded?
 
-See [compatibility matrix](../release/compatibility_matrix.md) and
-[known issues](../release/known_issues.md).
+See the [compatibility matrix](compatibility.md) and
+[known limitations](known-limitations.md).

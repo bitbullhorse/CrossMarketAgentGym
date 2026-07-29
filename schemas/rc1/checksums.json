@@ -32,6 +32,6 @@
     "configs/training.schema.json": "8caa3d78eca17313ace29120052a847fa1ca025a592a0d2d12c5d1f7189d5fae",
     "configs/tuning.schema.json": "8ddcc9423b35540f3eee6c0d25e2c0f338c226a162282ba57516b67522a064af"
   },
-  "release": "1.0.0-rc2",
+  "release": "1.0.0",
   "schema_version": "1.0"
 }

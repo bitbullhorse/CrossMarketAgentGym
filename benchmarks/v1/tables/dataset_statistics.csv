@@ -1,0 +1,5 @@
+market,symbols,rows,date_start,date_end,manifest
+CN,20,20706,2021-01-04,2025-09-30,dataset_manifest.json
+HK,20,6276,2021-01-04,2025-09-30,dataset_manifest.json
+JP,20,22391,2021-01-04,2025-09-30,dataset_manifest.json
+US,20,23820,2021-01-04,2025-09-30,dataset_manifest.json

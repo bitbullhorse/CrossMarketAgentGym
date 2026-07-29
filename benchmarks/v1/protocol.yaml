@@ -1,0 +1,327 @@
+schema_version: '1.0'
+protocol_id: protocol-v4
+status: frozen
+purpose: softwarex_formal_experiments
+development_run_inputs_allowed: false
+software_release: v1.0.0-rc2
+dataset:
+  dataset_version: dataset-manifest-v3
+  source_root: stock_data
+  source_inventory: experiments/data/source_inventory_v3.json
+  source_inventory_sha256: 4102bbd96b71001dd44c397c2f406f2e4109d864b1a59cc25e67395bcd56f58d
+  processed_root: data/processed/formal_v3
+  processed_manifest: data/processed/formal_v3/dataset_manifest.json
+  processed_manifest_sha256: 0ed9091f1ab96d24ef5fbd41d0d080668623e954e4f15e4a277f1c217e825eb9
+  selection:
+    markets:
+    - CN
+    - HK
+    - JP
+    - US
+    assets_per_market: 20
+    held_out_assets_per_market: 4
+    ordering: sha256_market_symbol_salt
+    ordering_salt: CrossMarketAgentGym-protocol-v2
+    reject_source_on_any_quality_error: true
+    allow_row_repair: false
+    allowed_semantic_exclusions:
+    - non_ohlcv_record_with_all_price_volume_fields_missing
+    minimum_source_coverage:
+      start: '2021-01-04'
+      end: '2021-02-01'
+    experiment_window:
+      start: 2021-01-04
+      end: 2025-09-30
+    survivorship_bias_disclosed: true
+    universe_formation_date: '2021-02-01'
+    selection_information_cutoff: '2021-02-01'
+    post_cutoff_quality_policy: retain_symbol_censor_from_first_invalid_observation
+  corporate_action_policy: raw_ohlc_with_adjusted_close_metadata_no_future_backfill
+  source_mutation_policy: reject_invalid_observation_and_censor_all_later_observations
+fx:
+  provider: European Central Bank Data Portal
+  dataset: EXR
+  endpoint: https://data-api.ecb.europa.eu/service/data/EXR/D.CNY%2BHKD%2BJPY%2BUSD.EUR.SP00.A
+  raw_snapshot: experiments/data/ecb_exr_20201201_20250930.csv
+  raw_snapshot_sha256: a84793dceb4a5d61f30cf97033c5c51805ee87b41c60df8bb74fa0576294ace1
+  currencies:
+  - CNY
+  - HKD
+  - JPY
+  - USD
+  quote_currency: USD
+  transformation: currency_to_usd=usd_per_eur/currency_per_eur
+  lookup: latest_on_or_before
+  acquisition_window:
+    start: 2020-12-01
+    end: 2025-09-30
+partitions:
+  train:
+    start: '2021-02-02'
+    end: 2023-12-29
+  validation:
+    start: 2024-01-02
+    end: 2024-12-31
+  test:
+    start: 2025-01-02
+    end: 2025-09-30
+  walk_forward:
+  - fold_id: fold_01
+    train:
+      start: '2021-02-02'
+      end: 2022-12-30
+    validation:
+      start: 2023-01-03
+      end: 2023-06-30
+  - fold_id: fold_02
+    train:
+      start: '2021-02-02'
+      end: 2023-06-30
+    validation:
+      start: 2023-07-03
+      end: 2023-12-29
+  - fold_id: fold_03
+    train:
+      start: '2021-02-02'
+      end: 2023-12-29
+    validation:
+      start: 2024-01-02
+      end: 2024-12-31
+  train_usage: fit_model_and_train_only_preprocessing
+  validation_usage: early_stopping_hpo_and_model_selection
+  test_usage: single_locked_configuration_final_evaluation
+  random_time_shuffle: false
+execution:
+  signal_execution: close_signal_next_open
+  base_currency: USD
+  initial_cash: 1000000.0
+  transaction_cost_bps: 10.0
+  slippage_bps: 5.0
+  allow_short: false
+  max_leverage: 1.0
+  max_asset_weight: 0.1
+  max_market_weight: 0.35
+  cash_floor: 0.05
+  max_turnover: 0.5
+  t_plus_one_markets:
+  - CN
+  asynchronous_calendar: union_observed_sessions
+  fx_rule: latest_on_or_before
+  risk_projection: mandatory_deterministic
+  accounting_tolerance: 1.0e-08
+drl:
+  algorithms:
+  - PPO
+  - SAC
+  - TD3
+  policy: mlp
+  observation_layout: flat
+  lookback: 20
+  total_timesteps: 50000
+  evaluation_episodes: 5
+  deterministic_evaluation: true
+  search_space:
+    learning_rate:
+      kind: float
+      low: 1.0e-05
+      high: 0.001
+      log: true
+    gamma:
+      kind: float
+      low: 0.95
+      high: 0.999
+    n_steps:
+      kind: int
+      low: 128
+      high: 1024
+      step: 128
+    batch_size:
+      kind: int
+      low: 32
+      high: 256
+      step: 32
+agents:
+  model: deepseek-v4-pro
+  api_key_env: DEEPSEEK_API_KEY
+  base_url_env: DEEPSEEK_BASE_URL
+  default_base_url: https://api.deepseek.com
+  temperature: 0.0
+  max_rounds: 2
+  prompt_version: phase12.v1
+  prompt_source_sha256: 9ee7ad5d5e7cd91da1a0f629d39e7554005aeb0b1d8b0489ec46e388b6c2c938
+  allowed_permissions:
+  - read
+  - compute
+  network_access: provider_only
+  account_state_mutation: false
+  deterministic_risk_layer_bypass: false
+  replay_required: true
+  presets:
+  - no_llm
+  - research_only
+  - risk_only
+  - hierarchical_only
+  - research_risk
+  - full_stack_single_agent
+  - custom_multi_agent_committee
+  prompt_source: experiments/agents/prompt_bundle_v1.json
+hpo:
+  searchers:
+  - default
+  - random
+  - tpe
+  - cma_es
+  - pso
+  - genetic
+  - differential_evolution
+  - nsga_ii
+  scheduler: asha
+  scheduler_is_resource_only: true
+  trials_per_searcher: 24
+  timesteps_per_trial: 20000
+  walk_forward_folds: 3
+  same_search_space: true
+  same_seed_fold_budget: true
+  test_partition_visible_during_search: false
+statistics:
+  confidence_level: 0.95
+  dispersion:
+  - mean
+  - std
+  - median
+  - best
+  - worst
+  interval_method: student_t
+  paired_test: wilcoxon_signed_rank
+  multiple_comparison_correction: holm
+  effect_size: paired_rank_biserial
+  report_best_seed_only: false
+compute:
+  seeds:
+  - 1024
+  - 2048
+  - 4096
+  - 8192
+  - 16384
+  cpu_quickcheck_required: true
+  remote_gpu_count: 4
+  gpu_model: NVIDIA RTX 4090D
+  max_parallel_gpu_trials: 4
+  ray_optional: true
+groups:
+- code: A
+  name: Environment correctness
+  methods:
+  - transaction_cost
+  - slippage
+  - t_plus_one
+  - suspension
+  - price_limits
+  - minimum_lot
+  - market_holiday
+  - fx_conversion
+  - weight_projection
+  - cash_holdings_nav
+  required_metrics:
+  - passed
+  - expected
+  - observed
+  - absolute_error
+- code: B
+  name: Strategy compatibility
+  methods:
+  - cash
+  - buy_and_hold
+  - equal_weight
+  - risk_parity
+  - mean_variance
+  - PPO
+  - SAC
+  - TD3
+  required_metrics:
+  - mean_return
+  - mean_reward
+  - max_drawdown
+  - mean_turnover
+  - total_cost
+  - runtime_seconds
+- code: C
+  name: Cross-market generalization
+  methods:
+  - CN+HK+JP_to_US
+  - CN+HK+US_to_JP
+  - CN+JP+US_to_HK
+  - HK+JP+US_to_CN
+  - single_market
+  - joint_market
+  - unseen_stock
+  - leave_one_market_out
+  - market_rule_sensitivity
+  required_metrics:
+  - mean_return
+  - sharpe
+  - max_drawdown
+  - mean_turnover
+- code: D
+  name: Market mechanism ablation
+  methods:
+  - no_transaction_cost
+  - no_slippage
+  - no_t_plus_one
+  - no_price_limits
+  - no_suspension
+  - no_fx_variation
+  - synchronous_calendar
+  - no_turnover_cap
+  - minimum_deterministic_risk_projection
+  required_metrics:
+  - mean_return
+  - sharpe
+  - max_drawdown
+  - mean_turnover
+  - trade_count
+  - invalid_order_count
+  - runtime_seconds
+- code: E
+  name: LLM Agent ablation
+  methods:
+  - no_llm
+  - research_only
+  - risk_only
+  - hierarchical_only
+  - research_risk
+  - full_stack_single_agent
+  - custom_multi_agent_committee
+  required_metrics:
+  - task_success_rate
+  - config_validity_rate
+  - tool_call_accuracy
+  - leakage_violation_rate
+  - risk_directive_validity_rate
+  - conflict_resolution_rate
+  - report_completeness_rate
+  - token_cost
+  - api_cost
+  - additional_runtime_seconds
+  - replay_consistency
+  - portfolio_metrics
+- code: F
+  name: Hyperparameter optimization
+  methods:
+  - default
+  - random
+  - tpe
+  - cma_es
+  - pso
+  - genetic
+  - differential_evolution
+  - nsga_ii
+  required_metrics:
+  - validation_score
+  - locked_test_score
+  - convergence
+  - runtime_seconds
+  - stability
+  - pareto_front
+  - tuning_overfit_gap
+supersedes_protocol: protocol-v3

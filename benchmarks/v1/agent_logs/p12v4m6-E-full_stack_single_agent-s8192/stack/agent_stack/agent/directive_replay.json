@@ -1,0 +1,182 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": {
+    "confidence": 0.8,
+    "global_risk_budget": 0.3,
+    "market_budgets": {
+      "CN": 0.25,
+      "HK": 0.25,
+      "JP": 0.25,
+      "US": 0.25
+    },
+    "market_regime": "neutral",
+    "objective_weights": {
+      "research": 0.5,
+      "risk": 0.5
+    },
+    "rebalance_interval": 21,
+    "sector_budgets": null
+  },
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.9,
+    "estimated_compute_units": 0.0,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol. Never access test metrics.",
+    "rationale": "The formal_v3 dataset is confirmed valid (73,193 rows, 80 symbols across CN, HK, JP, US). To produce bounded directives we will: validate dataset integrity, enumerate markets and symbols, create a validation-only split, validate the experiment configuration, and estimate compute budget. All steps are safe, read-only, and confined to validation artifacts.",
+    "safe_to_execute": false,
+    "steps": [
+      {
+        "action": "inspect_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [],
+        "expected_artifacts": [],
+        "id": "step1"
+      },
+      {
+        "action": "validate_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "step1"
+        ],
+        "expected_artifacts": [
+          "validation_report"
+        ],
+        "id": "step2"
+      },
+      {
+        "action": "list_markets",
+        "arguments": {},
+        "depends_on": [
+          "step2"
+        ],
+        "expected_artifacts": [
+          "market_list"
+        ],
+        "id": "step3"
+      },
+      {
+        "action": "list_symbols",
+        "arguments": {},
+        "depends_on": [
+          "step3"
+        ],
+        "expected_artifacts": [
+          "symbol_list"
+        ],
+        "id": "step4"
+      },
+      {
+        "action": "create_split",
+        "arguments": {
+          "partition_authority": "validation_only"
+        },
+        "depends_on": [
+          "step4"
+        ],
+        "expected_artifacts": [
+          "validation_split"
+        ],
+        "id": "step5"
+      },
+      {
+        "action": "validate_experiment_config",
+        "arguments": {},
+        "depends_on": [
+          "step5"
+        ],
+        "expected_artifacts": [
+          "config_validation"
+        ],
+        "id": "step6"
+      },
+      {
+        "action": "estimate_compute_budget",
+        "arguments": {
+          "mode": "validation_only"
+        },
+        "depends_on": [
+          "step6"
+        ],
+        "expected_artifacts": [
+          "compute_budget_estimate"
+        ],
+        "id": "step7"
+      }
+    ],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": {
+    "allow_new_positions": false,
+    "cash_floor": 0.5,
+    "confidence": 0.9,
+    "max_asset_weight": 0.05,
+    "max_market_weights": {
+      "CN": 0.05,
+      "HK": 0.05,
+      "JP": 0.05,
+      "US": 0.05
+    },
+    "max_turnover": 0.1,
+    "rationale": "Phase 12 protocol is frozen; given 8% drawdown and 20% vol, we impose strict limits to preserve capital and reduce tail risk. Volatility z-score of 1.0 indicates normal regime but elevated CVaR suggests potential downside. Limits ensure no single asset dominates and high cash buffer absorbs shocks. Rebalancing monthly minimizes turnover costs.",
+    "rebalance_frequency": "monthly",
+    "risk_budget": 0.02
+  },
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": null,
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.0,
+    "estimated_compute_units": 0.0,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol. Never access test metrics.",
+    "rationale": "Initiating with dataset inspection to ground all subsequent steps in validation-only evidence. Dry-run mode ensures no unintended execution. Test metrics excluded by constraint.",
+    "safe_to_execute": false,
+    "steps": [
+      {
+        "action": "inspect_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [],
+        "expected_artifacts": [],
+        "id": "inspect_manifest"
+      }
+    ],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": {
+    "allow_new_positions": false,
+    "cash_floor": 0.4,
+    "confidence": 0.85,
+    "max_asset_weight": 0.2,
+    "max_market_weights": {
+      "CN": 0.2,
+      "HK": 0.2,
+      "JP": 0.2,
+      "US": 0.2
+    },
+    "max_turnover": 0.5,
+    "rationale": "Current portfolio exhibits moderate volatility (20% ann.), CVaR 4%, and 8% drawdown. Given market membership limited to CN, HK, JP, US, we propose conservative risk limits to adhere to frozen Phase 12 protocol: risk budget of 0.04, max asset weight 0.2, cash floor 0.4, max turnover 0.5, and no new positions. Rebalancing monthly to minimize transaction costs.",
+    "rebalance_frequency": "monthly",
+    "risk_budget": 0.04
+  },
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

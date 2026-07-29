@@ -1,0 +1,147 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": null,
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.9,
+    "estimated_compute_units": 0.0,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol. Never access test metrics.",
+    "rationale": "Dry-run plan to validate dataset and experiment configuration without executing training or accessing test metrics. Steps are designed to inspect, validate, and estimate resources for Phase 12 protocol while strictly remaining within validation partition authority.",
+    "safe_to_execute": false,
+    "steps": [
+      {
+        "action": "inspect_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [],
+        "expected_artifacts": [
+          "dataset_summary"
+        ],
+        "id": "step_01_inspect_manifest"
+      },
+      {
+        "action": "validate_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json",
+          "partition": "validation"
+        },
+        "depends_on": [
+          "step_01_inspect_manifest"
+        ],
+        "expected_artifacts": [
+          "validation_report"
+        ],
+        "id": "step_02_validate_dataset"
+      },
+      {
+        "action": "list_symbols",
+        "arguments": {},
+        "depends_on": [
+          "step_02_validate_dataset"
+        ],
+        "expected_artifacts": [
+          "symbols_list"
+        ],
+        "id": "step_03_list_symbols"
+      },
+      {
+        "action": "validate_experiment_config",
+        "arguments": {
+          "config_path": "configs/phase12_protocol.yaml"
+        },
+        "depends_on": [
+          "step_03_list_symbols"
+        ],
+        "expected_artifacts": [
+          "config_validation_report"
+        ],
+        "id": "step_04_validate_config"
+      },
+      {
+        "action": "estimate_compute_budget",
+        "arguments": {
+          "config_path": "configs/phase12_protocol.yaml"
+        },
+        "depends_on": [
+          "step_04_validate_config"
+        ],
+        "expected_artifacts": [
+          "compute_budget_estimate"
+        ],
+        "id": "step_05_estimate_budget"
+      }
+    ],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": {
+    "allow_new_positions": true,
+    "cash_floor": 0.05,
+    "confidence": 0.85,
+    "max_asset_weight": 0.05,
+    "max_market_weights": {
+      "CN": 0.2,
+      "HK": 0.2,
+      "JP": 0.2,
+      "US": 0.2
+    },
+    "max_turnover": 0.25,
+    "rationale": "Conservative limits due to moderate drawdown (8%) and elevated volatility (z-score 1). Maintaining liquidity buffer and diversification. Weekly rebalancing balances trading costs with risk control.",
+    "rebalance_frequency": "weekly",
+    "risk_budget": 0.01
+  },
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

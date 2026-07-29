@@ -1,0 +1,177 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": null,
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.9,
+    "estimated_compute_units": 0.0,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol. Never access test metrics.",
+    "rationale": "The dataset 'CrossMarketAgentGym formal_v3' has been inspected and found valid (73,193 rows, 80 symbols across CN, HK, JP, US markets). To bound research safely, we propose a validation-only plan that confirms data integrity, enumerates available markets and symbols, creates a validation split aligned with the frozen Phase 12 protocol, validates experiment configuration, and estimates compute budget—all without touching test metrics.",
+    "safe_to_execute": false,
+    "steps": [
+      {
+        "action": "inspect_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [],
+        "expected_artifacts": [
+          "dataset_summary"
+        ],
+        "id": "step-1-inspect"
+      },
+      {
+        "action": "validate_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "step-1-inspect"
+        ],
+        "expected_artifacts": [
+          "validation_report"
+        ],
+        "id": "step-2-validate"
+      },
+      {
+        "action": "list_markets",
+        "arguments": {},
+        "depends_on": [],
+        "expected_artifacts": [
+          "market_list"
+        ],
+        "id": "step-3-list-markets"
+      },
+      {
+        "action": "list_symbols",
+        "arguments": {
+          "markets": [
+            "CN",
+            "HK",
+            "JP",
+            "US"
+          ]
+        },
+        "depends_on": [
+          "step-3-list-markets"
+        ],
+        "expected_artifacts": [
+          "symbol_map"
+        ],
+        "id": "step-4-list-symbols"
+      },
+      {
+        "action": "create_split",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json",
+          "partition": "validation_only",
+          "protocol": "Phase12"
+        },
+        "depends_on": [
+          "step-2-validate"
+        ],
+        "expected_artifacts": [
+          "split_manifest"
+        ],
+        "id": "step-5-create-split"
+      },
+      {
+        "action": "validate_experiment_config",
+        "arguments": {
+          "split_manifest": "step-5-create-split.split_manifest"
+        },
+        "depends_on": [
+          "step-5-create-split"
+        ],
+        "expected_artifacts": [
+          "config_validation_report"
+        ],
+        "id": "step-6-validate-config"
+      },
+      {
+        "action": "estimate_compute_budget",
+        "arguments": {
+          "config_validation": "step-6-validate-config.config_validation_report"
+        },
+        "depends_on": [
+          "step-6-validate-config"
+        ],
+        "expected_artifacts": [
+          "compute_budget_estimate"
+        ],
+        "id": "step-7-estimate-budget"
+      }
+    ],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": {
+    "allow_new_positions": false,
+    "cash_floor": 0.6,
+    "confidence": 0.85,
+    "max_asset_weight": 0.1,
+    "max_market_weights": {
+      "CN": 0.1,
+      "HK": 0.1,
+      "JP": 0.1,
+      "US": 0.1
+    },
+    "max_turnover": 0.1,
+    "rationale": "Given 8% drawdown, 20% rolling volatility, and 4% CVaR, we adopt conservative limits: low risk budget 0.1, max asset weight 0.1, maintain at least 60% cash, cap turnover at 0.1, disallow new positions, and rebalance monthly to reduce trading costs and risk.",
+    "rebalance_frequency": "monthly",
+    "risk_budget": 0.1
+  },
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

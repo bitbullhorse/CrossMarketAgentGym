@@ -1,0 +1,32 @@
+site_name: CrossMarketAgentGym
+site_description: Auditable cross-market strategy research and backtesting
+site_url: https://bitbullhorse.github.io/CrossMarketAgentGym/
+repo_url: https://github.com/bitbullhorse/CrossMarketAgentGym
+repo_name: bitbullhorse/CrossMarketAgentGym
+docs_dir: docs
+strict: true
+theme:
+  name: mkdocs
+nav:
+  - Home: README.md
+  - Installation: installation.md
+  - Quickstart: quickstart.md
+  - GUI guide: gui.zh-CN.md
+  - Data schema: data_schema.md
+  - Market environment: environment.md
+  - Market rules: market_rules.md
+  - RL training: rl_training.md
+  - LLM agents: llm_agents.md
+  - Multi-agent runtime: multi_agent.md
+  - Hyperparameter optimization: tuning.md
+  - Benchmark v1: benchmark-v1.md
+  - Reproducibility: reproducibility.md
+  - API reference: api-reference.md
+  - CLI reference: cli-reference.md
+  - Stable API: stable-api.md
+  - Compatibility: compatibility.md
+  - Known limitations: known-limitations.md
+  - Security: security.md
+  - Troubleshooting: troubleshooting.md
+  - FAQ: faq.md
+  - Release: release.md

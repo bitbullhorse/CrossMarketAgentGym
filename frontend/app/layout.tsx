@@ -6,20 +6,20 @@ export const metadata: Metadata = {
     "https://crossmarket-agent-gym.chenzhenjiang05.chatgpt.site",
   ),
   title: {
-    default: "CrossMarketAgentGym · Research Control Center",
+    default: "CrossMarketAgentGym · 智能策略实验室",
     template: "%s · CrossMarketAgentGym",
   },
   description:
-    "可审计的跨市场智能体研究控制台：编排训练、复现运行并审阅冻结实验。",
+    "无需编程即可创建、训练和回测跨市场智能交易策略。",
   openGraph: {
-    title: "CrossMarketAgentGym",
-    description: "Auditable Research Control Center",
+    title: "CrossMarketAgentGym 智能策略实验室",
+    description: "通过图形化向导创建、训练和回测跨市场智能策略",
     images: [{ url: "/og.png", width: 1536, height: 1024 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CrossMarketAgentGym",
-    description: "Auditable Research Control Center",
+    title: "CrossMarketAgentGym 智能策略实验室",
+    description: "无需编程，创建并回测你的跨市场智能策略",
     images: ["/og.png"],
   },
 };

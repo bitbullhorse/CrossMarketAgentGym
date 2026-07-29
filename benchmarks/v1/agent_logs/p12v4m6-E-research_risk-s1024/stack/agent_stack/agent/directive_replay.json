@@ -1,0 +1,149 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": null,
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.8,
+    "estimated_compute_units": 1.0,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol. Never access test metrics.",
+    "rationale": "The Phase 12 protocol is frozen, so all research must be read-only and validation-gated. The plan inspects the dataset manifest, validates its integrity, enumerates markets and symbols, checks that experiment configuration is compatible, and estimates compute bounds. No training, tuning, or checkpoint evaluation is performed. No test metrics are accessed. All steps are idempotent and safe for dry-run execution.",
+    "safe_to_execute": false,
+    "steps": [
+      {
+        "action": "inspect_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [],
+        "expected_artifacts": [],
+        "id": "step-1-inspect-dataset"
+      },
+      {
+        "action": "validate_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "step-1-inspect-dataset"
+        ],
+        "expected_artifacts": [],
+        "id": "step-2-validate-dataset"
+      },
+      {
+        "action": "list_markets",
+        "arguments": {},
+        "depends_on": [
+          "step-2-validate-dataset"
+        ],
+        "expected_artifacts": [],
+        "id": "step-3-list-markets"
+      },
+      {
+        "action": "list_symbols",
+        "arguments": {},
+        "depends_on": [
+          "step-3-list-markets"
+        ],
+        "expected_artifacts": [],
+        "id": "step-4-list-symbols"
+      },
+      {
+        "action": "validate_experiment_config",
+        "arguments": {
+          "protocol": "Phase12"
+        },
+        "depends_on": [
+          "step-4-list-symbols"
+        ],
+        "expected_artifacts": [],
+        "id": "step-5-validate-config"
+      },
+      {
+        "action": "estimate_compute_budget",
+        "arguments": {},
+        "depends_on": [
+          "step-5-validate-config"
+        ],
+        "expected_artifacts": [],
+        "id": "step-6-estimate-budget"
+      },
+      {
+        "action": "generate_report",
+        "arguments": {
+          "title": "Bounded Research and Risk Directive for Frozen Phase 12 Protocol"
+        },
+        "depends_on": [
+          "step-6-estimate-budget"
+        ],
+        "expected_artifacts": [],
+        "id": "step-7-generate-report"
+      }
+    ],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": {
+    "allow_new_positions": false,
+    "cash_floor": 0.1,
+    "confidence": 0.7,
+    "max_asset_weight": 0.2,
+    "max_market_weights": {},
+    "max_turnover": 0.1,
+    "rationale": "Current market regime exhibits elevated volatility (20%) and a drawdown of 8%, coupled with a volatility z-score of 1.0, indicating slightly above-average risk. In the enforced risk mode, a conservative posture is warranted. We set risk budget to 15% annualized volatility to reduce potential tail losses, limit asset weights to 20% to avoid concentration, enforce a 10% cash floor for liquidity, cap turnover at 10% to minimize transaction costs during uncertainty, disallow new positions to stay within known exposures, and adjust rebalance frequency to monthly to reduce trading frequency. Confidence is moderate due to static evidence without test metrics.",
+    "rebalance_frequency": "monthly",
+    "risk_budget": 0.15
+  },
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

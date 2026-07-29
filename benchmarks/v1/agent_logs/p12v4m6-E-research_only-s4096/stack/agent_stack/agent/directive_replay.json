@@ -1,0 +1,175 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": null,
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.9,
+    "estimated_compute_units": 0.0,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol.",
+    "rationale": "The plan inspects and validates the dataset, discovers available markets and symbols, creates a validation-only split, validates the experiment configuration for the frozen protocol, estimates compute budget, evaluates a frozen checkpoint on validation data, and generates a report with risk directives. All steps operate exclusively within the validation partition and never access test metrics, satisfying the validation-only constraint.",
+    "safe_to_execute": false,
+    "steps": [
+      {
+        "action": "inspect_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [],
+        "expected_artifacts": [],
+        "id": "inspect_dataset"
+      },
+      {
+        "action": "validate_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "inspect_dataset"
+        ],
+        "expected_artifacts": [],
+        "id": "validate_dataset"
+      },
+      {
+        "action": "list_markets",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "validate_dataset"
+        ],
+        "expected_artifacts": [],
+        "id": "list_markets"
+      },
+      {
+        "action": "list_symbols",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "validate_dataset"
+        ],
+        "expected_artifacts": [],
+        "id": "list_symbols"
+      },
+      {
+        "action": "create_split",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json",
+          "partition": "validation",
+          "split_name": "validation_only"
+        },
+        "depends_on": [
+          "list_markets",
+          "list_symbols"
+        ],
+        "expected_artifacts": [],
+        "id": "create_validation_split"
+      },
+      {
+        "action": "validate_experiment_config",
+        "arguments": {
+          "config_path": "configs/phase12_frozen.yaml"
+        },
+        "depends_on": [
+          "create_validation_split"
+        ],
+        "expected_artifacts": [],
+        "id": "validate_experiment_config"
+      },
+      {
+        "action": "estimate_compute_budget",
+        "arguments": {
+          "config_path": "configs/phase12_frozen.yaml",
+          "split_name": "validation_only"
+        },
+        "depends_on": [
+          "validate_experiment_config"
+        ],
+        "expected_artifacts": [],
+        "id": "estimate_compute_budget"
+      },
+      {
+        "action": "evaluate_checkpoint",
+        "arguments": {
+          "checkpoint_path": "checkpoints/phase12_frozen.pt",
+          "split_name": "validation_only"
+        },
+        "depends_on": [
+          "estimate_compute_budget"
+        ],
+        "expected_artifacts": [],
+        "id": "evaluate_frozen_checkpoint"
+      },
+      {
+        "action": "generate_report",
+        "arguments": {
+          "evaluation_results": "{{evaluate_frozen_checkpoint.artifacts}}",
+          "report_type": "risk_directives"
+        },
+        "depends_on": [
+          "evaluate_frozen_checkpoint"
+        ],
+        "expected_artifacts": [
+          "risk_directives_report.pdf"
+        ],
+        "id": "generate_risk_directives"
+      }
+    ],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": null,
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

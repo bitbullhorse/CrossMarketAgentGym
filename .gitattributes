@@ -21,3 +21,6 @@ Dockerfile text eol=lf
 
 # Phase 12 immutable protocol inputs are byte-addressed by SHA-256.
 /experiments/** -text -eol whitespace=cr-at-eol
+
+# Phase 13 Benchmark v1 is a byte-addressed, write-once publication artifact.
+/benchmarks/v1/** -text -eol whitespace=cr-at-eol

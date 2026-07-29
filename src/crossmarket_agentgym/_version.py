@@ -1,3 +1,3 @@
-"""Single source of truth for the release-candidate version."""
+"""Single source of truth for the stable software version."""
 
-__version__ = "1.0.0rc2"
+__version__ = "1.0.0"

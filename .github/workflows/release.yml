@@ -1,13 +1,28 @@
-name: release
+name: Stable release
 
 on:
   push:
     tags:
-      - "v*"
+      - "v1.0.0"
   workflow_dispatch:
     inputs:
-      publish:
-        description: "Publish the validated artifacts to PyPI"
+      publish_pypi:
+        description: "Publish the validated distributions to PyPI"
+        required: true
+        default: false
+        type: boolean
+      publish_container:
+        description: "Push the validated CPU image to GHCR"
+        required: true
+        default: false
+        type: boolean
+      deploy_docs:
+        description: "Deploy v1.0.0, stable, and latest documentation"
+        required: true
+        default: false
+        type: boolean
+      create_github_release:
+        description: "Create the immutable GitHub Release"
         required: true
         default: false
         type: boolean
@@ -15,22 +30,37 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: stable-release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
     env:
       PIP_INDEX_URL: https://pypi.tuna.tsinghua.edu.cn/simple
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - name: Checkout exact release source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
           cache: pip
-      - name: Install release tools
-        run: python -m pip install -c constraints-cpu.txt -e ".[release,rl,llm]"
-      - name: Validate version and release assets
+
+      - name: Install release, docs, CPU RL, and LLM dependencies
+        run: python -m pip install -c constraints-cpu.txt -e ".[release,docs,rl,llm]"
+
+      - name: Validate stable tag and immutable release inputs
         env:
           RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
         run: |
@@ -38,72 +68,240 @@ jobs:
           import os
           from crossmarket_agentgym import __version__
           from crossmarket_agentgym.release.versioning import release_tag
+          if __version__ != "1.0.0":
+              raise SystemExit(f"unexpected stable version: {__version__}")
           tag = os.environ["RELEASE_TAG"]
-          expected = release_tag(__version__)
-          if tag and tag != expected:
-              raise SystemExit(f"tag {tag!r} does not match {expected}")
+          if tag and tag != release_tag(__version__):
+              raise SystemExit(f"tag {tag!r} does not match {release_tag(__version__)!r}")
           PY
           cmag release freeze --workspace-root .
+          cmag benchmark verify --benchmark benchmarks/v1
+          python scripts/create_stable_release_manifest.py --verify
           python scripts/verify_docs.py
           cmag release check --workspace-root .
+
+      - name: Run static, type, unit, integration, leakage, and reproduction gates
+        run: |
+          python -m ruff check .
+          python -m mypy src
+          python -m pytest
+
       - name: Set reproducible source epoch
         run: echo "SOURCE_DATE_EPOCH=$(git show -s --format=%ct HEAD)" >> "$GITHUB_ENV"
+
       - name: Double-build reproducibility
         run: python scripts/verify_reproducible_build.py
-      - name: Build distributions
-        run: python -m build
-      - name: Validate distributions
-        run: python -m twine check dist/*.whl dist/*.tar.gz
-      - name: Inspect distribution contents
-        run: cmag release verify --dist-dir dist
-      - name: Write distribution manifest
-        run: cmag release manifest --dist-dir dist
-      - uses: actions/upload-artifact@v7
+
+      - name: Build and inspect wheel and sdist
+        run: |
+          python -m build
+          python -m twine check dist/*.whl dist/*.tar.gz
+          cmag release verify --dist-dir dist --version 1.0.0
+          cmag release manifest --dist-dir dist
+
+      - name: Install wheel in a fresh CPU-only environment
+        run: |
+          WHEEL_PATH="$(readlink -f "$(find dist -maxdepth 1 -name '*.whl' -print -quit)")"
+          python -m venv .release-venv
+          .release-venv/bin/python -m pip install \
+            -c constraints-cpu.txt \
+            "${WHEEL_PATH}[rl,llm]"
+          CUDA_VISIBLE_DEVICES="" .release-venv/bin/python - <<'PY'
+          import torch
+          if torch.cuda.is_available():
+              raise SystemExit("stable CPU quickstart unexpectedly detected CUDA")
+          PY
+          .release-venv/bin/cmag --version
+          CUDA_VISIBLE_DEVICES="" .release-venv/bin/cmag quickstart --smoke-steps 64
+
+      - name: Build versioned documentation and release archives
+        run: |
+          python scripts/build_versioned_docs.py --output site
+          python scripts/create_release_archive.py \
+            --output dist/crossmarket-agent-gym-1.0.0-evidence.tar.gz
+          tar \
+            --sort=name \
+            --mtime="@${SOURCE_DATE_EPOCH}" \
+            --owner=0 \
+            --group=0 \
+            --numeric-owner \
+            -czf dist/benchmark-v1.tar.gz \
+            benchmarks/v1
+          sha256sum dist/benchmark-v1.tar.gz \
+            > dist/benchmark-v1.tar.gz.sha256
+          cp release/release_manifest_v1.0.0.json dist/
+          cp release/release_manifest_v1.0.0.sha256 dist/
+          cp release/release_notes_v1.0.0.md dist/
+          cp data/sample/checkpoints/equal_weight_policy.json dist/
+          cp data/sample/checkpoints/equal_weight_policy.json.sha256 dist/
+          find dist -maxdepth 1 -type f -print0 \
+            | sort -z \
+            | xargs -0 sha256sum > dist/SHA256SUMS
+
+      - name: Attest wheel provenance
+        uses: actions/attest@v4
         with:
-          name: release-distributions
+          subject-path: dist/*.whl
+
+      - name: Attest source and evidence provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: dist/*.tar.gz
+
+      - name: Upload stable release evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: stable-release-${{ github.sha }}
           path: dist/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload versioned documentation
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
 
   publish-pypi:
-    if: github.event_name == 'workflow_dispatch' && inputs.publish
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: pypi
       url: https://pypi.org/p/crossmarket-agent-gym
     permissions:
       id-token: write
     steps:
-      - uses: actions/download-artifact@v8
+      - name: Download validated release evidence
+        uses: actions/download-artifact@v8
         with:
-          name: release-distributions
+          name: stable-release-${{ github.sha }}
           path: dist
-      - name: Keep PyPI directory distribution-only
-        run: rm dist/release-manifest.json
-      - uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Stage PyPI distributions only
+        run: |
+          mkdir pypi-dist
+          cp dist/*.whl pypi-dist/
+          cp dist/crossmarket_agent_gym-1.0.0.tar.gz pypi-dist/
+      - name: Publish through PyPI trusted publishing
+        if: >-
+          github.ref == 'refs/tags/v1.0.0' ||
+          (github.event_name == 'workflow_dispatch' && inputs.publish_pypi)
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: dist/
+          packages-dir: pypi-dist/
+      - name: Record dry-run
+        if: >-
+          github.ref != 'refs/tags/v1.0.0' &&
+          !(github.event_name == 'workflow_dispatch' && inputs.publish_pypi)
+        run: echo "PyPI dry-run passed; no upload performed."
+
+  container:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE: ghcr.io/bitbullhorse/crossmarket-agent-gym
+      PIP_INDEX_URL: https://pypi.tuna.tsinghua.edu.cn/simple
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build fresh CPU image
+        run: |
+          docker build \
+            --pull \
+            --no-cache \
+            --build-arg "PIP_INDEX_URL=${PIP_INDEX_URL}" \
+            --build-arg "CMAG_EXTRAS=rl,llm" \
+            --tag "${IMAGE}:1.0.0" \
+            .
+          docker image inspect "${IMAGE}:1.0.0" --format '{{.Id}}' \
+            | tee image-id.txt
+      - name: Run bounded non-root offline quickstart
+        run: |
+          test "$(docker image inspect "${IMAGE}:1.0.0" \
+            --format '{{.Config.User}}')" = "cmag"
+          docker run --rm \
+            --network none \
+            --cpus 2 \
+            --memory 7g \
+            --memory-swap 7g \
+            --pids-limit 512 \
+            --env CUDA_VISIBLE_DEVICES="" \
+            --env NVIDIA_VISIBLE_DEVICES=void \
+            "${IMAGE}:1.0.0" \
+            quickstart --smoke-steps 64
+      - name: Log in to GHCR
+        if: >-
+          github.ref == 'refs/tags/v1.0.0' ||
+          (github.event_name == 'workflow_dispatch' && inputs.publish_container)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish immutable and aliases
+        if: >-
+          github.ref == 'refs/tags/v1.0.0' ||
+          (github.event_name == 'workflow_dispatch' && inputs.publish_container)
+        run: |
+          docker push "${IMAGE}:1.0.0"
+          docker tag "${IMAGE}:1.0.0" "${IMAGE}:stable"
+          docker tag "${IMAGE}:1.0.0" "${IMAGE}:latest"
+          docker push "${IMAGE}:stable"
+          docker push "${IMAGE}:latest"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: stable-container-${{ github.sha }}
+          path: image-id.txt
+          if-no-files-found: error
+
+  docs:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy versioned documentation
+        id: deployment
+        if: >-
+          github.ref == 'refs/tags/v1.0.0' ||
+          (github.event_name == 'workflow_dispatch' && inputs.deploy_docs)
+        uses: actions/deploy-pages@v4
+      - name: Record dry-run
+        if: >-
+          github.ref != 'refs/tags/v1.0.0' &&
+          !(github.event_name == 'workflow_dispatch' && inputs.deploy_docs)
+        run: echo "Documentation dry-run passed; no Pages deployment performed."
 
   github-release:
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: build
-    runs-on: ubuntu-latest
+    needs: [build, publish-pypi, container, docs]
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v8
+      - name: Download validated release evidence
+        uses: actions/download-artifact@v8
         with:
-          name: release-distributions
+          name: stable-release-${{ github.sha }}
           path: dist
-      - name: Create GitHub release
+      - name: Create immutable stable GitHub Release
+        if: >-
+          github.ref == 'refs/tags/v1.0.0' ||
+          (github.event_name == 'workflow_dispatch' && inputs.create_github_release)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [[ "$GITHUB_REF_NAME" == *-rc* ]]; then
-            gh release create "$GITHUB_REF_NAME" dist/* \
-              --repo "$GITHUB_REPOSITORY" \
-              --verify-tag --generate-notes --prerelease
-          else
-            gh release create "$GITHUB_REF_NAME" dist/* \
-              --repo "$GITHUB_REPOSITORY" \
-              --verify-tag --generate-notes
-          fi
+          gh release create v1.0.0 dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --title "CrossMarketAgentGym v1.0.0" \
+            --notes-file dist/release_notes_v1.0.0.md
+      - name: Record dry-run
+        if: >-
+          github.ref != 'refs/tags/v1.0.0' &&
+          !(github.event_name == 'workflow_dispatch' && inputs.create_github_release)
+        run: echo "GitHub Release dry-run passed; no Release was created."

@@ -23,13 +23,13 @@ async function render(path = "/") {
   );
 }
 
-test("server-renders the control center and all primary routes", async () => {
+test("server-renders the consumer strategy experience and all primary routes", async () => {
   const cases = [
-    ["/", "让每次实验都有边界"],
-    ["/workflows", "工作流编排"],
-    ["/runs", "运行证据"],
-    ["/experiments", "Phase 12 正式实验"],
-    ["/settings", "连接设置"],
+    ["/", "不写代码，也能训练和回测"],
+    ["/workflows", "创建并测试你的策略"],
+    ["/runs", "策略与回测记录"],
+    ["/experiments", "选择策略方法的参考"],
+    ["/settings", "应用设置"],
   ];
 
   for (const [path, expected] of cases) {
@@ -47,19 +47,21 @@ test("server-renders the control center and all primary routes", async () => {
   }
 });
 
-test("keeps the safety and frozen-protocol disclosures visible", async () => {
-  const [home, workflows, experiments] = await Promise.all([
+test("keeps user-facing safety boundaries visible without development workflow copy", async () => {
+  const [home, workflows, experiments, workflowSource] = await Promise.all([
     render("/").then((response) => response.text()),
     render("/workflows").then((response) => response.text()),
     render("/experiments").then((response) => response.text()),
+    readFile(new URL("../app/workflows/WorkflowBuilder.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.match(home, /INDEPENDENT_REVIEW_MISSING/);
-  assert.match(home, /不会直接修改账户/);
-  assert.match(workflows, /测试集不对 HPO 可见/);
-  assert.match(workflows, /风险层不可绕过/);
-  assert.match(experiments, /0 \/ 200/);
-  assert.match(experiments, /不得作为最终论文结论/);
+  assert.match(home, /不会连接或修改真实账户/);
+  assert.match(home, /训练调参不会偷看最终测试数据/);
+  assert.match(workflows, /AI 也不能绕过/);
+  assert.match(workflowSource, /最终区间不是日常调参工具/);
+  assert.match(experiments, /历史表现不代表未来收益/);
+  assert.doesNotMatch(home, /Phase \d+|冻结协议|独立复核|开发流程/);
+  assert.doesNotMatch(workflows, /Phase \d+|冻结协议|独立复核|开发流程/);
 });
 
 test("does not embed credentials in source or rendered HTML", async () => {
@@ -73,5 +75,5 @@ test("does not embed credentials in source or rendered HTML", async () => {
 
   assert.doesNotMatch(combined, /\bsk-[a-zA-Z0-9]{12,}\b/);
   assert.doesNotMatch(combined, /https?:\/\/[^/\s]+:[^@\s]+@/);
-  assert.match(combined, /浏览器中没有密钥/);
+  assert.match(combined, /不保存任何密钥/);
 });

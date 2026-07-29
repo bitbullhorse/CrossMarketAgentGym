@@ -1,0 +1,9 @@
+{
+  "artifacts": {
+    "model/training/test/trades.json": "56139782da78678c38f33d51409c5dcddcb3cdecbfef620213256405611b1889",
+    "model/training/test/weights.json": "416ff1829ee756ca42b2b3f3ac00d97021798aea8df9b30d5433071d80bc8eae",
+    "model/training/training_metrics.jsonl": "04a2b0275b05185e6210768e7f3a10c1f0aeb566ad45ed03a5213d2be183038a"
+  },
+  "purpose": "Phase 13 training, equity/drawdown and market-exposure figures",
+  "run_id": "p12v4m6-B-ppo-s1024"
+}

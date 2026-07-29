@@ -21,7 +21,7 @@ keywords = [
   "hyperparameter-optimization",
 ]
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
@@ -71,6 +71,9 @@ service = [
 release = [
   "build>=1.2,<2",
   "twine>=5,<7",
+]
+docs = [
+  "mkdocs>=1.6,<2",
 ]
 dev = [
   "coverage[toml]>=7.6,<8",
@@ -129,6 +132,7 @@ include = [
   "/CITATION.cff",
   "/CODE_OF_CONDUCT.md",
   "/CONTRIBUTING.md",
+  "/DATA_LICENSE.md",
   "/Dockerfile",
   "/LICENSE",
   "/README.md",
@@ -142,7 +146,9 @@ include = [
   "/environment-gpu.yml",
   "/examples",
   "/experiments",
+  "/frontend",
   "/paper",
+  "/benchmarks",
   "/pyproject.toml",
   "/release",
   "/schemas/rc1",
@@ -157,6 +163,12 @@ exclude = [
   "/results",
   "/runs",
   "/stock_data",
+  "/frontend/.vinext",
+  "/frontend/.wrangler",
+  "/frontend/dist",
+  "/frontend/node_modules",
+  "/frontend/outputs",
+  "/frontend/tsconfig.tsbuildinfo",
 ]
 
 [tool.hatch.version]

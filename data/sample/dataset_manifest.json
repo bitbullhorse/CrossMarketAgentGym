@@ -128,7 +128,7 @@
     "tradable"
   ],
   "schema_version": "1.0.0",
-  "software_version": "1.0.0rc1",
+  "software_version": "1.0.0",
   "source": "deterministic synthetic data; not for investment use",
   "symbols": [
     "000001",

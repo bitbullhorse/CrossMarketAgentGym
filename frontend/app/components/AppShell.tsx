@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 const nav = [
-  { href: "/", label: "总览", mark: "01" },
-  { href: "/workflows", label: "工作流", mark: "02" },
-  { href: "/runs", label: "运行证据", mark: "03" },
-  { href: "/experiments", label: "正式实验", mark: "04" },
-  { href: "/settings", label: "连接设置", mark: "05" },
+  { href: "/", label: "首页", mark: "⌂" },
+  { href: "/workflows", label: "创建策略", mark: "策" },
+  { href: "/runs", label: "回测记录", mark: "绩" },
+  { href: "/experiments", label: "策略参考", mark: "参" },
+  { href: "/settings", label: "设置", mark: "设" },
 ];
 
 export function AppShell({
@@ -36,7 +36,7 @@ export function AppShell({
           </span>
           <span>
             <strong>CrossMarket</strong>
-            <small>AgentGym</small>
+            <small>智能策略实验室</small>
           </span>
         </Link>
 
@@ -60,10 +60,10 @@ export function AppShell({
         </nav>
 
         <div className="sidebar-foot">
-          <div className="tiny-label">安全边界</div>
-          <p>GUI 只生成命令并读取证据；账户状态只能由确定性环境更新。</p>
+          <div className="tiny-label">安心使用</div>
+          <p>仓位、现金和交易成本限制会在每次模拟交易前自动检查。</p>
           <span className="status-line">
-            <i className="status-dot" /> rc2 · guarded
+            <i className="status-dot" /> 风险保护已开启
           </span>
         </div>
       </aside>

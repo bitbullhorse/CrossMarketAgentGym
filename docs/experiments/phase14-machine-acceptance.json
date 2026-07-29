@@ -1,0 +1,79 @@
+{
+  "distribution_checks": [
+    {
+      "detail": "found 1 wheel(s) and 1 source archive(s)",
+      "name": "distribution_count",
+      "passed": true
+    },
+    {
+      "detail": "wheel name, version 1.0.0, and Python requirement agree",
+      "name": "wheel_metadata",
+      "passed": true
+    },
+    {
+      "detail": "packaged config, sample manifest, typing marker, and version present",
+      "name": "wheel_resources",
+      "passed": true
+    },
+    {
+      "detail": "wheel contains no local-only path",
+      "name": "wheel_exclusions",
+      "passed": true
+    },
+    {
+      "detail": "source documentation, citation, license, metadata, and paper present",
+      "name": "sdist_resources",
+      "passed": true
+    },
+    {
+      "detail": "source archive contains no local-only path",
+      "name": "sdist_exclusions",
+      "passed": true
+    }
+  ],
+  "evaluated_at": "2026-07-29T11:39:59.301196+00:00",
+  "external_verification": {
+    "docker_verified": false,
+    "docs_site_verified": false,
+    "doi": null,
+    "doi_verified": false,
+    "evidence_source": "operator_supplied_disposition",
+    "github_release_verified": false,
+    "note": "This script records supplied publication checks. It does not fabricate registry, DOI, or review evidence.",
+    "p0_zero": true,
+    "p1_zero": true,
+    "pypi_verified": false
+  },
+  "local_checks": {
+    "benchmark_verified": true,
+    "distributions_verified": true,
+    "phase13_ready": true,
+    "release_manifest_verified": true,
+    "release_readiness_verified": true,
+    "sample_checkpoint_verified": true,
+    "version_is_stable": true,
+    "versioned_docs_strict_build": true
+  },
+  "local_ready": true,
+  "phase": 14,
+  "phase13_input_valid": true,
+  "phase14_complete": false,
+  "phase15_ready": false,
+  "release_blockers": [
+    "docker_verified",
+    "docs_site_verified",
+    "doi_verified",
+    "github_release_verified",
+    "pypi_verified",
+    "stable_tag_missing"
+  ],
+  "schema_version": "1.0",
+  "stable_manifest_problems": [],
+  "tag_state": {
+    "exists_locally": false,
+    "head_commit": "42391dc40ee47241ea373f6fe35c9fbe5ae94691",
+    "points_to_head": false,
+    "tag": "v1.0.0",
+    "tag_commit": null
+  }
+}

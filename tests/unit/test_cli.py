@@ -48,7 +48,7 @@ def test_version_option() -> None:
     result = runner.invoke(app, ["--version"])
 
     assert result.exit_code == 0
-    assert result.stdout.strip() == "1.0.0rc2"
+    assert result.stdout.strip() == "1.0.0"
 
 
 def test_reproduce_requires_run_id() -> None:

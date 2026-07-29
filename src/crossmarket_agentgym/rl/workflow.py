@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import platform
 import time
 from datetime import UTC, datetime
@@ -199,6 +200,24 @@ def evaluate_saved_run(
     config_override: TrainRunConfig | None = None,
 ) -> EvaluationResult:
     """Evaluate a saved checkpoint once on validation or locked test data."""
+    return _evaluate_saved_run(
+        run_dir,
+        partition=partition,
+        config_override=config_override,
+        output_dir_override=None,
+    )
+
+
+def _evaluate_saved_run(
+    run_dir: Path,
+    *,
+    partition: Literal["validation", "test"],
+    config_override: TrainRunConfig | None,
+    output_dir_override: Path | None,
+) -> EvaluationResult:
+    """Shared implementation for public evaluation and isolated GUI backtests."""
+    if output_dir_override is not None and partition == "test":
+        raise ValueError("locked test evaluation must remain inside the source run")
     config_path = run_dir / "resolved_config.json"
     if config_override is None and not config_path.exists():
         raise FileNotFoundError(config_path)
@@ -212,9 +231,11 @@ def evaluate_saved_run(
     environments = build_partitioned_environments(config)
     if partition not in environments:
         raise ValueError(f"run has no {partition} partition")
-    output_dir = run_dir / partition
+    output_dir = output_dir_override or run_dir / partition
     if partition == "test" and (output_dir / "metrics.json").exists():
         raise FileExistsError("locked test evaluation already exists")
+    if output_dir_override is not None and output_dir.exists():
+        raise FileExistsError("independent validation backtest already exists")
     trainer = trainer_from_config(config.trainer, run_dir)
     checkpoint = run_dir / "checkpoints" / "final_model.zip"
     result = trainer.evaluate(
@@ -223,7 +244,21 @@ def evaluate_saved_run(
         episodes=config.trainer.eval_episodes,
     )
     write_evaluation_artifacts(result, output_dir)
-    if config_path.is_file():
+    if output_dir_override is not None:
+        (output_dir / "source_run.json").write_text(
+            json.dumps(
+                {
+                    "source_run_id": config.run_name,
+                    "source_run_path": run_dir.as_posix(),
+                    "partition": partition,
+                    "selection_authority": False,
+                },
+                indent=2,
+                sort_keys=True,
+            ),
+            encoding="utf-8",
+        )
+    if output_dir_override is None and config_path.is_file():
         write_run_manifest(
             run_dir,
             workspace_root=Path.cwd(),

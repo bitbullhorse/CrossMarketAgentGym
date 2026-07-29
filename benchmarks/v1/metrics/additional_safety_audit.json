@@ -1,0 +1,50 @@
+{
+  "agents": {
+    "credential_pattern_hits": 0,
+    "credential_scan_files": 556,
+    "deterministic_risk_bypassed_any": false,
+    "replay_consistency_all": true,
+    "replay_file_count": 100,
+    "run_count": 35
+  },
+  "code_commit": "6f03d3da3ed6ecbe918c5a7f9aa35cb9abfb2b83",
+  "completed_runs": 215,
+  "environment": {
+    "all_passed": true,
+    "case_count": 10,
+    "maximum_absolute_error": 0.0
+  },
+  "errors": [],
+  "generated_at": "2026-07-29T01:37:11.274150Z",
+  "group_counts": {
+    "A": 10,
+    "B": 40,
+    "C": 45,
+    "D": 45,
+    "E": 35,
+    "F": 40
+  },
+  "hpo": {
+    "methods": {
+      "cma_es": 5,
+      "default": 5,
+      "differential_evolution": 5,
+      "genetic": 5,
+      "nsga_ii": 5,
+      "pso": 5,
+      "random": 5,
+      "tpe": 5
+    },
+    "minimum_hpo_validation_artifacts": 72,
+    "run_count": 40,
+    "scheduler_role": "resource_only",
+    "test_access_count_per_run": 1,
+    "test_visible_during_search": false,
+    "trial_budget": 24,
+    "walk_forward_folds": 3
+  },
+  "matrix_id": "phase12-run-matrix-v6",
+  "passed": true,
+  "planned_runs": 215,
+  "schema_version": "1.0"
+}

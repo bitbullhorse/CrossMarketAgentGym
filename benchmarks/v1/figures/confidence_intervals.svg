@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="360" viewBox="0 0 1000 360">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="28" y="38" font-family="sans-serif" font-size="22" font-weight="600">Strategy mean return with 95% interval endpoint</text>
+<line x1="180" y1="58" x2="180" y2="330" stroke="#64748b" stroke-width="1"/>
+<text x="12" y="84" font-family="sans-serif" font-size="11">PPO</text>
+<rect x="180.000" y="72" width="512.095" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="697.095" y="83" font-family="monospace" font-size="10">0.121168</text>
+<rect x="180.000" y="86" width="673.726" height="5" fill="#dc2626" opacity="0.68"/>
+<text x="12" y="112" font-family="sans-serif" font-size="11">SAC</text>
+<rect x="180.000" y="100" width="584.435" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="769.435" y="111" font-family="monospace" font-size="10">0.138284</text>
+<rect x="180.000" y="114" width="661.540" height="5" fill="#dc2626" opacity="0.68"/>
+<text x="12" y="140" font-family="sans-serif" font-size="11">TD3</text>
+<rect x="180.000" y="128" width="558.530" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="743.530" y="139" font-family="monospace" font-size="10">0.132155</text>
+<rect x="180.000" y="142" width="720.000" height="5" fill="#dc2626" opacity="0.68"/>
+<text x="12" y="168" font-family="sans-serif" font-size="11">buy_and_hold</text>
+<rect x="180.000" y="156" width="309.766" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="494.766" y="167" font-family="monospace" font-size="10">0.0732942</text>
+<rect x="180.000" y="170" width="309.766" height="5" fill="#dc2626" opacity="0.68"/>
+<text x="12" y="196" font-family="sans-serif" font-size="11">cash</text>
+<rect x="180.000" y="184" width="0.000" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="185.000" y="195" font-family="monospace" font-size="10">0</text>
+<rect x="180.000" y="198" width="0.000" height="5" fill="#dc2626" opacity="0.68"/>
+<text x="12" y="224" font-family="sans-serif" font-size="11">equal_weight</text>
+<rect x="180.000" y="212" width="632.797" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="817.797" y="223" font-family="monospace" font-size="10">0.149727</text>
+<rect x="180.000" y="226" width="632.797" height="5" fill="#dc2626" opacity="0.68"/>
+<text x="12" y="252" font-family="sans-serif" font-size="11">mean_variance</text>
+<rect x="180.000" y="240" width="371.068" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="556.068" y="251" font-family="monospace" font-size="10">0.087799</text>
+<rect x="180.000" y="254" width="371.068" height="5" fill="#dc2626" opacity="0.68"/>
+<text x="12" y="280" font-family="sans-serif" font-size="11">risk_parity</text>
+<rect x="180.000" y="268" width="542.630" height="13" fill="#2563eb" opacity="0.82"/>
+<text x="727.630" y="279" font-family="monospace" font-size="10">0.128393</text>
+<rect x="180.000" y="282" width="542.630" height="5" fill="#dc2626" opacity="0.68"/>
+</svg>

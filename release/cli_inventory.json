@@ -88,6 +88,100 @@
       ]
     },
     {
+      "command": "cmag benchmark",
+      "help": "Build and verify immutable formal benchmarks.",
+      "hidden": false,
+      "parameters": []
+    },
+    {
+      "command": "cmag benchmark build",
+      "help": "Build benchmark-v1 once; an existing destination is never overwritten.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": null,
+          "kind": "option",
+          "name": "protocol",
+          "nargs": 1,
+          "options": [
+            "--protocol"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=True, dir_okay=False, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": "results\\phase12-review-v1",
+          "kind": "option",
+          "name": "source_root",
+          "nargs": 1,
+          "options": [
+            "--source-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=False, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": "benchmarks\\v1",
+          "kind": "option",
+          "name": "output",
+          "nargs": 1,
+          "options": [
+            "--output"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": null,
+          "kind": "option",
+          "name": "visual_payload_root",
+          "nargs": 1,
+          "options": [
+            "--visual-payload-root"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=False, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": true,
+          "kind": "option",
+          "name": "seal",
+          "nargs": 1,
+          "options": [
+            "--seal"
+          ],
+          "required": false,
+          "secondary_options": [
+            "--no-seal"
+          ],
+          "type": "click.types.BoolParamType"
+        }
+      ]
+    },
+    {
+      "command": "cmag benchmark verify",
+      "help": "Verify benchmark hashes, provenance, run bindings, HPO isolation and Replay.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": "benchmarks\\v1",
+          "kind": "option",
+          "name": "benchmark",
+          "nargs": 1,
+          "options": [
+            "--benchmark"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=False, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
       "command": "cmag data",
       "help": "Inspect, import, and validate market data.",
       "hidden": false,
@@ -165,6 +259,74 @@
           "required": false,
           "secondary_options": [],
           "type": "click.types.StringParamType"
+        }
+      ]
+    },
+    {
+      "command": "cmag paper",
+      "help": "Export verified benchmark artifacts for manuscripts.",
+      "hidden": false,
+      "parameters": []
+    },
+    {
+      "command": "cmag paper export-figures",
+      "help": "Export generated figures from a verified benchmark to a new directory.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": "benchmarks\\v1",
+          "kind": "option",
+          "name": "benchmark",
+          "nargs": 1,
+          "options": [
+            "--benchmark"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=False, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": null,
+          "kind": "option",
+          "name": "output",
+          "nargs": 1,
+          "options": [
+            "--output"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        }
+      ]
+    },
+    {
+      "command": "cmag paper export-tables",
+      "help": "Export generated tables from a verified benchmark to a new directory.",
+      "hidden": false,
+      "parameters": [
+        {
+          "default": "benchmarks\\v1",
+          "kind": "option",
+          "name": "benchmark",
+          "nargs": 1,
+          "options": [
+            "--benchmark"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=True, file_okay=False, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": null,
+          "kind": "option",
+          "name": "output",
+          "nargs": 1,
+          "options": [
+            "--output"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
         }
       ]
     },
@@ -290,6 +452,18 @@
           "required": false,
           "secondary_options": [],
           "type": "typer.models.TyperPath(exists=False, file_okay=True, dir_okay=True, readable=True, writable=False, resolve_path=False, allow_dash=False)"
+        },
+        {
+          "default": null,
+          "kind": "option",
+          "name": "version",
+          "nargs": 1,
+          "options": [
+            "--version"
+          ],
+          "required": false,
+          "secondary_options": [],
+          "type": "click.types.StringParamType"
         }
       ]
     },
@@ -553,6 +727,6 @@
       ]
     }
   ],
-  "release": "1.0.0-rc2",
+  "release": "1.0.0",
   "schema_version": "1.0"
 }

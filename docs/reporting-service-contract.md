@@ -71,9 +71,23 @@ The default binds to `127.0.0.1`, disables OpenAPI documentation, and exposes on
 - whitelisted `.csv`, `.json`, `.md`, and `.svg` report assets.
 
 The no-trailing-slash report URL redirects to the canonical trailing-slash URL so relative assets
-resolve correctly. The service has no mutation endpoint and no arbitrary run-file endpoint.
+resolve correctly. The default `service.yaml` profile has no mutation endpoint and no arbitrary
+run-file endpoint.
 Non-loopback binding requires explicit `allow_remote: true`; network authentication and TLS remain
 the operator's responsibility and are not implied by that opt-in.
+
+## Guarded local GUI profile
+
+`configs/reporting/gui.yaml` is a separate opt-in profile. It keeps the report endpoints and adds
+configuration catalog/validation plus allow-listed job endpoints. Execution mode is forced to a
+loopback host even when `allow_remote` is set. It cannot execute arbitrary commands, read
+configurations outside their registered `configs/` subtree, persist credentials, expose an HPO
+test-partition selector, or overwrite validation backtest evidence. Edited YAML is validated with
+the current Pydantic model before a job is created.
+
+The GUI job endpoints are operational and are not part of the rc1 frozen public API. They expose
+job metadata and a bounded log tail; checkpoints, prompts, arbitrary files, environment variables
+and secret values remain unavailable. See [GUI 操作指南](gui.zh-CN.md).
 
 ## Reproducibility
 

@@ -1,0 +1,70 @@
+{
+  "benchmark": {
+    "benchmark_id": "benchmark-v1",
+    "checksummed_file_count": 232,
+    "checksums_file": "benchmarks/v1/checksums.json",
+    "checksums_sha256": "97260d8b59b2fdf5bd104d03e7f150e26120f574dbb301cf839de3eaf0de532c",
+    "formal_code_commit": "6f03d3da3ed6ecbe918c5a7f9aa35cb9abfb2b83",
+    "path": "benchmarks/v1",
+    "run_count": 215
+  },
+  "data_policy": {
+    "formal_raw_data_redistributed": false,
+    "license_statement": "DATA_LICENSE.md",
+    "restricted_paths_excluded": [
+      "stock_data",
+      "data/processed",
+      "runs",
+      "reports",
+      "results"
+    ]
+  },
+  "formal_experiment_inputs": {
+    "dataset": {
+      "manifest_id": "dataset-manifest-v3",
+      "release_file": "benchmarks/v1/dataset_manifest.json",
+      "sha256": "0ed9091f1ab96d24ef5fbd41d0d080668623e954e4f15e4a277f1c217e825eb9"
+    },
+    "protocol": {
+      "protocol_id": "protocol-v4",
+      "release_file": "benchmarks/v1/protocol.yaml",
+      "sha256": "90e40d212b5faaff644e0041eeef92c0b0056ce9a834095a047948a1d5e42529"
+    }
+  },
+  "package": "crossmarket-agent-gym",
+  "public_sample": {
+    "checkpoint": "data/sample/checkpoints/equal_weight_policy.json",
+    "checkpoint_sha256": "9e8241f0e0e17bf88fb55e39328829d188cc1190f0188829c9fb01982d77b5cb",
+    "contains_formal_market_data": false,
+    "manifest": "data/sample/dataset_manifest.json"
+  },
+  "publication": {
+    "container": {
+      "identifier": "ghcr.io/bitbullhorse/crossmarket-agent-gym:1.0.0",
+      "status": "pending_publication"
+    },
+    "documentation": {
+      "aliases": [
+        "v1.0.0",
+        "stable",
+        "latest"
+      ],
+      "status": "pending_publication"
+    },
+    "doi": {
+      "identifier": null,
+      "status": "pending_reservation"
+    },
+    "pypi": {
+      "identifier": "crossmarket-agent-gym==1.0.0",
+      "status": "pending_publication"
+    }
+  },
+  "release": {
+    "formal_experiment_commit_is_ancestor": true,
+    "release_commit_resolution": "tag_target",
+    "tag": "v1.0.0",
+    "version": "1.0.0"
+  },
+  "schema_version": "1.0"
+}

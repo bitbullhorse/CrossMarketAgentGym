@@ -1,0 +1,32 @@
+{
+  "edges": [
+    [
+      "frozen protocol",
+      "formal run matrix"
+    ],
+    [
+      "dataset manifest",
+      "formal run matrix"
+    ],
+    [
+      "formal run matrix",
+      "Groups A-F"
+    ],
+    [
+      "Groups A-F",
+      "tables and figures"
+    ],
+    [
+      "tables and figures",
+      "paper provenance"
+    ]
+  ],
+  "nodes": [
+    "frozen protocol",
+    "dataset manifest",
+    "formal run matrix",
+    "Groups A-F",
+    "tables and figures",
+    "paper provenance"
+  ]
+}

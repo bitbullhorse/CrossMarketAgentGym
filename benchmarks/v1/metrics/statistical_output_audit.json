@@ -1,0 +1,11 @@
+{
+  "descriptive_rows": 494,
+  "errors": [],
+  "figure_count": 5,
+  "minimum_non_environment_n": 5,
+  "minimum_paired_n": 5,
+  "paired_test_rows": 200,
+  "passed": true,
+  "run_metric_rows": 2390,
+  "unique_run_ids": 215
+}

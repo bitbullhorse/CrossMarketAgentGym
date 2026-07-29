@@ -148,7 +148,7 @@
       "version": "1"
     }
   ],
-  "release": "1.0.0-rc2",
+  "release": "1.0.0",
   "schema_version": "1.0",
   "unlisted_interfaces": "internal"
 }

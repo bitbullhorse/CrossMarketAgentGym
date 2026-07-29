@@ -1,0 +1,189 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": {
+    "confidence": 0.6,
+    "global_risk_budget": 0.5,
+    "market_budgets": {
+      "CN": 0.25,
+      "HK": 0.25,
+      "JP": 0.25,
+      "US": 0.25
+    },
+    "market_regime": "neutral",
+    "objective_weights": {
+      "research": 0.5,
+      "risk": 0.5
+    },
+    "rebalance_interval": 21,
+    "sector_budgets": null
+  },
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.85,
+    "estimated_compute_units": 0.0,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol. Never access test metrics.",
+    "rationale": "The formal_v3 dataset (sha256: 0ed9091f1ab96d24ef5fbd41d0d080668623e954e4f15e4a277f1c217e825eb9) passed quality validation with 73,193 rows across 80 symbols in CN,HK,JP,US markets. The frozen Phase 12 protocol mandates validation-only analysis; all test metrics are strictly off-limits. This dry-run directive confines risk assessment to validation splits, sanity checks, and budget estimation, avoiding any training or evaluation that could leak test information.",
+    "safe_to_execute": false,
+    "steps": [
+      {
+        "action": "validate_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [],
+        "expected_artifacts": [],
+        "id": "step-1"
+      },
+      {
+        "action": "list_markets",
+        "arguments": {},
+        "depends_on": [
+          "step-1"
+        ],
+        "expected_artifacts": [],
+        "id": "step-2"
+      },
+      {
+        "action": "list_symbols",
+        "arguments": {
+          "markets": [
+            "CN",
+            "HK",
+            "JP",
+            "US"
+          ]
+        },
+        "depends_on": [
+          "step-2"
+        ],
+        "expected_artifacts": [],
+        "id": "step-3"
+      },
+      {
+        "action": "create_split",
+        "arguments": {
+          "split_type": "validation_only",
+          "validation_ratio": 0.2
+        },
+        "depends_on": [
+          "step-3"
+        ],
+        "expected_artifacts": [
+          "validation_split_indices"
+        ],
+        "id": "step-4"
+      },
+      {
+        "action": "validate_experiment_config",
+        "arguments": {
+          "config_path": "configs/phase12_frozen.yaml"
+        },
+        "depends_on": [
+          "step-4"
+        ],
+        "expected_artifacts": [],
+        "id": "step-5"
+      },
+      {
+        "action": "estimate_compute_budget",
+        "arguments": {
+          "config_path": "configs/phase12_frozen.yaml",
+          "validation_only": true
+        },
+        "depends_on": [
+          "step-5"
+        ],
+        "expected_artifacts": [
+          "compute_budget_estimate"
+        ],
+        "id": "step-6"
+      },
+      {
+        "action": "generate_report",
+        "arguments": {
+          "frozen": true,
+          "include_risk_assessment": true,
+          "protocol": "Phase12"
+        },
+        "depends_on": [
+          "step-6"
+        ],
+        "expected_artifacts": [
+          "risk_directive_report"
+        ],
+        "id": "step-7"
+      }
+    ],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": {
+    "allow_new_positions": false,
+    "cash_floor": 0.5,
+    "confidence": 0.7,
+    "max_asset_weight": 0.05,
+    "max_market_weights": {
+      "CN": 0.15,
+      "HK": 0.15,
+      "JP": 0.15,
+      "US": 0.15
+    },
+    "max_turnover": 0.05,
+    "rationale": "Phase 12 protocol is frozen; to preserve capital and limit drawdown risk, we set conservative risk limits with low risk budget, asset weight cap, cash floor, and turnover, and disallow new positions.",
+    "rebalance_frequency": "monthly",
+    "risk_budget": 0.04
+  },
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

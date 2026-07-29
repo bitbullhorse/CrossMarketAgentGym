@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "checkpoint_format": "crossmarket_agentgym.deterministic_baseline",
+  "checkpoint_version": "1",
+  "policy": "equal_weight",
+  "training_data_used": false,
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "symbols": [
+    "000001",
+    "0001.HK",
+    "1301.T",
+    "A"
+  ],
+  "cash_weight": 0.0,
+  "asset_weights": [
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "intended_use": "CPU quickstart and checkpoint-format demonstration only",
+  "investment_use": false
+}

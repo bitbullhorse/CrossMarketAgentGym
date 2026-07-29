@@ -1,0 +1,26 @@
+{
+  "blockers": [
+    "INDEPENDENT_REVIEW_MISSING"
+  ],
+  "code_commit": "6f03d3da3ed6ecbe918c5a7f9aa35cb9abfb2b83",
+  "completed_run_count": 215,
+  "dataset_manifest_sha256": "0ed9091f1ab96d24ef5fbd41d0d080668623e954e4f15e4a277f1c217e825eb9",
+  "development_results_used": false,
+  "failed_or_missing_run_count": 0,
+  "figures": [
+    "group_B_mean_return.svg",
+    "group_C_mean_return.svg",
+    "group_D_mean_return.svg",
+    "group_E_mean_return.svg",
+    "group_F_validation_score.svg"
+  ],
+  "five_seed_requirement": 5,
+  "formal_results_only": true,
+  "hpo_test_access": false,
+  "matrix_id": "phase12-run-matrix-v6",
+  "phase12_complete": false,
+  "phase13_ready": false,
+  "planned_run_count": 215,
+  "protocol_sha256": "90e40d212b5faaff644e0041eeef92c0b0056ce9a834095a047948a1d5e42529",
+  "schema_version": "1.0"
+}

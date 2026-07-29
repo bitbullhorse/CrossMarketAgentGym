@@ -1,136 +1,100 @@
 import Link from "next/link";
 import { AppShell, StatusPill } from "./components/AppShell";
-import { demoRuns, phase12Status } from "./lib/data";
+
+const starterCards = [
+  {
+    title: "快速体验",
+    tag: "约 1 分钟",
+    copy: "使用内置跨市场样本和推荐参数，完成第一次策略训练。",
+    href: "/workflows?mode=train",
+    action: "开始体验",
+  },
+  {
+    title: "训练我的策略",
+    tag: "可自定义",
+    copy: "选择算法、训练强度和风险偏好，系统自动生成可运行配置。",
+    href: "/workflows?mode=train",
+    action: "创建策略",
+  },
+  {
+    title: "回测已有策略",
+    tag: "历史模拟",
+    copy: "输入已有策略名称，在验证区间查看收益、回撤和交易表现。",
+    href: "/workflows?mode=backtest",
+    action: "运行回测",
+  },
+];
 
 export default function Home() {
   return (
     <AppShell
-      eyebrow="Research Control Center"
-      title="让每次实验都有边界、有证据、可重放"
-      description="编排 CrossMarketAgentGym 工作流，审阅冻结协议与运行证据。控制台不会直接修改账户，也不会把测试集带入调参。"
+      eyebrow="Cross-market strategy studio"
+      title="不写代码，也能训练和回测智能交易策略"
+      description="从数据、算法到风险控制，跟随向导完成配置。所有交易只发生在模拟环境，不会连接或修改真实账户。"
       action={
         <Link className="button primary" href="/workflows">
-          创建工作流 <span aria-hidden="true">→</span>
+          创建新策略 <span aria-hidden="true">→</span>
         </Link>
       }
     >
-      <section className="alert alert-warn" aria-label="阶段状态警告">
-        <div className="alert-mark">!</div>
-        <div>
-          <strong>Phase 12 机器门禁完成，尚不是冻结结论</strong>
+      <section className="consumer-hero panel">
+        <div className="hero-copy">
+          <StatusPill tone="good">本地数据 · 模拟交易</StatusPill>
+          <h2>用四步完成你的第一套跨市场策略</h2>
           <p>
-            215 / 215 个运行已完成且无失败；独立复核仍缺失，因此
-            Phase 12 未关闭、Phase 13 不可进入。
+            选择数据和算法，设定能承受的风险，启动训练，再用历史行情检验表现。
+            复杂配置由系统自动完成，高级用户仍可展开详细设置。
           </p>
-        </div>
-        <StatusPill tone="warn">{phase12Status.blocker}</StatusPill>
-      </section>
-
-      <section className="metric-grid" aria-label="项目指标">
-        <article className="metric-card">
-          <span>已完成运行</span>
-          <strong>{phase12Status.completedRuns}</strong>
-          <small>of {phase12Status.totalRuns} · 0 failed</small>
-        </article>
-        <article className="metric-card">
-          <span>数据覆盖</span>
-          <strong>{phase12Status.markets}</strong>
-          <small>markets · {phase12Status.symbols} symbols</small>
-        </article>
-        <article className="metric-card">
-          <span>冻结协议</span>
-          <strong className="mono metric-text">{phase12Status.protocol}</strong>
-          <small>{phase12Status.matrix}</small>
-        </article>
-        <article className="metric-card">
-          <span>发布状态</span>
-          <strong className="metric-text">v1.0.0-rc2</strong>
-          <small>Phase 11 closed</small>
-        </article>
-      </section>
-
-      <div className="dashboard-grid">
-        <section className="panel span-2">
-          <div className="panel-head">
-            <div>
-              <div className="tiny-label">Protocol pipeline</div>
-              <h2>研究门禁</h2>
-            </div>
-            <StatusPill tone="good">会计误差 &lt; 1e-8</StatusPill>
-          </div>
-          <div className="gate-list">
-            {[
-              ["01", "数据清单冻结", "manifest + SHA-256", "pass"],
-              ["02", "泄漏与会计测试", "test partition isolated", "pass"],
-              ["03", "训练 / Agent / HPO", "统一 AgentRuntime", "pass"],
-              ["04", "计算重放", "numerically_reproduced", "pass"],
-              ["05", "独立复核", "review signature missing", "wait"],
-            ].map(([number, label, note, state]) => (
-              <div className="gate-row" key={number}>
-                <span className="step-number">{number}</span>
-                <div>
-                  <strong>{label}</strong>
-                  <small>{note}</small>
-                </div>
-                <span className={`gate-state ${state}`}>
-                  {state === "pass" ? "通过" : "等待"}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <aside className="panel protocol-card">
-          <div className="tiny-label">Deterministic guard</div>
-          <h2>风险层在线</h2>
-          <div className="radar-disc" aria-hidden="true">
-            <span>RISK</span>
-          </div>
-          <ul className="check-list">
-            <li>LLM 不可直接修改账户</li>
-            <li>测试集不对 HPO 可见</li>
-            <li>指令必须通过动作投影</li>
-            <li>API Key 不进入浏览器</li>
-          </ul>
-        </aside>
-      </div>
-
-      <div className="dashboard-grid lower">
-        <section className="panel span-2">
-          <div className="panel-head">
-            <div>
-              <div className="tiny-label">Evidence ledger</div>
-              <h2>最近运行</h2>
-            </div>
-            <Link className="text-link" href="/runs">
-              查看全部 →
+          <div className="hero-actions">
+            <Link className="button primary" href="/workflows?mode=train">
+              开始创建
+            </Link>
+            <Link className="button secondary" href="/runs">
+              查看已有结果
             </Link>
           </div>
-          <div className="run-table" role="table" aria-label="最近运行">
-            {demoRuns.map((run) => (
-              <div className="run-row" role="row" key={run.id}>
-                <div>
-                  <strong className="mono">{run.id}</strong>
-                  <small>{run.kind}</small>
-                </div>
-                <span>{run.protocol}</span>
-                <StatusPill tone={run.status === "verified" ? "good" : "warn"}>
-                  {run.status}
-                </StatusPill>
+        </div>
+        <div className="journey-card" aria-label="策略创建步骤">
+          {[
+            ["1", "选择数据", "确定用于训练的市场数据"],
+            ["2", "设计策略", "选择算法与训练强度"],
+            ["3", "控制风险", "设置仓位、现金和换手限制"],
+            ["4", "训练回测", "查看策略在历史行情中的表现"],
+          ].map(([number, label, note]) => (
+            <div className="journey-step" key={number}>
+              <span>{number}</span>
+              <div>
+                <strong>{label}</strong>
+                <small>{note}</small>
               </div>
-            ))}
-          </div>
-        </section>
+            </div>
+          ))}
+        </div>
+      </section>
 
-        <section className="panel quick-panel">
-          <div className="tiny-label">Quick actions</div>
-          <h2>从证据开始</h2>
-          <Link href="/workflows">生成安全训练命令 <span>→</span></Link>
-          <Link href="/runs">导入 run manifest <span>→</span></Link>
-          <Link href="/experiments">审阅 Phase 12 <span>→</span></Link>
-          <Link href="/settings">连接只读服务 <span>→</span></Link>
-        </section>
-      </div>
+      <section className="starter-grid" aria-label="常用入口">
+        {starterCards.map((card) => (
+          <Link className="starter-card panel" href={card.href} key={card.title}>
+            <span>{card.tag}</span>
+            <h2>{card.title}</h2>
+            <p>{card.copy}</p>
+            <strong>{card.action} →</strong>
+          </Link>
+        ))}
+      </section>
+
+      <section className="panel protection-strip">
+        <div>
+          <div className="tiny-label">自动保护</div>
+          <h2>你专注策略想法，系统负责守住边界</h2>
+        </div>
+        <ul>
+          <li>训练调参不会偷看最终测试数据</li>
+          <li>AI 建议必须通过仓位与现金限制</li>
+          <li>交易成本和滑点会计入回测</li>
+          <li>每次运行都保留配置和结果</li>
+        </ul>
+      </section>
     </AppShell>
   );
 }

@@ -1,0 +1,284 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": {
+    "confidence": 0.8,
+    "global_risk_budget": 0.3,
+    "market_budgets": {},
+    "market_regime": "high_volatility",
+    "objective_weights": {
+      "alpha_generation": 0.3,
+      "capital_preservation": 0.7
+    },
+    "rebalance_interval": 20,
+    "sector_budgets": null
+  },
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": {
+    "confidence": 0.85,
+    "estimated_compute_units": 150.0,
+    "mode": "dry_run",
+    "objective": "Using validation-only evidence, produce bounded research and risk directives for the frozen Phase 12 protocol. Never access test metrics.",
+    "rationale": "Dataset manifest validated (formal_v3, 80 symbols, 73193 rows, quality_valid=true). Bounded research plan constructed under validation-only constraints; all steps designed to avoid test metrics and operate within dry-run guardrails.",
+    "safe_to_execute": false,
+    "steps": [
+      {
+        "action": "inspect_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [],
+        "expected_artifacts": [
+          "dataset_summary"
+        ],
+        "id": "inspect_manifest"
+      },
+      {
+        "action": "validate_dataset",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json"
+        },
+        "depends_on": [
+          "inspect_manifest"
+        ],
+        "expected_artifacts": [
+          "validation_report"
+        ],
+        "id": "validate_dataset"
+      },
+      {
+        "action": "list_markets",
+        "arguments": {},
+        "depends_on": [
+          "validate_dataset"
+        ],
+        "expected_artifacts": [
+          "market_list"
+        ],
+        "id": "list_markets"
+      },
+      {
+        "action": "list_symbols",
+        "arguments": {
+          "markets": [
+            "CN",
+            "HK",
+            "JP",
+            "US"
+          ]
+        },
+        "depends_on": [
+          "list_markets"
+        ],
+        "expected_artifacts": [
+          "symbol_list"
+        ],
+        "id": "list_symbols"
+      },
+      {
+        "action": "create_split",
+        "arguments": {
+          "manifest_path": "data/processed/formal_v3/dataset_manifest.json",
+          "split_ratios": {
+            "train": 0.7,
+            "val": 0.3
+          }
+        },
+        "depends_on": [
+          "list_symbols"
+        ],
+        "expected_artifacts": [
+          "split_indices"
+        ],
+        "id": "create_split"
+      },
+      {
+        "action": "validate_experiment_config",
+        "arguments": {
+          "config_path": "configs/phase12_rl_config.yaml"
+        },
+        "depends_on": [
+          "create_split"
+        ],
+        "expected_artifacts": [
+          "config_validation"
+        ],
+        "id": "validate_config"
+      },
+      {
+        "action": "estimate_compute_budget",
+        "arguments": {
+          "config_path": "configs/phase12_rl_config.yaml",
+          "dataset_size": 73193,
+          "num_symbols": 80
+        },
+        "depends_on": [
+          "validate_config"
+        ],
+        "expected_artifacts": [
+          "budget_estimate"
+        ],
+        "id": "estimate_budget"
+      },
+      {
+        "action": "train_rl",
+        "arguments": {
+          "config_path": "configs/phase12_rl_config.yaml",
+          "train_indices": "split_indices[train]"
+        },
+        "depends_on": [
+          "estimate_budget"
+        ],
+        "expected_artifacts": [
+          "checkpoint"
+        ],
+        "id": "train_rl"
+      },
+      {
+        "action": "tune_rl",
+        "arguments": {
+          "base_config": "configs/phase12_rl_config.yaml",
+          "hyperparameter_space": "configs/phase12_hparam_space.json",
+          "max_trials": 20,
+          "metric": "val_sharpe"
+        },
+        "depends_on": [
+          "train_rl"
+        ],
+        "expected_artifacts": [
+          "best_config",
+          "tuning_log"
+        ],
+        "id": "tune_rl"
+      },
+      {
+        "action": "evaluate_checkpoint",
+        "arguments": {
+          "checkpoint_path": "checkpoint_best",
+          "metrics": [
+            "sharpe",
+            "max_drawdown",
+            "win_rate"
+          ],
+          "val_indices": "split_indices[val]"
+        },
+        "depends_on": [
+          "train_rl",
+          "tune_rl"
+        ],
+        "expected_artifacts": [
+          "evaluation_metrics"
+        ],
+        "id": "evaluate_checkpoint"
+      },
+      {
+        "action": "compare_runs",
+        "arguments": {
+          "metrics": [
+            "sharpe",
+            "max_drawdown",
+            "win_rate"
+          ],
+          "run_ids": [
+            "phase12_baseline",
+            "phase12_tuned"
+          ]
+        },
+        "depends_on": [
+          "evaluate_checkpoint"
+        ],
+        "expected_artifacts": [
+          "comparison_report"
+        ],
+        "id": "compare_runs"
+      },
+      {
+        "action": "generate_report",
+        "arguments": {
+          "artifacts": [
+            "comparison_report",
+            "budget_estimate",
+            "config_validation"
+          ],
+          "template": "templates/phase12_risk_report.md"
+        },
+        "depends_on": [
+          "compare_runs"
+        ],
+        "expected_artifacts": [
+          "final_report"
+        ],
+        "id": "generate_report"
+      }
+    ],
+    "test_metrics_accessed": false,
+    "validation_only": true
+  },
+  "risk_mode": "enforced",
+  "risk_proposed": {
+    "allow_new_positions": false,
+    "cash_floor": 0.75,
+    "confidence": 0.9,
+    "max_asset_weight": 0.05,
+    "max_market_weights": {
+      "CN": 0.05,
+      "HK": 0.05,
+      "JP": 0.05,
+      "US": 0.05
+    },
+    "max_turnover": 0.05,
+    "rationale": "Enforced risk mode with frozen Phase 12 protocol requires conservative limits. Low risk budget (3%) and high cash floor (75%) to protect against current drawdown (8%) and elevated volatility (20% annualized). Max turnover set to 5% to minimize trading. New positions disallowed to freeze the book.",
+    "rebalance_frequency": "monthly",
+    "risk_budget": 0.03
+  },
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}

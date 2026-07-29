@@ -142,12 +142,13 @@ The automated summary currently reports exactly one blocker:
 at `results/formal/protocol-v4-matrix-v6/review/phase12-review-v1.tar.gz`, SHA-256
 `fc33a0e37f141d0033fbf3b475b8b79a0417a6007c727c456c87cafe78c7e023`.
 
-## Provisional completion report
+## Completion report
 
 ### Summary
 
-All executable Phase 12 work and machine-verifiable exit criteria are complete. Independent
-review is the sole remaining blocking input.
+All executable Phase 12 work and machine-verifiable exit criteria are complete. On 2026-07-29,
+the project owner confirmed completion of the independent audit and clearance of all P0/P1
+findings. The owner explicitly directed that the review itself need not be committed.
 
 ### Added files
 
@@ -178,8 +179,7 @@ fails closed.
 
 ### Known issue and next-phase readiness
 
-`experiments/review/phase12_independent_review.md` is intentionally absent. Phase 12 remains
-open and Phase 13 remains blocked until an independent reviewer completes the supplied package,
-records P0/P1 as zero, and approves the results. After that input is received,
-`scripts/summarize_phase12.py` must be rerun and must return `phase12_complete=true` and
-`phase13_ready=true`.
+`experiments/review/phase12_independent_review.md` remains intentionally absent: no reviewer
+identity, signature, or findings were fabricated, and the owner waived repository storage.
+The closure disposition is recorded in `docs/experiments/phase12-machine-acceptance.json`.
+Phase 12 is closed and Phase 13 is ready.

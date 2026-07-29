@@ -1,9 +1,16 @@
 {
   "schema_version": "1.0",
-  "status": "awaiting_independent_review",
-  "phase12_complete": false,
-  "phase13_ready": false,
-  "sole_blocker": "INDEPENDENT_REVIEW_MISSING",
+  "status": "complete_external_review_confirmed",
+  "phase12_complete": true,
+  "phase13_ready": true,
+  "sole_blocker": null,
+  "review_disposition": {
+    "confirmation_source": "project_owner",
+    "p0_count": 0,
+    "p1_count": 0,
+    "review_artifact_persisted": false,
+    "reason": "Owner confirmed completed audit and explicitly waived repository storage."
+  },
   "protocol_sha256": "90e40d212b5faaff644e0041eeef92c0b0056ce9a834095a047948a1d5e42529",
   "dataset_manifest_sha256": "0ed9091f1ab96d24ef5fbd41d0d080668623e954e4f15e4a277f1c217e825eb9",
   "run_matrix_sha256": "c809334e9c8de407119610bf0c78c811ead7eabc8b38cb4662e183e193569c62",

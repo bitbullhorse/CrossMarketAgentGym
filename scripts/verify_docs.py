@@ -26,12 +26,18 @@ REQUIRED_DOCS = (
     "docs/stable-api.md",
     "docs/faq.md",
     "docs/issues/phase-11-checklist.md",
+    "docs/issues/phase-14-checklist.md",
     "docs/phases/phase-11.md",
+    "docs/phases/phase-14.md",
+    "docs/compatibility.md",
+    "docs/known-limitations.md",
     "reproducibility_tests/protocol.md",
     "reproducibility_tests/reproducibility_report.md",
     "reproducibility_tests/independent_audit_attestation.md",
     "release/rc2_checklist.md",
     "release/release_notes_v1.0.0-rc2.md",
+    "release/release_notes_v1.0.0.md",
+    "DATA_LICENSE.md",
 )
 REQUIRED_COMMANDS = (
     "cmag data validate --config configs/data/sample.yaml",
@@ -44,6 +50,9 @@ REQUIRED_COMMANDS = (
     "cmag reproduce --run-id",
     "cmag reproduce --run-id repro-ppo-quickstart --verify-only",
     "cmag reproduce --run-id repro-ppo-quickstart --execute --compare",
+    "cmag benchmark verify --benchmark benchmarks/v1",
+    "cmag release verify --version 1.0.0",
+    "scripts/verify_public_release.sh --online",
 )
 LINK = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 SECRET = re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b")

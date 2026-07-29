@@ -1,0 +1,74 @@
+{
+  "current_weights": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "environment": {
+    "accounting_tolerance": 1e-08,
+    "allow_short": false,
+    "base_currency": "USD",
+    "cash_floor": 0.05,
+    "cvar_alpha": 0.05,
+    "cvar_penalty": 0.5,
+    "drawdown_penalty": 0.5,
+    "execution_protocol": "close_signal_next_open",
+    "initial_cash": 1000000.0,
+    "lookback": 20,
+    "lot_sizes": {},
+    "market_weight_overrides": {},
+    "max_asset_weight": 0.1,
+    "max_episode_steps": null,
+    "max_leverage": 1.0,
+    "max_market_weight": 0.35,
+    "max_turnover": 0.5,
+    "reward": "risk_adjusted",
+    "risk_aversion": 0.1,
+    "slippage_bps": 5.0,
+    "t_plus_one_markets": [
+      "CN"
+    ],
+    "transaction_cost_bps": 10.0
+  },
+  "hierarchical": null,
+  "markets": [
+    "CN",
+    "HK",
+    "JP",
+    "US"
+  ],
+  "raw_action": [
+    0.0,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "research": null,
+  "risk_mode": "enforced",
+  "risk_proposed": {
+    "allow_new_positions": true,
+    "cash_floor": 0.1,
+    "confidence": 0.8,
+    "max_asset_weight": 0.3,
+    "max_market_weights": {
+      "CN": 0.15,
+      "HK": 0.15,
+      "JP": 0.15,
+      "US": 0.15
+    },
+    "max_turnover": 0.5,
+    "rationale": "Given 8% drawdown and 20% volatility, we impose conservative risk limits to cap further losses. Max asset weight 30% prevents concentration; cash floor 10% ensures liquidity; max turnover 50% limits transaction costs; risk budget 15% restricts portfolio risk. Rebalancing monthly reduces overtrading.",
+    "rebalance_frequency": "monthly",
+    "risk_budget": 0.15
+  },
+  "schema_version": "1.0",
+  "tradable_mask": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
