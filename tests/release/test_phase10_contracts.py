@@ -199,8 +199,7 @@ def test_stable_release_publish_requires_exact_tag_or_explicit_dispatch() -> Non
         encoding="utf-8"
     )
     assert (
-        'python -m pip install -c constraints-cpu.txt '
-        '-e ".[dev,release,docs,rl,llm]"'
+        '-e ".[dev,docs,legacy-data,release,rl,llm,service]"'
         in workflow
     )
     assert "github.ref == 'refs/tags/v1.0.0'" in workflow
