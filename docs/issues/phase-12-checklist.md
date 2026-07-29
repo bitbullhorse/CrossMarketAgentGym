@@ -1,7 +1,8 @@
 # Phase 12 issue checklist — formal research experiments
 
-Status: **in progress**. Cutoff-safe protocol-v4 and source identities are frozen. No formal result is accepted
-until its run audit, leakage gate, five-seed coverage, and independent-review gate pass.
+Status: **machine gates passed; awaiting independent review**. All 215 matrix-v6 formal runs,
+statistics, safety audits, and post-experiment software gates are complete. Phase 13 remains
+blocked until a real independent reviewer approves the results with P0/P1 equal to zero.
 
 ## Input conditions
 
@@ -40,7 +41,7 @@ until its run audit, leakage gate, five-seed coverage, and independent-review ga
 - [x] Freeze and preserve run-matrix-v5 against the corrected metadata commit.
 - [x] Supersede run-matrix-v5 before formal execution after its resource audit found CPU-only
   formal HPO trials and a coverage-flag defect in the remote convenience script.
-- [ ] Freeze run-matrix-v6 against the GPU-enabled corrected code without changing protocol-v4.
+- [x] Freeze run-matrix-v6 against the GPU-enabled corrected code without changing protocol-v4.
 
 ## Isolation and safety gates
 
@@ -51,55 +52,55 @@ until its run audit, leakage gate, five-seed coverage, and independent-review ga
 - [x] Keep the deterministic risk layer mandatory in every Agent and ablation run.
 - [x] Prevent LLM tools from mutating account state.
 - [x] Retain failed run directories and structured failure reasons.
-- [ ] Prove that every formal run references protocol, dataset, commit, seed, environment,
+- [x] Prove that every formal run references protocol, dataset, commit, seed, environment,
   hardware, duration, and status.
 
 ## Group A — environment correctness
 
-- [ ] Cost, slippage, T+1, suspension, price limit, lot, holiday, FX, projection, cash,
+- [x] Cost, slippage, T+1, suspension, price limit, lot, holiday, FX, projection, cash,
   holdings, and NAV cases are hand-computable and automated.
-- [ ] Accounting error is no greater than `1e-8`.
-- [ ] Structured expected/observed/error evidence is written.
+- [x] Accounting error is no greater than `1e-8`.
+- [x] Structured expected/observed/error evidence is written.
 
 ## Group B — strategy compatibility
 
-- [ ] Cash, Buy-and-Hold, Equal-Weight, Risk-Parity, and Mean-Variance use the shared protocol.
-- [ ] PPO, SAC, and TD3 run for all five frozen seeds.
-- [ ] Rebalancing, costs, risk constraints, and metrics are identical across methods.
+- [x] Cash, Buy-and-Hold, Equal-Weight, Risk-Parity, and Mean-Variance use the shared protocol.
+- [x] PPO, SAC, and TD3 run for all five frozen seeds.
+- [x] Rebalancing, costs, risk constraints, and metrics are identical across methods.
 
 ## Group C — cross-market generalization
 
-- [ ] All four leave-one-market-out routes run for five seeds.
-- [ ] Single-market, joint-market, unseen-stock, and rule-sensitivity comparisons are complete.
+- [x] All four leave-one-market-out routes run for five seeds.
+- [x] Single-market, joint-market, unseen-stock, and rule-sensitivity comparisons are complete.
 
 ## Group D — market mechanism ablation
 
-- [ ] Every frozen mechanism ablation runs for five seeds.
-- [ ] The safety-preserving minimum-risk-projection ablation is clearly distinguished from
+- [x] Every frozen mechanism ablation runs for five seeds.
+- [x] The safety-preserving minimum-risk-projection ablation is clearly distinguished from
   bypassing the deterministic risk layer.
 
 ## Group E — LLM Agent ablation
 
-- [ ] All seven frozen Agent presets run with `deepseek-v4-pro`.
-- [ ] Prompt hash, temperature, round count, permissions, Provider identity, and Replay are fixed.
-- [ ] Full credential-redacted Replay, tool audit, safety audit, token/cost, and timing are saved.
+- [x] All seven frozen Agent presets run with `deepseek-v4-pro`.
+- [x] Prompt hash, temperature, round count, permissions, Provider identity, and Replay are fixed.
+- [x] Full credential-redacted Replay, tool audit, safety audit, token/cost, and timing are saved.
 
 ## Group F — HPO
 
-- [ ] Default, Random, TPE, CMA-ES, PSO, GA, DE, and NSGA-II use equal budgets.
-- [ ] ASHA is recorded solely as an independent resource scheduler.
-- [ ] Selection reads train/walk-forward validation only.
-- [ ] The locked test is evaluated once after configuration lock.
+- [x] Default, Random, TPE, CMA-ES, PSO, GA, DE, and NSGA-II use equal budgets.
+- [x] ASHA is recorded solely as an independent resource scheduler.
+- [x] Selection reads train/walk-forward validation only.
+- [x] The locked test is evaluated once after configuration lock.
 
 ## Statistics, automation, and exit conditions
 
-- [ ] Every core comparison has at least five successful frozen seeds and fold-level evidence.
-- [ ] Mean, standard deviation, median, 95% CI, best, and worst are generated automatically.
-- [ ] Wilcoxon paired tests, Holm correction, and paired rank-biserial effect sizes are generated.
-- [ ] Tables and figures are generated only from auditable formal run IDs.
-- [ ] Re-run unit, integration, leakage, reproduction, Ruff, and strict mypy gates on the
-  matrix-v6-bound code commit (matrix-v4 Linux gate: 379 passed, one skipped, one blocking
-  metadata assertion failed; protocol, frozen contracts, Ruff, mypy, and 48 targeted tests
-  passed).
+- [x] Every core comparison has at least five successful frozen seeds and fold-level evidence.
+- [x] Mean, standard deviation, median, 95% CI, best, and worst are generated automatically.
+- [x] Wilcoxon paired tests, Holm correction, and paired rank-biserial effect sizes are generated.
+- [x] Tables and figures are generated only from auditable formal run IDs.
+- [x] Re-run unit, integration, leakage, reproduction, Ruff, and strict mypy gates on the
+  matrix-v6-bound code commit: 380 passed and one source-data-dependent test skipped; coverage
+  85.69%; Ruff and strict mypy passed.
+- [x] Generate and checksum a credential-free independent-review package.
 - [ ] Independent review is recorded without inventing participant evidence.
 - [ ] All Phase 12 exit criteria pass before Phase 13 begins.

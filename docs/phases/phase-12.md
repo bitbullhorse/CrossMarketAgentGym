@@ -1,7 +1,9 @@
 # Phase 12 — formal research experiments
 
-Status: **in progress**. Protocol-v4 inputs are frozen and executable; the formal run matrix
-and publication-eligible results are not yet frozen or executed.
+Status: **machine gates passed; awaiting independent review**. Protocol-v4, run-matrix-v6,
+all 215 formal runs, statistics, figures, and post-experiment software gates are complete.
+The results are not publication-eligible and Phase 13 is not ready until a real independent
+reviewer approves them with P0/P1 equal to zero.
 
 ## Goal and entry conditions
 
@@ -101,7 +103,82 @@ coverage threshold when selecting only experiment/leakage tests. Its zero-result
 supersession notice are preserved. The DeepSeek endpoint separately returned HTTP 200 for the
 exact frozen `deepseek-v4-pro` identifier without persisting the credential or response body.
 
-Run-matrix-v6, all eligible formal runs, aggregate statistics, and independent review remain
-pending.
+Run-matrix-v6 is frozen against commit
+`6f03d3da3ed6ecbe918c5a7f9aa35cb9abfb2b83`, with SHA-256
+`c809334e9c8de407119610bf0c78c811ead7eabc8b38cb4662e183e193569c62`.
+It contains 215 tasks: A 10, B 40, C 45, D 45, E 35, and F 40. Every task completed, every
+group boundary passed, no formal run failed or went missing, and no development result was used.
+The full immutable remote evidence occupies approximately 230 GB under
+`results/formal/protocol-v4-matrix-v6`.
 
-Phase 12 is not complete. Phase 13 is not ready.
+Group C's `single_market` and `leave_one_market_out` tasks each contain four separately locked
+target-market subruns. Their audit count of four test evaluations means one evaluation per
+locked model, not four evaluations of one selected model. The initial external boundary checker
+incorrectly expected one; its failed report is preserved, the checker semantics were corrected,
+and all 40 affected subruns were verified to have individual pre-test locks.
+
+The formal aggregation contains 2,390 normalized metric rows, 494 descriptive-statistic rows,
+200 paired tests, and five generated SVG figures. Every non-environment comparison has at least
+five seeds. The Agent audit covers 35 runs and 100 Replay files; Replay consistency is true,
+the deterministic risk layer was never bypassed, and a scan of 556 Agent text artifacts found
+no credential pattern. Every HPO method has five seeds, 24 trials per seed, three walk-forward
+folds, at least 72 validation artifacts per run, and exactly one locked-test access. ASHA is
+recorded only as `resource_only`.
+
+Post-experiment gates on the matrix-bound commit passed:
+
+- protocol and input integrity: passed;
+- unit: 91 passed;
+- integration: 16 passed and one local-source-data test skipped;
+- leakage: 14 passed;
+- reproduction: 15 passed;
+- frozen rc2 contracts: 10 passed;
+- full suite: 380 passed, one skipped, 85.69% coverage;
+- Ruff: passed;
+- strict mypy: 152 source files passed.
+
+The automated summary currently reports exactly one blocker:
+`INDEPENDENT_REVIEW_MISSING`. A credential-free review archive with 4,744 files was generated
+at `results/formal/protocol-v4-matrix-v6/review/phase12-review-v1.tar.gz`, SHA-256
+`fc33a0e37f141d0033fbf3b475b8b79a0417a6007c727c456c87cafe78c7e023`.
+
+## Provisional completion report
+
+### Summary
+
+All executable Phase 12 work and machine-verifiable exit criteria are complete. Independent
+review is the sole remaining blocking input.
+
+### Added files
+
+- `experiments/run_matrix_v6.json`
+- `experiments/run_matrix_v6.sha256`
+- machine evidence, statistics, figures, gates, and review package under the ignored formal
+  result root
+
+### Modified files
+
+- `docs/issues/phase-12-checklist.md`
+- `docs/phases/phase-12.md`
+- `docs/design-log.md`
+
+### Design decisions
+
+- Preserve superseded protocols and matrices rather than editing frozen identities.
+- Treat a multi-target Group C task as one test access per independently locked submodel.
+- Keep external GPU allocation separate from HPO search and ASHA scheduling.
+- Do not fabricate independent reviewer identity, findings, or approval.
+
+### Tests and acceptance
+
+All formal run, leakage, accounting, Replay, HPO isolation, statistics, unit, integration,
+reproduction, lint, type, and frozen-contract machine gates passed. The review gate correctly
+fails closed.
+
+### Known issue and next-phase readiness
+
+`experiments/review/phase12_independent_review.md` is intentionally absent. Phase 12 remains
+open and Phase 13 remains blocked until an independent reviewer completes the supplied package,
+records P0/P1 as zero, and approves the results. After that input is received,
+`scripts/summarize_phase12.py` must be rerun and must return `phase12_complete=true` and
+`phase13_ready=true`.

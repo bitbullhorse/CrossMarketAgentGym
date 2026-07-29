@@ -659,3 +659,40 @@
 - Reason: CPU quickstart safety must not silently disable the four-GPU formal execution plan.
   Device assignment is a resource decision, not a search algorithm, and selected-test coverage
   cannot validly satisfy a whole-repository coverage threshold.
+
+## DL-0093 — Matrix-v6 binds the final executable experiment code
+
+- Decision: freeze run-matrix-v6 with SHA-256
+  `c809334e9c8de407119610bf0c78c811ead7eabc8b38cb4662e183e193569c62`
+  against code commit `6f03d3da3ed6ecbe918c5a7f9aa35cb9abfb2b83`. Accept only its
+  `p12v4m6-*` IDs as Phase 12 formal results.
+- Reason: matrices v4 and v5 were correctly superseded before eligible execution. New IDs and
+  an immutable binding prevent results produced by different runtime semantics from mixing.
+
+## DL-0094 — Respect occupied GPUs without changing scientific budgets
+
+- Decision: leave unrelated workloads on GPUs 1 and 2 untouched. Execute matrix-v6 through
+  externally assigned slots on GPUs 0 and 3, with at most four concurrent tasks, while leaving
+  all per-task seeds, trials, timesteps, folds, and ASHA rules unchanged.
+- Reason: device allocation is an operational resource decision. It must neither disturb other
+  users nor become a search algorithm or change the equal HPO budget.
+
+## DL-0095 — Multi-target test counts are per independently locked model
+
+- Decision: audit Group C `single_market` and `leave_one_market_out` tasks with four test
+  accesses because each task trains and locks four independent target-market models. Preserve
+  the initial external-checker failure, verify all 40 subruns, and correct only the external
+  boundary checker's expected-count semantics.
+- Reason: forcing an aggregate count of one would misdescribe the frozen experiment. Each model
+  is evaluated once after its own configuration lock, so no model-selection path gains repeated
+  access to the locked test partition.
+
+## DL-0096 — Machine completion cannot substitute for independent review
+
+- Decision: generate statistics, figures, post-experiment gates, an additional safety audit, and
+  a credential-free independent-review package, but leave Phase 12 and Phase 13 readiness false
+  until a real reviewer supplies identity, hashes, completed checks, P0/P1 clearance, and an
+  approved decision.
+- Reason: the Phase 12 protocol explicitly requires independent review. Automatically inventing
+  reviewer evidence would invalidate the scientific provenance even though all machine gates
+  pass.

@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "status": "awaiting_independent_review",
+  "phase12_complete": false,
+  "phase13_ready": false,
+  "sole_blocker": "INDEPENDENT_REVIEW_MISSING",
+  "protocol_sha256": "90e40d212b5faaff644e0041eeef92c0b0056ce9a834095a047948a1d5e42529",
+  "dataset_manifest_sha256": "0ed9091f1ab96d24ef5fbd41d0d080668623e954e4f15e4a277f1c217e825eb9",
+  "run_matrix_sha256": "c809334e9c8de407119610bf0c78c811ead7eabc8b38cb4662e183e193569c62",
+  "code_commit": "6f03d3da3ed6ecbe918c5a7f9aa35cb9abfb2b83",
+  "planned_run_count": 215,
+  "completed_run_count": 215,
+  "failed_or_missing_run_count": 0,
+  "group_counts": {
+    "A": 10,
+    "B": 40,
+    "C": 45,
+    "D": 45,
+    "E": 35,
+    "F": 40
+  },
+  "statistics": {
+    "normalized_metric_rows": 2390,
+    "descriptive_rows": 494,
+    "paired_test_rows": 200,
+    "minimum_seed_count": 5,
+    "figure_count": 5
+  },
+  "safety": {
+    "maximum_environment_absolute_error": 0.0,
+    "agent_run_count": 35,
+    "agent_replay_file_count": 100,
+    "agent_replay_consistency_all": true,
+    "deterministic_risk_layer_bypassed_any": false,
+    "credential_pattern_hits": 0,
+    "hpo_run_count": 40,
+    "hpo_trial_budget": 24,
+    "hpo_walk_forward_folds": 3,
+    "hpo_test_visible_during_search": false,
+    "hpo_locked_test_access_count_per_run": 1,
+    "asha_role": "resource_only"
+  },
+  "post_experiment_gates": {
+    "protocol": "passed",
+    "unit": "91 passed",
+    "integration": "16 passed, 1 skipped",
+    "leakage": "14 passed",
+    "reproduction": "15 passed",
+    "frozen_contract": "10 passed",
+    "full_pytest": "380 passed, 1 skipped, 85.69% coverage",
+    "ruff": "passed",
+    "mypy": "152 source files passed"
+  },
+  "review_package": {
+    "path": "results/formal/protocol-v4-matrix-v6/review/phase12-review-v1.tar.gz",
+    "file_count": 4744,
+    "sha256": "fc33a0e37f141d0033fbf3b475b8b79a0417a6007c727c456c87cafe78c7e023"
+  }
+}
