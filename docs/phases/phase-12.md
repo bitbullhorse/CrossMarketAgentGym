@@ -153,6 +153,7 @@ review is the sole remaining blocking input.
 
 - `experiments/run_matrix_v6.json`
 - `experiments/run_matrix_v6.sha256`
+- `docs/experiments/phase12-machine-acceptance.json`
 - machine evidence, statistics, figures, gates, and review package under the ignored formal
   result root
 
