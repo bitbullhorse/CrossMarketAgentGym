@@ -1,5 +1,8 @@
 # Documentation
 
+- [`operations-guide.zh-CN.md`](operations-guide.zh-CN.md) is the end-to-end Chinese operating
+  manual for installation, data, environment checks, training, Agents, HPO, reproduction,
+  reporting, Docker, Ray/GPU, audit, and troubleshooting.
 - [`architecture/`](architecture/) describes the stable boundaries and planned package tree.
 - [`phases/`](phases/) records delivery and acceptance evidence for each phase.
 - [`issues/`](issues/) contains phase checklists.

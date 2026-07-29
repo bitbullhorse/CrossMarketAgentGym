@@ -90,6 +90,7 @@ configs use model `deepseek-v4-pro`.
 
 ## Documentation
 
+- [中文详细操作手册](docs/operations-guide.zh-CN.md)
 - [Data schema](docs/data_schema.md), [environment](docs/environment.md), and
   [market rules](docs/market_rules.md)
 - [RL training](docs/rl_training.md) and [tuning](docs/tuning.md)
