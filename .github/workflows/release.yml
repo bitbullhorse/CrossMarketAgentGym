@@ -58,7 +58,7 @@ jobs:
           cache: pip
 
       - name: Install release, docs, CPU RL, and LLM dependencies
-        run: python -m pip install -c constraints-cpu.txt -e ".[release,docs,rl,llm]"
+        run: python -m pip install -c constraints-cpu.txt -e ".[dev,release,docs,rl,llm]"
 
       - name: Validate stable tag and immutable release inputs
         env:
