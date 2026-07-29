@@ -17,6 +17,8 @@
   --red-dim: #3b1c1a;
   --sidebar: 244px;
   --radius: 10px;
+  --font-geist-sans: Inter, "Segoe UI", "Microsoft YaHei", sans-serif;
+  --font-geist-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   color-scheme: dark;
 }
 
