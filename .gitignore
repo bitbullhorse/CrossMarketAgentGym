@@ -15,6 +15,7 @@ htmlcov/
 .phase*-venv/
 .phase*-py*/
 build/
+site/
 dist/
 dist-*/
 *.egg-info/

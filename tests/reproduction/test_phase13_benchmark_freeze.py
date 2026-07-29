@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import stat
 from pathlib import Path
 
 from crossmarket_agentgym.benchmarking.core import verify_benchmark
@@ -16,8 +15,6 @@ def test_benchmark_verification_is_reproducible() -> None:
     assert first.model_dump(mode="json") == second.model_dump(mode="json")
     assert first.run_count == 215
     assert first.file_count == 233
-    assert all(
-        not path.stat().st_mode & stat.S_IWUSR
-        for path in BENCHMARK.rglob("*")
-        if path.is_file()
-    )
+    checks = {check.name: check for check in first.checks}
+    assert checks["file_hashes"].passed
+    assert checks["immutable_snapshot"].passed

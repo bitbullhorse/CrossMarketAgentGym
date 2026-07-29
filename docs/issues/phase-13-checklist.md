@@ -58,7 +58,10 @@ signature, or review body was invented or persisted.
 
 ## Exit conditions
 
-- [x] `benchmarks/v1` is a write-once, read-only snapshot.
+- [x] `benchmarks/v1` is a write-once snapshot: the builder rejects overwrite,
+  all content is checksummed, and the original build output is filesystem-sealed.
+  Fresh VCS checkouts rely on the checksum contract because Git does not preserve
+  ordinary-file read-only bits.
 - [x] All included paper values have a source file and/or formal run IDs.
 - [x] Tables and figures are generated automatically.
 - [x] Hash, run/config, HPO isolation and Agent log checks pass.

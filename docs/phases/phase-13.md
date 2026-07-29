@@ -88,7 +88,10 @@ Final results on Python 3.12:
 - documentation contract: 25 required files passed;
 - frozen contracts: 251 Python API records, 11 config Schemas and 20 artifact Schemas passed.
 
-The final Benchmark verification reports eight passing checks. All 233 files are read-only.
+The final Benchmark verification reports eight passing checks. All 233 files were sealed
+read-only in the original build output. Fresh Git checkouts verify the same immutable bytes
+through `checksums.json`; ordinary-file read-only permission bits are intentionally not treated
+as portable VCS evidence.
 The formal representative series contains 450 training points and 970 locked-test
 equity/drawdown points; four realized market exposures are derived from the same 80-asset
 weight vectors.
